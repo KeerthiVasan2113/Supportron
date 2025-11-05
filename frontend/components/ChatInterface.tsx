@@ -29,7 +29,7 @@ const ChatInterface = () => {
 
   return (
     <div 
-      className="h-full w-full flex flex-col glass-effect rounded-2xl overflow-hidden shadow-2xl"
+      className="h-full w-full flex flex-col glass-effect rounded-2xl overflow-hidden shadow-2xl relative scan-line"
       role="log"
       aria-label="Chat conversation"
       aria-live="polite"

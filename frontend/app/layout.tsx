@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
+import { AuthProvider } from '@/contexts/AuthContext'
 
 export const metadata: Metadata = {
   title: 'Supportron - IT Tech Support AI',
@@ -22,7 +23,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="min-h-screen">
-        {children}
+        <AuthProvider>
+          {children}
+        </AuthProvider>
       </body>
     </html>
   )

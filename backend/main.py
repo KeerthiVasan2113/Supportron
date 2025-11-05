@@ -172,7 +172,7 @@ async def chat(request: ChatRequest):
         except Exception as model_error:
             # Try fallback model
             logger.warning(f"Model {model_name} failed, trying gemini-1.5-pro: {str(model_error)}")
-            model_name = "gemini-1.5-pro"
+            model_name = "gemini-2.5-pro"
             model = genai.GenerativeModel(
                 model_name=model_name,
                 generation_config={

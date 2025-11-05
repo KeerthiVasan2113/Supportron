@@ -1,9 +1,11 @@
 import React from 'react'
-import { Message } from '@/types/chat'
 import { Avatar } from './Avatar'
 
 interface MessageBubbleProps {
-  message: Message
+  message: {
+    role: 'user' | 'assistant'
+    content: string
+  }
   'aria-label'?: string
 }
 
@@ -18,10 +20,10 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ message, 'aria-lab
       aria-label={ariaLabel || `Message from ${senderName}`}
     >
       <div
-        className={`max-w-[92%] xs:max-w-[88%] sm:max-w-[82%] md:max-w-[78%] lg:max-w-[72%] xl:max-w-[68%] 2xl:max-w-[65%] 3xl:max-w-[60%] rounded-2xl p-3 xs:p-3.5 sm:p-4 md:p-4 lg:p-4 ${
+        className={`max-w-[92%] xs:max-w-[88%] sm:max-w-[82%] md:max-w-[78%] lg:max-w-[72%] xl:max-w-[68%] 2xl:max-w-[65%] 3xl:max-w-[60%] rounded-2xl p-3 xs:p-3.5 sm:p-4 md:p-4 lg:p-4 relative ${
           isUser
-            ? 'bg-telegram-blue text-white shadow-lg'
-            : 'bg-telegram-surface text-text-primary shadow-md'
+            ? 'bg-gradient-to-br from-neon-cyan to-cyber-blue text-white shadow-lg neon-glow border border-neon-cyan/50'
+            : 'bg-tech-surface text-text-primary shadow-md tech-border border-tech-border'
         }`}
         style={{
           borderRadius: isUser ? '12px 12px 4px 12px' : '12px 12px 12px 4px',
