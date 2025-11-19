@@ -1,0 +1,157 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 226, 232, 240;
+  --background-start-rgb: 2, 6, 23;
+  --background-end-rgb: 15, 23, 42;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      135deg,
+      rgb(var(--background-start-rgb)) 0%,
+      rgb(var(--background-end-rgb)) 100%
+    );
+  min-height: 100vh;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  /* Cyber glow effects */
+  .cyber-glow {
+    box-shadow: 0 0 10px rgba(6, 182, 212, 0.3),
+                0 0 20px rgba(6, 182, 212, 0.2),
+                0 0 30px rgba(6, 182, 212, 0.1);
+  }
+  
+  .cyber-glow-strong {
+    box-shadow: 0 0 15px rgba(6, 182, 212, 0.5),
+                0 0 30px rgba(6, 182, 212, 0.3),
+                0 0 45px rgba(6, 182, 212, 0.2);
+  }
+  
+  .glass-effect {
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(6, 182, 212, 0.2);
+  }
+  
+  .glass-effect-light {
+    background: rgba(30, 41, 59, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(6, 182, 212, 0.15);
+  }
+}
+
+/* Custom scrollbar - Cyber theme */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.5);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    180deg,
+    rgba(6, 182, 212, 0.6) 0%,
+    rgba(20, 184, 166, 0.6) 100%
+  );
+  border-radius: 5px;
+  border: 1px solid rgba(6, 182, 212, 0.3);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(
+    180deg,
+    rgba(6, 182, 212, 0.8) 0%,
+    rgba(20, 184, 166, 0.8) 100%
+  );
+  box-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Selection color */
+::selection {
+  background: rgba(6, 182, 212, 0.3);
+  color: rgb(226, 232, 240);
+}
+
+/* Paperplane flying animation */
+@keyframes paperplane-fly {
+  0% {
+    transform: translateX(0) translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateX(20px) translateY(-10px) rotate(15deg) scale(1.1);
+  }
+  100% {
+    transform: translateX(0) translateY(0) rotate(0deg);
+  }
+}
+
+@keyframes paperplane-icon {
+  0% {
+    transform: translateX(0) translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateX(3px) translateY(-2px) rotate(-15deg);
+  }
+  50% {
+    transform: translateX(6px) translateY(-4px) rotate(-30deg);
+  }
+  75% {
+    transform: translateX(3px) translateY(-2px) rotate(-15deg);
+  }
+  100% {
+    transform: translateX(0) translateY(0) rotate(0deg);
+  }
+}
+
+.animate-paperplane-fly {
+  animation: paperplane-fly 0.6s ease-in-out;
+}
+
+.animate-paperplane-icon {
+  animation: paperplane-icon 0.6s ease-in-out;
+}
+
+/* User message flying animation */
+@keyframes message-fly-in {
+  0% {
+    transform: translateX(-100vw) translateY(0) rotate(-10deg);
+    opacity: 0;
+  }
+  60% {
+    transform: translateX(10px) translateY(-5px) rotate(5deg);
+    opacity: 0.8;
+  }
+  80% {
+    transform: translateX(-5px) translateY(2px) rotate(-2deg);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateX(0) translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+.animate-message-fly-in {
+  animation: message-fly-in 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
