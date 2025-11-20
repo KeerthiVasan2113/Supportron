@@ -290,7 +290,7 @@ const MessageBubble = ({ message, onEdit, onRegenerate }: MessageBubbleProps) =>
               <div className="flex items-center space-x-3 py-2">
                 <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 text-cyan-400 animate-spin" />
                 <div className="flex flex-col">
-                  <span className="text-cyan-300 font-medium">Re-Inventing Solutions 💡</span>
+                  <span className="text-cyan-300 font-medium">Re-Inventing Solutions 🔧✨</span>
                   <span className="text-xs text-cyan-400/70 mt-0.5">{elapsedTime}s</span>
                 </div>
               </div>

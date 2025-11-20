@@ -70,9 +70,9 @@ async def chat(request: ChatRequest) -> ChatResponse:
     """
     # Convert Pydantic models to dicts for service layer
     history = None
-    if request.conversation_history:
+    if request.include_history and request.conversation_history:
         history = [{"role": msg.role, "content": msg.content} for msg in request.conversation_history]
-    
+
     answer, sources = process_chat_request(request.question, history)
     
     return ChatResponse(

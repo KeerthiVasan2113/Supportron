@@ -75,28 +75,32 @@ export interface ChatResponse {
 export const sendChatMessage = async (
   question: string,
   showSources: boolean = true,
+  includeHistory: boolean = false,
   conversationHistory?: MessageHistory[]
 ): Promise<ChatResponse> => {
   const endpoint = getChatEndpoint()
-  
-  // Format conversation history (exclude current question)
-  const history: MessageHistory[] | undefined = conversationHistory 
-    ? conversationHistory.map(msg => ({
-        role: msg.role,
-        content: msg.content
-      }))
+
+  // Only include conversation_history in the payload if includeHistory === true
+  const history: MessageHistory[] | undefined = (includeHistory && conversationHistory)
+    ? conversationHistory.map(msg => ({ role: msg.role, content: msg.content }))
     : undefined
-  
+
+  const payload: any = {
+    question: question.trim(),
+    show_sources: showSources,
+    include_history: includeHistory,
+  }
+
+  if (history) {
+    payload.conversation_history = history
+  }
+
   const response = await fetch(endpoint, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({
-      question: question.trim(),
-      show_sources: showSources,
-      conversation_history: history,
-    } as ChatRequest),
+    body: JSON.stringify(payload as ChatRequest),
   })
 
   if (!response.ok) {

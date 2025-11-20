@@ -13,6 +13,8 @@ from app.api.dependencies import set_rag_model
 from app.api.v1 import routes as v1_routes
 from app.core.config import Config
 from app.core.logging_config import logger
+from app.core.ollama_manager import start_ollama_if_needed
+from app.core.preload_models import preload_all_models
 
 # RAG model imports
 project_root = Path(__file__).parent.parent.parent
@@ -94,23 +96,25 @@ async def chat_legacy(request: ChatRequest) -> ChatResponse:
 
 @app.on_event("startup")
 async def startup_event() -> None:
-    """Initialize Ollama models and RAG on startup."""
-    # Verify Ollama models are available
+    """Initialize Ollama and RAG on startup."""
+    import asyncio
+    
+    # Attempt to start Ollama if it's not running
     try:
-        logger.info("Checking Ollama models availability...")
-        # Test Qwen
-        ollama.generate(model=Config.QWEN_MODEL, prompt="test")
-        logger.info(f"✓ Qwen model '{Config.QWEN_MODEL}' is ready!")
-        
-        # Test Phi-2
-        ollama.generate(model=Config.PHI_MODEL, prompt="test")
-        logger.info(f"✓ Phi-2 model '{Config.PHI_MODEL}' is ready!")
+        logger.info("🚀 Starting Ollama service...")
+        loop = asyncio.get_event_loop()
+        ollama_started = await loop.run_in_executor(None, start_ollama_if_needed)
+        if ollama_started:
+            logger.info("✓ Ollama is running and ready!")
+            
+            # Preload models into memory to avoid cold-start delays
+            logger.info("📦 Preloading models into memory...")
+            models_to_load = [Config.PHI_MODEL, Config.QWEN_MODEL]
+            await loop.run_in_executor(None, preload_all_models, models_to_load)
+        else:
+            logger.warning("⚠ Ollama not available. Chat may have limited functionality.")
     except Exception as e:
-        logger.error(f"Failed to connect to Ollama or model not found: {e}", exc_info=True)
-        logger.warning("Make sure Ollama is running and models are pulled:")
-        logger.warning("  ollama pull qwen2.5:0.5b")
-        logger.warning("  ollama pull phi:latest")
-        # Don't raise - allow server to start, but chat will fail gracefully
+        logger.error(f"Error during Ollama startup: {e}", exc_info=True)
     
     # Initialize RAG model
     try:

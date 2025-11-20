@@ -19,6 +19,7 @@ class ChatRequest(BaseModel):
     """Request model for chat endpoint."""
     question: str = Field(..., min_length=1, max_length=5000, description="User's question")
     show_sources: bool = Field(default=True, description="Whether to include source documents")
+    include_history: bool = Field(default=False, description="Whether to include conversation history in the model prompt")
     conversation_history: Optional[List[MessageHistory]] = Field(
         default=None, 
         description="Previous messages in the conversation for context"

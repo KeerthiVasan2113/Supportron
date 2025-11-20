@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import MessageBubble from './MessageBubble'
 import { Message } from '@/types/chat'
 import { Loader2 } from 'lucide-react'
@@ -14,6 +14,8 @@ interface MessageListProps {
 
 const MessageList = ({ messages, isLoading, onEditMessage, onRegenerate }: MessageListProps) => {
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const [elapsedTime, setElapsedTime] = useState(0)
+  const startRef = useRef<number | null>(null)
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -21,6 +23,30 @@ const MessageList = ({ messages, isLoading, onEditMessage, onRegenerate }: Messa
 
   // Check if any message is in loading state
   const hasLoadingMessage = messages.some(msg => msg.isLoading)
+
+  // Manage timer for standalone loading indicator (when isLoading is true but no message is in loading state)
+  useEffect(() => {
+    let interval: ReturnType<typeof setInterval> | null = null
+    if (isLoading && !hasLoadingMessage) {
+      // start timer
+      startRef.current = Date.now()
+      setElapsedTime(0)
+      interval = setInterval(() => {
+        if (startRef.current) {
+          const elapsed = ((Date.now() - startRef.current) / 1000).toFixed(1)
+          setElapsedTime(parseFloat(elapsed))
+        }
+      }, 100)
+    } else {
+      // reset
+      setElapsedTime(0)
+      startRef.current = null
+    }
+
+    return () => {
+      if (interval) clearInterval(interval)
+    }
+  }, [isLoading, hasLoadingMessage])
 
   return (
     <div className="flex flex-col space-y-3 sm:space-y-4 p-2 sm:p-4 pb-20 sm:pb-24">
@@ -49,9 +75,12 @@ const MessageList = ({ messages, isLoading, onEditMessage, onRegenerate }: Messa
             </svg>
           </div>
           <div className="flex-1 glass-effect-light border border-cyan-500/20 rounded-xl sm:rounded-2xl px-3 sm:px-4 py-2 sm:py-3">
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-3">
               <Loader2 className="w-4 h-4 animate-spin text-cyan-400" />
-              <span className="text-sm sm:text-base text-cyan-300 font-mono">Thinking...</span>
+              <div className="flex items-center space-x-2">
+                <span className="text-sm sm:text-base text-cyan-300 font-mono">Brainstorming 🧠⚡</span>
+                <span className="text-xs text-cyan-400/70 font-mono">{elapsedTime}s</span>
+              </div>
             </div>
           </div>
         </div>
