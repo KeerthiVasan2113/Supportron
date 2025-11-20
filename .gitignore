@@ -1,78 +1,113 @@
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-*.egg-info/
-dist/
-build/
-*.egg
-venv/
-env/
-ENV/
-.venv
-redhat/
-*.log
-*.log.*
+# Unified .gitignore
+# Organized by directory/area for clarity.
 
-# Node.js
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnp
-.pnp.js
-.next/
-out/
-build/
-
-# Environment variables
-.env
-.env*.local
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-.DS_Store
-Thumbs.db
-
+##########
+# Root (general)
+##########
 # OS
 .DS_Store
 .DS_Store?
 ._*
 .Spotlight-V100
 .Trashes
-ehthumbs.db
 Thumbs.db
+ehthumbs.db
 
-# Logs
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs & temporary
 logs/
 *.log
+*.log.*
+*.tmp
+*.temp
+.cache/
 
-# Database files
-*.db
-*.sqlite
-*.sqlite3
+# Local environment files
+.env
+.env*.local
+
+# Binary / build outputs
+dist/
+build/
+out/
+
+# Misc
+*.pem
+
+##########
+# Backend (Python - under `backend/`)
+##########
+# Python bytecode and build artifacts
+backend/__pycache__/
+backend/*.py[cod]
+backend/*$py.class
+
+# Python virtualenvs and packaging
+backend/.Python
+backend/*.egg-info/
+backend/*.egg
+backend/venv/
+backend/env/
+backend/ENV/
+backend/.venv
+
+# Python C extensions
+backend/*.so
+
+# Logs and local virtualenvs
+backend/*.log
+backend/redhat/
+
+# Databases and vector DB (backend/data-processing)
+backend/databases/
 databases/
-
-# Vector database
+data-processing/vector_db/
 vector_db/
 *.index
 *.pkl
 
-# Output files (optional - uncomment if you don't want to track these)
+##########
+# Frontend (Node / Next.js - under `frontend/`)
+##########
+# Node dependencies and build outputs
+frontend/node_modules/
+frontend/.pnp
+frontend/.pnp.js
+frontend/.next/
+frontend/out/
+frontend/build/
+
+# Frontend env & Next.js helper
+frontend/.env
+frontend/.env*.local
+frontend/next-env.d.ts
+frontend/*.tsbuildinfo
+
+# Coverage & production
+frontend/coverage/
+frontend/.vercel/
+
+# Debug logs
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+
+##########
+# Data-processing / generated output
+##########
 data-processing/output/
 
-# Temporary files
-*.tmp
-*.temp
-.cache/
+##########
+# Database files (global)
+##########
+*.db
+*.sqlite
+*.sqlite3
+
 
