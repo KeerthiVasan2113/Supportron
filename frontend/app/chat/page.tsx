@@ -26,7 +26,6 @@ export default function ChatPage() {
   const pendingChatIdRef = useRef<string | null>(null)
   const isInitialLoad = useRef(true)
   const greetingSentRef = useRef(false)
-  const createdGreetingChatRef = useRef<string | null>(null)
 
   // Check if we should start a new chat (from landing page)
   useEffect(() => {
@@ -36,8 +35,6 @@ export default function ChatPage() {
       setCurrentChatId(null)
       setMessages([])
       pendingChatIdRef.current = null
-      createdGreetingChatRef.current = null
-      greetingSentRef.current = false
       localStorage.removeItem('supportron_last_chat_id')
       isInitialLoad.current = false
     }
@@ -82,7 +79,7 @@ export default function ChatPage() {
     }
   }, [currentChatId, chatHistory])
 
-  // Send greeting message for new chats - only trigger on specific conditions
+  // Send greeting message for new chats
   useEffect(() => {
     // Only send greeting if:
     // 1. No current chat selected
@@ -91,15 +88,7 @@ export default function ChatPage() {
     // 4. Initial load is complete
     // 5. No initial question (which would create a chat with user message)
     // 6. Greeting hasn't been sent yet in this session
-    // 7. We haven't already created a greeting chat for this session
-    if (
-      !currentChatId &&
-      messages.length === 0 &&
-      !isInitialLoad.current &&
-      !initialQuestion &&
-      !greetingSentRef.current &&
-      !createdGreetingChatRef.current
-    ) {
+    if (!currentChatId && messages.length === 0 && !isInitialLoad.current && !initialQuestion && !greetingSentRef.current) {
       greetingSentRef.current = true
       
       const greetingMessage: Message = {
@@ -111,12 +100,11 @@ export default function ChatPage() {
       
       // Create a new chat with the greeting
       const newChatId = createChat([greetingMessage])
-      createdGreetingChatRef.current = newChatId
       setCurrentChatId(newChatId)
       pendingChatIdRef.current = newChatId
       setMessages([greetingMessage])
     }
-  }, [currentChatId, messages.length, isInitialLoad.current, initialQuestion, createChat, setCurrentChatId])
+  }, [currentChatId, messages.length, isInitialLoad.current, initialQuestion, createChat])
   
   // Reset greeting flag when a chat is selected or cleared
   useEffect(() => {
@@ -183,8 +171,6 @@ export default function ChatPage() {
     setMessages([])
     setCurrentChatId(null)
     pendingChatIdRef.current = null
-    greetingSentRef.current = false
-    createdGreetingChatRef.current = null
   }
 
   const handleSelectChat = (chatId: string) => {
@@ -196,26 +182,9 @@ export default function ChatPage() {
   const handleDeleteChat = (chatId: string) => {
     deleteChat(chatId)
     if (currentChatId === chatId) {
-      // Find the next chat to display
-      const remainingChats = chatHistory.filter(chat => chat.id !== chatId)
-      
-      if (remainingChats.length > 0) {
-        // Open the most recent chat (first one in the list)
-        const nextChat = remainingChats[0]
-        selectChat(nextChat.id)
-        setCurrentChatId(nextChat.id)
-        pendingChatIdRef.current = nextChat.id
-        if (nextChat.messages && nextChat.messages.length > 0) {
-          setMessages(nextChat.messages)
-        } else {
-          setMessages([])
-        }
-      } else {
-        // No chats left, clear everything
-        setMessages([])
-        setCurrentChatId(null)
-        pendingChatIdRef.current = null
-      }
+      setMessages([])
+      setCurrentChatId(null)
+      pendingChatIdRef.current = null
     }
   }
 

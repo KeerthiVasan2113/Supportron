@@ -57,17 +57,6 @@ const ChatInterface = ({
     scrollToBottom()
   }, [messages])
 
-  // Ensure global loading indicator is scoped to the currently visible chat
-  // Reset when switching chats or when messages for the current chat change
-  useEffect(() => {
-    // If the current chat has any per-message loading entries, keep the per-message UI.
-    // Otherwise clear the global loading flag so other chats don't show the standalone "Brainstorming" bubble.
-    const hasPerMessageLoading = messages.some(m => m.isLoading)
-    if (!hasPerMessageLoading) {
-      setIsLoading(false)
-    }
-  }, [messages, currentChatId])
-
   // Send initial question if provided
   useEffect(() => {
     if (initialQuestion && !initialQuestionSent.current && messages.length === 0) {
@@ -101,8 +90,41 @@ const ChatInterface = ({
     const startTime = Date.now()
 
     try {
-      // Do NOT send conversation history by default. Only include history if user explicitly requests it.
-      const data = await sendChatMessage(content.trim(), true)
+      // Prepare conversation history (all messages up to but not including the one being regenerated)
+      // For questions about the conversation, we'll send all messages
+      // Otherwise, send last 30 messages for context
+      let messagesToInclude = messages
+      
+      // If regenerating, only include messages before the one being regenerated
+      if (regenerateMessageId) {
+        const regenerateIndex = messages.findIndex(m => m.id === regenerateMessageId)
+        if (regenerateIndex !== -1) {
+          messagesToInclude = messages.slice(0, regenerateIndex)
+        }
+      }
+      
+      // Check if the question is about the conversation itself
+      const questionLower = content.toLowerCase()
+      const isAboutConversation = [
+        'first question', 'first message', 'earlier', 'previous', 'before',
+        'what did i ask', 'what did you say', 'conversation', 'chat history',
+        'earlier in', 'mentioned', 'discussed', 'talked about'
+      ].some(keyword => questionLower.includes(keyword))
+      
+      // If question is about conversation, include all messages; otherwise last 30
+      const historyMessages = isAboutConversation
+        ? messagesToInclude.map(msg => ({
+            role: msg.role,
+            content: msg.content
+          }))
+        : messagesToInclude
+            .slice(-30)
+            .map(msg => ({
+              role: msg.role,
+              content: msg.content
+            }))
+      
+      const data = await sendChatMessage(content.trim(), true, historyMessages)
       const endTime = Date.now()
       const timeTaken = ((endTime - startTime) / 1000).toFixed(2)
 
@@ -132,13 +154,25 @@ const ChatInterface = ({
     } catch (error) {
       console.error('Error sending message:', error)
       
+      // Extract error message
+      let errorContent = 'An unexpected error occurred. Please try again.'
+      if (error instanceof Error) {
+        errorContent = error.message
+        
+        // If it's a 511 tunnel error, make it more user-friendly
+        if (error.message.includes('Tunnel authentication required') || error.message.includes('511')) {
+          const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://supportron-api.loca.lt'
+          errorContent = `⚠️ Tunnel Connection Required\n\nPlease visit this URL first to accept the connection:\n${apiUrl}\n\nThen come back and try again.`
+        } else {
+          errorContent = `Error: ${error.message}`
+        }
+      }
+      
       // Show user-friendly error message
       const errorMessage: Message = {
         id: regenerateMessageId || Date.now().toString(),
         role: 'assistant',
-        content: error instanceof Error 
-          ? `Error: ${error.message}` 
-          : 'An unexpected error occurred. Please try again.',
+        content: errorContent,
         timestamp: new Date(),
         isLoading: false
       }
@@ -236,7 +270,7 @@ const ChatInterface = ({
       <div className="glass-effect border-b border-cyan-500/20 px-3 sm:px-4 py-2 sm:py-3 flex items-center justify-between flex-shrink-0 relative z-20">
         <div className="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-1">
           <h1 
-            onClick={() => router.push('/home')}
+            onClick={() => router.push('/landing')}
             className="text-lg sm:text-xl font-bold bg-gradient-to-r from-cyan-400 via-teal-400 to-cyan-300 bg-clip-text text-transparent truncate cursor-pointer hover:opacity-80 transition-opacity"
           >
             Supportron

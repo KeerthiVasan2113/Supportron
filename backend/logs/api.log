@@ -1,0 +1,698 @@
+2025-11-19 09:35:50 - __main__ - INFO - Checking Ollama models availability...
+2025-11-19 09:35:52 - __main__ - ERROR - Failed to connect to Ollama or model not found: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+Traceback (most recent call last):
+  File "C:\Projects\data-extraction-redhat\backend\api.py", line 568, in startup_event
+    ollama.generate(model=Config.QWEN_MODEL, prompt="test")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\data-extraction-redhat\backend\redhat\Lib\site-packages\ollama\_client.py", line 262, in generate
+    return self._request(
+           ~~~~~~~~~~~~~^
+      GenerateResponse,
+      ^^^^^^^^^^^^^^^^^
+    ...<19 lines>...
+      stream=stream,
+      ^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Projects\data-extraction-redhat\backend\redhat\Lib\site-packages\ollama\_client.py", line 189, in _request
+    return cls(**self._request_raw(*args, **kwargs).json())
+                 ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Projects\data-extraction-redhat\backend\redhat\Lib\site-packages\ollama\_client.py", line 135, in _request_raw
+    raise ConnectionError(CONNECTION_ERROR_MESSAGE) from None
+ConnectionError: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+2025-11-19 09:35:52 - __main__ - WARNING - Make sure Ollama is running and models are pulled:
+2025-11-19 09:35:52 - __main__ - WARNING -   ollama pull qwen2.5:0.5b
+2025-11-19 09:35:52 - __main__ - WARNING -   ollama pull phi:latest
+2025-11-19 09:35:52 - __main__ - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-19 09:35:58 - __main__ - INFO - ✓ RAG model initialized successfully!
+2025-11-19 09:41:29 - __main__ - INFO - Received question: How do I configure system settings?
+2025-11-19 09:41:31 - __main__ - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-19 09:41:31 - __main__ - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-19 09:41:33 - __main__ - ERROR - Qwen2.5B generation failed: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+2025-11-19 09:43:05 - __main__ - INFO - Received question: How do I configure system settings?
+2025-11-19 09:43:05 - __main__ - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-19 09:43:05 - __main__ - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-19 09:43:38 - __main__ - INFO - Generated answer (length: 1515 chars, sources: 0)
+2025-11-19 09:44:19 - __main__ - INFO - Received question: mail dir setup
+2025-11-19 09:44:20 - __main__ - INFO - Found 1 relevant RAG documents
+2025-11-19 09:44:20 - __main__ - INFO - Using RAG + Phi-2 + Qwen2.5B pipeline
+2025-11-19 09:46:11 - __main__ - INFO - Generated answer (length: 533 chars, sources: 1)
+2025-11-19 10:56:13 - app.core.logging_config - INFO - Checking Ollama models availability...
+2025-11-19 10:56:18 - app.core.logging_config - INFO - ✓ Qwen model 'qwen2.5:0.5b' is ready!
+2025-11-19 10:56:36 - app.core.logging_config - INFO - ✓ Phi-2 model 'phi:latest' is ready!
+2025-11-19 10:56:36 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-19 10:56:41 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-19 10:56:41 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-19 10:58:11 - app.core.logging_config - INFO - Received question: mysql server auth failed after update
+2025-11-19 10:58:12 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-19 10:58:12 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-19 10:58:33 - app.core.logging_config - INFO - Generated answer (length: 1557 chars, sources: 0)
+2025-11-19 10:59:29 - app.core.logging_config - INFO - Received question: setup mail dir in linux
+2025-11-19 10:59:29 - app.core.logging_config - INFO - Found 1 relevant RAG documents
+2025-11-19 10:59:29 - app.core.logging_config - INFO - Using RAG + Phi-2 + Qwen2.5B pipeline
+2025-11-19 11:00:59 - app.core.logging_config - INFO - Generated answer (length: 1314 chars, sources: 1)
+2025-11-19 11:02:45 - app.core.logging_config - INFO - Received question: Ubuntu System settings configure how?
+2025-11-19 11:02:45 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-19 11:02:45 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-19 11:03:08 - app.core.logging_config - INFO - Generated answer (length: 2293 chars, sources: 0)
+2025-11-19 11:16:58 - app.core.logging_config - INFO - Checking Ollama models availability...
+2025-11-19 11:17:06 - app.core.logging_config - INFO - ✓ Qwen model 'qwen2.5:0.5b' is ready!
+2025-11-19 11:17:33 - app.core.logging_config - INFO - ✓ Phi-2 model 'phi:latest' is ready!
+2025-11-19 11:17:33 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-19 11:17:42 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-19 11:17:42 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-19 11:18:40 - app.core.logging_config - INFO - Checking Ollama models availability...
+2025-11-19 11:18:45 - app.core.logging_config - INFO - ✓ Qwen model 'qwen2.5:0.5b' is ready!
+2025-11-19 11:18:59 - app.core.logging_config - INFO - ✓ Phi-2 model 'phi:latest' is ready!
+2025-11-19 11:18:59 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-19 11:19:05 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-19 11:19:05 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-19 11:19:31 - app.core.logging_config - INFO - Checking Ollama models availability...
+2025-11-19 11:19:36 - app.core.logging_config - INFO - ✓ Qwen model 'qwen2.5:0.5b' is ready!
+2025-11-19 11:19:47 - app.core.logging_config - INFO - ✓ Phi-2 model 'phi:latest' is ready!
+2025-11-19 11:19:47 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-19 11:19:52 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-19 11:19:52 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-19 11:54:09 - app.core.logging_config - INFO - Received question: what is the first thing I asked you in the chat
+2025-11-19 11:54:09 - app.core.logging_config - INFO - Conversation history: 6 previous messages
+2025-11-19 11:54:11 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-19 11:54:11 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-19 11:54:45 - app.core.logging_config - INFO - Generated answer (length: 868 chars, sources: 0)
+2025-11-19 12:05:04 - app.core.logging_config - INFO - Checking Ollama models availability...
+2025-11-19 12:05:15 - app.core.logging_config - INFO - ✓ Qwen model 'qwen2.5:0.5b' is ready!
+2025-11-19 12:05:49 - app.core.logging_config - INFO - ✓ Phi-2 model 'phi:latest' is ready!
+2025-11-19 12:05:49 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-19 12:05:58 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-19 12:05:58 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-19 12:06:42 - app.core.logging_config - INFO - Checking Ollama models availability...
+2025-11-19 12:06:47 - app.core.logging_config - INFO - ✓ Qwen model 'qwen2.5:0.5b' is ready!
+2025-11-19 12:07:06 - app.core.logging_config - INFO - ✓ Phi-2 model 'phi:latest' is ready!
+2025-11-19 12:07:06 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-19 12:07:16 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-19 12:07:16 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-19 12:21:37 - app.core.logging_config - INFO - Received question: hello
+2025-11-19 12:21:37 - app.core.logging_config - INFO - Conversation history: 1 previous messages
+2025-11-19 12:21:38 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-19 12:21:49 - app.core.logging_config - INFO - Generated answer (length: 34 chars, sources: 0)
+2025-11-19 12:29:41 - app.core.logging_config - INFO - Received question: hello
+2025-11-19 12:29:42 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-19 12:29:51 - app.core.logging_config - INFO - Generated answer (length: 110 chars, sources: 0)
+2025-11-19 12:29:54 - app.core.logging_config - INFO - Received question: hello
+2025-11-19 12:29:54 - app.core.logging_config - INFO - Conversation history: 1 previous messages
+2025-11-19 12:29:54 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-19 12:30:01 - app.core.logging_config - INFO - Generated answer (length: 87 chars, sources: 0)
+2025-11-19 12:30:04 - app.core.logging_config - INFO - Received question: hello
+2025-11-19 12:30:04 - app.core.logging_config - INFO - Conversation history: 1 previous messages
+2025-11-19 12:30:04 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-19 12:30:06 - app.core.logging_config - INFO - Generated answer (length: 134 chars, sources: 0)
+2025-11-19 12:30:17 - app.core.logging_config - INFO - Received question: hello
+2025-11-19 12:30:17 - app.core.logging_config - INFO - Conversation history: 1 previous messages
+2025-11-19 12:30:17 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-19 12:30:19 - app.core.logging_config - INFO - Generated answer (length: 34 chars, sources: 0)
+2025-11-19 12:33:27 - app.core.logging_config - INFO - Received question: hello
+2025-11-19 12:33:27 - app.core.logging_config - INFO - Conversation history: 1 previous messages
+2025-11-19 12:33:27 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-19 12:33:29 - app.core.logging_config - INFO - Generated answer (length: 34 chars, sources: 0)
+2025-11-19 12:33:45 - app.core.logging_config - INFO - Received question: steps to set up mysql server
+2025-11-19 12:33:45 - app.core.logging_config - INFO - Conversation history: 2 previous messages
+2025-11-19 12:33:45 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-19 12:33:45 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-19 12:34:17 - app.core.logging_config - INFO - Generated answer (length: 1609 chars, sources: 0)
+2025-11-19 12:34:35 - app.core.logging_config - INFO - Received question: steps to set up mysql server
+2025-11-19 12:34:35 - app.core.logging_config - INFO - Conversation history: 3 previous messages
+2025-11-19 12:34:35 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-19 12:34:35 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-19 12:35:18 - app.core.logging_config - INFO - Generated answer (length: 2290 chars, sources: 0)
+2025-11-19 12:38:28 - app.core.logging_config - INFO - Received question: steps to set up mysql server
+2025-11-19 12:38:28 - app.core.logging_config - INFO - Conversation history: 3 previous messages
+2025-11-19 12:38:28 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-19 12:38:28 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-19 12:38:52 - app.core.logging_config - INFO - Generated answer (length: 1713 chars, sources: 0)
+2025-11-19 12:39:27 - app.core.logging_config - INFO - Received question: php server setup instructions
+2025-11-19 12:39:27 - app.core.logging_config - INFO - Conversation history: 4 previous messages
+2025-11-19 12:39:28 - app.core.logging_config - INFO - Found 2 relevant RAG documents
+2025-11-19 12:39:28 - app.core.logging_config - INFO - Using RAG + Phi-2 + Qwen2.5B pipeline
+2025-11-19 12:43:33 - app.core.logging_config - INFO - Generated answer (length: 1468 chars, sources: 2)
+2025-11-19 13:00:04 - app.core.logging_config - INFO - Received question: How to set up a web server?
+2025-11-19 13:00:05 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-19 13:00:05 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-19 13:00:30 - app.core.logging_config - INFO - Generated answer (length: 1271 chars, sources: 0)
+2025-11-19 13:00:37 - app.core.logging_config - INFO - Received question: How to set up a web server?
+2025-11-19 13:00:37 - app.core.logging_config - INFO - Conversation history: 1 previous messages
+2025-11-19 13:00:37 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-19 13:00:37 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-19 13:01:09 - app.core.logging_config - INFO - Generated answer (length: 1880 chars, sources: 0)
+2025-11-19 13:01:29 - app.core.logging_config - INFO - Received question: what was my question earlier?
+2025-11-19 13:01:29 - app.core.logging_config - INFO - Conversation history: 2 previous messages
+2025-11-19 13:01:30 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-19 13:01:51 - app.core.logging_config - INFO - Generated answer (length: 469 chars, sources: 0)
+2025-11-19 13:17:08 - app.core.logging_config - INFO - Received question: php server setup insttruction for linux
+2025-11-19 13:17:08 - app.core.logging_config - INFO - Conversation history: 4 previous messages
+2025-11-19 13:17:09 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-19 13:17:09 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-19 13:17:42 - app.core.logging_config - INFO - Generated answer (length: 426 chars, sources: 0)
+2025-11-19 13:18:07 - app.core.logging_config - INFO - Received question: php server setup insttruction for linux
+2025-11-19 13:18:07 - app.core.logging_config - INFO - Conversation history: 5 previous messages
+2025-11-19 13:18:07 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-19 13:18:07 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-19 13:18:22 - app.core.logging_config - INFO - Generated answer (length: 621 chars, sources: 0)
+2025-11-19 13:20:11 - app.core.logging_config - INFO - Received question: php server auth fail after version update
+2025-11-19 13:20:11 - app.core.logging_config - INFO - Conversation history: 6 previous messages
+2025-11-19 13:20:11 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-19 13:20:11 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-19 13:20:29 - app.core.logging_config - INFO - Generated answer (length: 626 chars, sources: 0)
+2025-11-19 13:52:07 - app.core.logging_config - INFO - Checking Ollama models availability...
+2025-11-19 13:52:13 - app.core.logging_config - INFO - ✓ Qwen model 'qwen2.5:0.5b' is ready!
+2025-11-19 13:52:44 - app.core.logging_config - INFO - ✓ Phi-2 model 'phi:latest' is ready!
+2025-11-19 13:52:44 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-19 13:52:50 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-19 13:52:50 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-19 14:55:02 - app.core.logging_config - INFO - Checking Ollama models availability...
+2025-11-19 14:55:10 - app.core.logging_config - INFO - ✓ Qwen model 'qwen2.5:0.5b' is ready!
+2025-11-19 14:55:52 - app.core.logging_config - INFO - ✓ Phi-2 model 'phi:latest' is ready!
+2025-11-19 14:55:52 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-19 14:56:03 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-19 14:56:03 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-19 15:32:52 - app.core.logging_config - INFO - Received question: Give example linux commands to configure the network
+2025-11-19 15:32:52 - app.core.logging_config - INFO - Conversation history: 1 previous messages
+2025-11-19 15:32:54 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-19 15:32:54 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-19 15:33:37 - app.core.logging_config - INFO - Generated answer (length: 1316 chars, sources: 0)
+2025-11-19 15:36:52 - app.core.logging_config - INFO - Received question: config sys settings
+2025-11-19 15:36:52 - app.core.logging_config - INFO - Conversation history: 1 previous messages
+2025-11-19 15:36:52 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-19 15:36:52 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-19 15:37:00 - app.core.logging_config - INFO - Generated answer (length: 268 chars, sources: 0)
+2025-11-19 15:37:37 - app.core.logging_config - INFO - Received question: guide to config linux sys settings
+2025-11-19 15:37:37 - app.core.logging_config - INFO - Conversation history: 3 previous messages
+2025-11-19 15:37:38 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-19 15:37:38 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-19 15:37:58 - app.core.logging_config - INFO - Generated answer (length: 882 chars, sources: 0)
+2025-11-20 10:11:04 - app.core.logging_config - INFO - Checking Ollama models availability...
+2025-11-20 10:11:06 - app.core.logging_config - ERROR - Failed to connect to Ollama or model not found: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+Traceback (most recent call last):
+  File "C:\Projects\data-extraction-redhat\backend\app\main.py", line 102, in startup_event
+    ollama.generate(model=Config.QWEN_MODEL, prompt="test")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\data-extraction-redhat\backend\redhat\Lib\site-packages\ollama\_client.py", line 262, in generate
+    return self._request(
+           ~~~~~~~~~~~~~^
+      GenerateResponse,
+      ^^^^^^^^^^^^^^^^^
+    ...<19 lines>...
+      stream=stream,
+      ^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Projects\data-extraction-redhat\backend\redhat\Lib\site-packages\ollama\_client.py", line 189, in _request
+    return cls(**self._request_raw(*args, **kwargs).json())
+                 ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Projects\data-extraction-redhat\backend\redhat\Lib\site-packages\ollama\_client.py", line 135, in _request_raw
+    raise ConnectionError(CONNECTION_ERROR_MESSAGE) from None
+ConnectionError: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+2025-11-20 10:11:06 - app.core.logging_config - WARNING - Make sure Ollama is running and models are pulled:
+2025-11-20 10:11:06 - app.core.logging_config - WARNING -   ollama pull qwen2.5:0.5b
+2025-11-20 10:11:06 - app.core.logging_config - WARNING -   ollama pull phi:latest
+2025-11-20 10:11:06 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-20 10:11:12 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-20 10:11:12 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-20 10:14:11 - app.core.logging_config - INFO - Received question: How to set up mail directory in ubuntu?
+2025-11-20 10:14:11 - app.core.logging_config - INFO - Conversation history: 1 previous messages
+2025-11-20 10:14:12 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-20 10:14:12 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-20 10:14:14 - app.core.logging_config - ERROR - Qwen2.5B generation failed: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+2025-11-20 10:30:07 - app.core.logging_config - INFO - 🚀 Starting Ollama service check...
+2025-11-20 10:30:08 - app.core.logging_config - WARNING - ⚠ Ollama not available. Chat may have limited functionality.
+2025-11-20 10:30:08 - app.core.logging_config - INFO - Checking Ollama models availability...
+2025-11-20 10:30:10 - app.core.logging_config - ERROR - Failed to connect to Ollama or model not found: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+Traceback (most recent call last):
+  File "C:\Projects\data-extraction-redhat\backend\app\main.py", line 115, in startup_event
+    ollama.generate(model=Config.QWEN_MODEL, prompt="test")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\data-extraction-redhat\backend\redhat\Lib\site-packages\ollama\_client.py", line 262, in generate
+    return self._request(
+           ~~~~~~~~~~~~~^
+      GenerateResponse,
+      ^^^^^^^^^^^^^^^^^
+    ...<19 lines>...
+      stream=stream,
+      ^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Projects\data-extraction-redhat\backend\redhat\Lib\site-packages\ollama\_client.py", line 189, in _request
+    return cls(**self._request_raw(*args, **kwargs).json())
+                 ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Projects\data-extraction-redhat\backend\redhat\Lib\site-packages\ollama\_client.py", line 135, in _request_raw
+    raise ConnectionError(CONNECTION_ERROR_MESSAGE) from None
+ConnectionError: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+2025-11-20 10:30:10 - app.core.logging_config - WARNING - Make sure Ollama is running and models are pulled:
+2025-11-20 10:30:10 - app.core.logging_config - WARNING -   ollama pull qwen2.5:0.5b
+2025-11-20 10:30:10 - app.core.logging_config - WARNING -   ollama pull phi:latest
+2025-11-20 10:30:10 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-20 10:30:17 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-20 10:30:17 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-20 10:35:59 - app.core.logging_config - INFO - 🚀 Starting Ollama service...
+2025-11-20 10:36:00 - app.core.logging_config - WARNING - ⚠ Ollama not available. Chat may have limited functionality.
+2025-11-20 10:36:00 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-20 10:36:04 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-20 10:36:04 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-20 10:46:40 - app.core.logging_config - INFO - 🚀 Starting Ollama service...
+2025-11-20 10:46:40 - app.core.logging_config - INFO - ✓ Ollama is running and ready!
+2025-11-20 10:46:40 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-20 10:46:45 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-20 10:46:45 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-20 10:47:14 - app.core.logging_config - INFO - 🚀 Starting Ollama service...
+2025-11-20 10:47:14 - app.core.logging_config - INFO - ✓ Ollama is running and ready!
+2025-11-20 10:47:14 - app.core.logging_config - INFO - 📦 Preloading models into memory...
+2025-11-20 10:48:15 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-20 10:48:21 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-20 10:48:21 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-20 10:49:45 - app.core.logging_config - INFO - Received question: mySQL query examples for all JOIN types
+2025-11-20 10:49:45 - app.core.logging_config - INFO - Conversation history: 1 previous messages
+2025-11-20 10:49:46 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-20 10:49:46 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-20 10:50:14 - app.core.logging_config - INFO - Generated answer (length: 1826 chars, sources: 0)
+2025-11-20 10:58:51 - app.core.logging_config - INFO - 🚀 Starting Ollama service...
+2025-11-20 10:58:51 - app.core.logging_config - INFO - ✓ Ollama is running and ready!
+2025-11-20 10:58:51 - app.core.logging_config - INFO - 📦 Preloading models into memory...
+2025-11-20 10:59:39 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-20 10:59:45 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-20 10:59:45 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-20 11:46:23 - app.core.logging_config - INFO - Received question: mail dir set up in linux
+2025-11-20 11:46:23 - app.core.logging_config - INFO - Conversation history: 1 previous messages
+2025-11-20 11:46:25 - app.core.logging_config - INFO - Found 1 relevant RAG documents
+2025-11-20 11:46:25 - app.core.logging_config - INFO - Using RAG + Phi-2 + Qwen2.5B pipeline
+2025-11-20 11:48:03 - app.core.logging_config - INFO - Generated answer (length: 767 chars, sources: 1)
+2025-11-20 11:53:38 - app.core.logging_config - INFO - Received question: mail dir set up in linux
+2025-11-20 11:53:38 - app.core.logging_config - INFO - Conversation history: 2 previous messages
+2025-11-20 11:53:38 - app.core.logging_config - INFO - Found 1 relevant RAG documents
+2025-11-20 11:53:38 - app.core.logging_config - INFO - Using RAG + Phi-2 + Qwen2.5B pipeline
+2025-11-20 12:00:00 - app.core.logging_config - INFO - Generated answer (length: 1101 chars, sources: 1)
+2025-11-20 12:00:00 - app.core.logging_config - INFO - Received question: mySQL query examples for all JOIN types
+2025-11-20 12:00:00 - app.core.logging_config - INFO - Conversation history: 2 previous messages
+2025-11-20 12:00:00 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-20 12:00:00 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-20 12:00:08 - app.core.logging_config - INFO - Generated answer (length: 146 chars, sources: 0)
+2025-11-20 12:00:27 - app.core.logging_config - INFO - Received question: just their syntax
+2025-11-20 12:00:27 - app.core.logging_config - INFO - Conversation history: 3 previous messages
+2025-11-20 12:00:27 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-20 12:00:27 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-20 12:00:34 - app.core.logging_config - INFO - Generated answer (length: 185 chars, sources: 0)
+2025-11-20 12:00:38 - app.core.logging_config - INFO - Received question: just their syntax
+2025-11-20 12:00:38 - app.core.logging_config - INFO - Conversation history: 4 previous messages
+2025-11-20 12:00:39 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-20 12:00:39 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-20 12:01:12 - app.core.logging_config - INFO - Generated answer (length: 1849 chars, sources: 0)
+2025-11-20 12:11:25 - app.core.logging_config - INFO - 🚀 Starting Ollama service...
+2025-11-20 12:11:25 - app.core.logging_config - INFO - ✓ Ollama is running and ready!
+2025-11-20 12:11:25 - app.core.logging_config - INFO - 📦 Preloading models into memory...
+2025-11-20 12:12:49 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-20 12:12:56 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-20 12:12:56 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-20 12:31:39 - app.core.logging_config - INFO - Received question: mail dir set up linux
+2025-11-20 12:31:39 - app.core.logging_config - INFO - Conversation history: 1 previous messages
+2025-11-20 12:31:40 - app.core.logging_config - INFO - Found 1 relevant RAG documents
+2025-11-20 12:31:40 - app.core.logging_config - INFO - Using RAG + Phi-2 + Qwen2.5B pipeline
+2025-11-20 12:36:39 - app.core.logging_config - INFO - Generated answer (length: 1153 chars, sources: 1)
+2025-11-20 12:42:40 - app.core.logging_config - INFO - 🚀 Starting Ollama service...
+2025-11-20 12:42:40 - app.core.logging_config - INFO - ✓ Ollama is running and ready!
+2025-11-20 12:42:40 - app.core.logging_config - INFO - 📦 Preloading models into memory...
+2025-11-20 12:43:16 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-20 12:43:23 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-20 12:43:23 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-20 12:48:27 - app.core.logging_config - INFO - Received question: php server authentication failed after version update
+2025-11-20 12:48:27 - app.core.logging_config - INFO - Conversation history: 1 previous messages
+2025-11-20 12:48:28 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-20 12:48:28 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-20 12:48:59 - app.core.logging_config - INFO - Generated answer (length: 1032 chars, sources: 0)
+2025-11-20 12:54:16 - app.core.logging_config - INFO - 🚀 Starting Ollama service...
+2025-11-20 12:54:16 - app.core.logging_config - INFO - ✓ Ollama is running and ready!
+2025-11-20 12:54:16 - app.core.logging_config - INFO - 📦 Preloading models into memory...
+2025-11-20 12:54:46 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-20 12:54:52 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-20 12:54:52 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-20 12:55:32 - app.core.logging_config - INFO - 🚀 Starting Ollama service...
+2025-11-20 12:55:32 - app.core.logging_config - INFO - ✓ Ollama is running and ready!
+2025-11-20 12:55:32 - app.core.logging_config - INFO - 📦 Preloading models into memory...
+2025-11-20 12:56:19 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-20 12:56:26 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-20 12:56:26 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-20 12:56:58 - app.core.logging_config - INFO - 🚀 Starting Ollama service...
+2025-11-20 12:56:58 - app.core.logging_config - INFO - ✓ Ollama is running and ready!
+2025-11-20 12:56:58 - app.core.logging_config - INFO - 📦 Preloading models into memory...
+2025-11-20 12:57:29 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-20 12:57:34 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-20 12:57:34 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-20 12:59:04 - app.core.logging_config - INFO - Received question: Give example linux commands to configure the network
+2025-11-20 12:59:05 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-20 12:59:05 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-20 12:59:40 - app.core.logging_config - INFO - Generated answer (length: 1936 chars, sources: 0)
+2025-11-20 12:59:56 - app.core.logging_config - INFO - Received question: guide to config linux sys settings
+2025-11-20 12:59:56 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-20 12:59:56 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-20 13:00:18 - app.core.logging_config - INFO - Generated answer (length: 1624 chars, sources: 0)
+2025-11-20 13:00:33 - app.core.logging_config - INFO - Received question: php server authentication failed after version update
+2025-11-20 13:00:33 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-20 13:00:33 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-20 13:00:40 - app.core.logging_config - INFO - Generated answer (length: 422 chars, sources: 0)
+2025-11-20 13:01:50 - app.core.logging_config - INFO - Received question: I want to know why my php server authentication failed after updating ?
+2025-11-20 13:01:50 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-20 13:01:50 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-20 13:02:23 - app.core.logging_config - INFO - Generated answer (length: 2198 chars, sources: 0)
+2025-11-20 13:16:12 - app.core.logging_config - INFO - Received question: how to set up python in linux?
+2025-11-20 13:16:12 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-20 13:16:12 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-20 13:16:38 - app.core.logging_config - INFO - Generated answer (length: 1401 chars, sources: 0)
+2025-11-20 13:17:51 - app.core.logging_config - INFO - Received question: how to set up python in linux?
+2025-11-20 13:17:51 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-20 13:17:51 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-20 13:18:26 - app.core.logging_config - INFO - Generated answer (length: 1905 chars, sources: 0)
+2025-11-20 13:35:30 - app.core.logging_config - INFO - 🚀 Starting Ollama service...
+2025-11-20 13:35:30 - app.core.logging_config - INFO - ✓ Ollama is running and ready!
+2025-11-20 13:35:30 - app.core.logging_config - INFO - 📦 Preloading models into memory...
+2025-11-20 13:36:15 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-20 13:36:23 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-20 13:36:23 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-20 13:47:45 - app.core.logging_config - INFO - Received question: Apache error log not showing error details for php files not found
+2025-11-20 13:47:46 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-20 13:47:46 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-20 13:48:25 - app.core.logging_config - INFO - Generated answer (length: 2167 chars, sources: 0)
+2025-11-20 13:50:18 - app.core.logging_config - INFO - Received question: Apache error log not showing error details for php files not found
+2025-11-20 13:50:19 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-20 13:50:19 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-20 13:50:46 - app.core.logging_config - INFO - Generated answer (length: 1959 chars, sources: 0)
+2025-11-20 13:52:09 - app.core.logging_config - INFO - Received question: Apache error log not showing error details for php files not found
+2025-11-20 13:52:09 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-20 13:52:09 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-20 13:52:47 - app.core.logging_config - INFO - Generated answer (length: 2363 chars, sources: 0)
+2025-11-20 13:53:02 - app.core.logging_config - INFO - Received question: hi
+2025-11-20 13:53:02 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-20 13:53:04 - app.core.logging_config - INFO - Generated answer (length: 34 chars, sources: 0)
+2025-11-20 14:26:57 - app.core.logging_config - INFO - 🚀 Starting Ollama service...
+2025-11-20 14:26:57 - app.core.logging_config - INFO - ✓ Ollama is running and ready!
+2025-11-20 14:26:57 - app.core.logging_config - INFO - 📦 Preloading models into memory...
+2025-11-20 14:29:06 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-20 14:29:12 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-20 14:29:12 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-20 15:42:44 - app.core.logging_config - INFO - Received question: How do I solve UID duplication on an LDAP client?
+2025-11-20 15:42:45 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-20 15:42:45 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-20 15:43:20 - app.core.logging_config - INFO - Generated answer (length: 1629 chars, sources: 0)
+2025-11-20 15:45:37 - app.core.logging_config - INFO - Received question: How to delete all partitions from terminal in linux?
+2025-11-20 15:45:37 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-20 15:45:37 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-20 15:45:57 - app.core.logging_config - INFO - Generated answer (length: 1169 chars, sources: 0)
+2025-11-20 15:46:09 - app.core.logging_config - INFO - Received question: How to delete all partitions from terminal in linux?
+2025-11-20 15:46:09 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-20 15:46:09 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-20 15:46:22 - app.core.logging_config - INFO - Generated answer (length: 786 chars, sources: 0)
+2025-11-20 15:47:14 - app.core.logging_config - INFO - Received question: How to diagnose/troubleshoot tftp timeout
+2025-11-20 15:47:14 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-20 15:47:14 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-20 15:47:43 - app.core.logging_config - INFO - Generated answer (length: 1852 chars, sources: 0)
+2025-11-20 15:47:58 - app.core.logging_config - INFO - Received question: How to diagnose/troubleshoot tftp timeout
+2025-11-20 15:47:58 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-20 15:47:58 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-20 15:48:14 - app.core.logging_config - INFO - Generated answer (length: 1288 chars, sources: 0)
+2025-11-20 16:36:07 - app.core.logging_config - INFO - 🚀 Starting Ollama service...
+2025-11-20 16:36:07 - app.core.logging_config - INFO - ✓ Ollama is running and ready!
+2025-11-20 16:36:07 - app.core.logging_config - INFO - 📦 Preloading models into memory...
+2025-11-20 16:36:42 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-20 16:36:49 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-20 16:36:49 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-20 16:43:33 - app.core.logging_config - INFO - Received question: How to configure DNS settings on Debian 12?
+2025-11-20 16:43:35 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-20 16:43:35 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-20 16:44:06 - app.core.logging_config - INFO - Generated answer (length: 1299 chars, sources: 0)
+2025-11-20 16:44:17 - app.core.logging_config - INFO - Received question: How to configure DNS settings on Debian 12?
+2025-11-20 16:44:17 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-20 16:44:17 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-20 16:45:00 - app.core.logging_config - INFO - Generated answer (length: 2569 chars, sources: 0)
+2025-11-20 17:01:44 - app.core.logging_config - INFO - 🚀 Starting Ollama service...
+2025-11-20 17:01:44 - app.core.logging_config - INFO - ✓ Ollama is running and ready!
+2025-11-20 17:01:44 - app.core.logging_config - INFO - 📦 Preloading models into memory...
+2025-11-20 17:02:26 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-20 17:02:33 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-20 17:02:33 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-20 17:07:13 - app.core.logging_config - INFO - 🚀 Starting Ollama service...
+2025-11-20 17:07:13 - app.core.logging_config - INFO - ✓ Ollama is running and ready!
+2025-11-20 17:07:13 - app.core.logging_config - INFO - 📦 Preloading models into memory...
+2025-11-20 17:09:52 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-20 17:10:00 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-20 17:10:00 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-20 17:10:44 - app.core.logging_config - INFO - 🚀 Starting Ollama service...
+2025-11-20 17:10:44 - app.core.logging_config - INFO - ✓ Ollama is running and ready!
+2025-11-20 17:10:44 - app.core.logging_config - INFO - 📦 Preloading models into memory...
+2025-11-20 17:11:25 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-20 17:11:32 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-20 17:11:32 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-20 17:53:29 - app.core.logging_config - INFO - 🚀 Starting Ollama service...
+2025-11-20 17:53:29 - app.core.logging_config - INFO - ✓ Ollama is running and ready!
+2025-11-20 17:53:29 - app.core.logging_config - INFO - 📦 Preloading models into memory...
+2025-11-20 17:56:42 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-20 17:56:50 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-20 17:56:50 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-21 09:45:25 - app.core.logging_config - INFO - 🚀 Starting Ollama service...
+2025-11-21 09:45:26 - app.core.logging_config - WARNING - ⚠ Ollama not available. Chat may have limited functionality.
+2025-11-21 09:45:26 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-21 09:45:31 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-21 09:45:31 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-21 10:50:53 - app.core.logging_config - INFO - Received question: How to forbid a domain to send emails? It is to Prevent spoofing.
+2025-11-21 10:50:55 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-21 10:50:55 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-21 10:51:10 - app.core.logging_config - INFO - Generated answer (length: 990 chars, sources: 0)
+2025-11-21 11:28:33 - app.core.logging_config - INFO - 🚀 Starting Ollama service...
+2025-11-21 11:28:33 - app.core.logging_config - INFO - ✓ Ollama is running and ready!
+2025-11-21 11:28:33 - app.core.logging_config - INFO - 📦 Preloading models into memory...
+2025-11-21 11:29:02 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-21 11:29:09 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-21 11:29:09 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-21 11:46:54 - app.core.logging_config - INFO - Received question: How to forbid a domain to send emails? It is to Prevent spoofing.
+2025-11-21 11:46:55 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-21 11:46:55 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-21 11:47:12 - app.core.logging_config - INFO - Generated answer (length: 1059 chars, sources: 0)
+2025-11-21 12:03:18 - app.core.logging_config - INFO - Received question: How to configure DNS settings on Debian 12?
+2025-11-21 12:03:19 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-21 12:03:19 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-21 12:03:46 - app.core.logging_config - INFO - Generated answer (length: 1530 chars, sources: 0)
+2025-11-21 12:24:00 - app.core.logging_config - INFO - 🚀 Starting Ollama service...
+2025-11-21 12:24:00 - app.core.logging_config - INFO - ✓ Ollama is running and ready!
+2025-11-21 12:24:00 - app.core.logging_config - INFO - 📦 Preloading models into memory...
+2025-11-21 12:24:41 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-21 12:24:48 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-21 12:24:48 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-21 12:45:51 - app.core.logging_config - INFO - 🚀 Starting Ollama service...
+2025-11-21 12:45:52 - app.core.logging_config - WARNING - ⚠ Ollama not available. Chat may have limited functionality.
+2025-11-21 12:45:52 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-21 12:46:00 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-21 12:46:00 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-21 12:48:28 - app.core.logging_config - INFO - 🚀 Starting Ollama service...
+2025-11-21 12:48:28 - app.core.logging_config - INFO - ✓ Ollama is running and ready!
+2025-11-21 12:48:28 - app.core.logging_config - INFO - 📦 Preloading models into memory...
+2025-11-21 12:49:12 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-21 12:49:18 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-21 12:49:18 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-21 15:30:36 - app.core.logging_config - INFO - 🚀 Starting Ollama service...
+2025-11-21 15:30:36 - app.core.logging_config - INFO - ✓ Ollama is running and ready!
+2025-11-21 15:30:36 - app.core.logging_config - INFO - 📦 Preloading models into memory...
+2025-11-21 15:31:22 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-21 15:31:30 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-21 15:31:30 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-24 09:38:48 - app.core.logging_config - INFO - 🚀 Starting Ollama service...
+2025-11-24 09:38:49 - app.core.logging_config - WARNING - ⚠ Ollama not available. Chat may have limited functionality.
+2025-11-24 09:38:49 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-24 09:38:55 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-24 09:38:55 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-24 10:10:35 - app.core.logging_config - INFO - Checking Ollama models availability...
+2025-11-24 10:10:37 - app.core.logging_config - ERROR - Failed to connect to Ollama or model not found: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+Traceback (most recent call last):
+  File "C:\Projects\data-extraction-redhat\backend\app\main.py", line 102, in startup_event
+    ollama.generate(model=Config.QWEN_MODEL, prompt="test")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\data-extraction-redhat\backend\redhat\Lib\site-packages\ollama\_client.py", line 262, in generate
+    return self._request(
+           ~~~~~~~~~~~~~^
+      GenerateResponse,
+      ^^^^^^^^^^^^^^^^^
+    ...<19 lines>...
+      stream=stream,
+      ^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Projects\data-extraction-redhat\backend\redhat\Lib\site-packages\ollama\_client.py", line 189, in _request
+    return cls(**self._request_raw(*args, **kwargs).json())
+                 ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Projects\data-extraction-redhat\backend\redhat\Lib\site-packages\ollama\_client.py", line 135, in _request_raw
+    raise ConnectionError(CONNECTION_ERROR_MESSAGE) from None
+ConnectionError: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+2025-11-24 10:10:37 - app.core.logging_config - WARNING - Make sure Ollama is running and models are pulled:
+2025-11-24 10:10:37 - app.core.logging_config - WARNING -   ollama pull qwen2.5:0.5b
+2025-11-24 10:10:37 - app.core.logging_config - WARNING -   ollama pull phi:latest
+2025-11-24 10:10:37 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-24 10:10:44 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-24 10:10:44 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-24 10:21:18 - app.core.logging_config - INFO - Checking Ollama models availability...
+2025-11-24 10:21:20 - app.core.logging_config - ERROR - Failed to connect to Ollama or model not found: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+Traceback (most recent call last):
+  File "C:\Projects\data-extraction-redhat\backend\app\main.py", line 102, in startup_event
+    ollama.generate(model=Config.QWEN_MODEL, prompt="test")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\data-extraction-redhat\backend\redhat\Lib\site-packages\ollama\_client.py", line 262, in generate
+    return self._request(
+           ~~~~~~~~~~~~~^
+      GenerateResponse,
+      ^^^^^^^^^^^^^^^^^
+    ...<19 lines>...
+      stream=stream,
+      ^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Projects\data-extraction-redhat\backend\redhat\Lib\site-packages\ollama\_client.py", line 189, in _request
+    return cls(**self._request_raw(*args, **kwargs).json())
+                 ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Projects\data-extraction-redhat\backend\redhat\Lib\site-packages\ollama\_client.py", line 135, in _request_raw
+    raise ConnectionError(CONNECTION_ERROR_MESSAGE) from None
+ConnectionError: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+2025-11-24 10:21:20 - app.core.logging_config - WARNING - Make sure Ollama is running and models are pulled:
+2025-11-24 10:21:20 - app.core.logging_config - WARNING -   ollama pull qwen2.5:0.5b
+2025-11-24 10:21:20 - app.core.logging_config - WARNING -   ollama pull phi:latest
+2025-11-24 10:21:20 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-24 10:21:25 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-24 10:21:25 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-24 10:33:29 - app.core.logging_config - INFO - Checking Ollama models availability...
+2025-11-24 10:33:31 - app.core.logging_config - ERROR - Failed to connect to Ollama or model not found: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+Traceback (most recent call last):
+  File "C:\Projects\data-extraction-redhat\backend\app\main.py", line 102, in startup_event
+    ollama.generate(model=Config.QWEN_MODEL, prompt="test")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\data-extraction-redhat\backend\redhat\Lib\site-packages\ollama\_client.py", line 262, in generate
+    return self._request(
+           ~~~~~~~~~~~~~^
+      GenerateResponse,
+      ^^^^^^^^^^^^^^^^^
+    ...<19 lines>...
+      stream=stream,
+      ^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Projects\data-extraction-redhat\backend\redhat\Lib\site-packages\ollama\_client.py", line 189, in _request
+    return cls(**self._request_raw(*args, **kwargs).json())
+                 ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Projects\data-extraction-redhat\backend\redhat\Lib\site-packages\ollama\_client.py", line 135, in _request_raw
+    raise ConnectionError(CONNECTION_ERROR_MESSAGE) from None
+ConnectionError: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+2025-11-24 10:33:31 - app.core.logging_config - WARNING - Make sure Ollama is running and models are pulled:
+2025-11-24 10:33:31 - app.core.logging_config - WARNING -   ollama pull qwen2.5:0.5b
+2025-11-24 10:33:31 - app.core.logging_config - WARNING -   ollama pull phi:latest
+2025-11-24 10:33:31 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-24 10:33:36 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-24 10:33:36 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-24 10:41:49 - app.core.logging_config - INFO - Checking Ollama models availability...
+2025-11-24 10:41:51 - app.core.logging_config - ERROR - Failed to connect to Ollama or model not found: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+Traceback (most recent call last):
+  File "C:\Projects\data-extraction-redhat\backend\app\main.py", line 102, in startup_event
+    try:
+    
+  File "C:\Projects\data-extraction-redhat\backend\redhat\Lib\site-packages\ollama\_client.py", line 262, in generate
+    return self._request(
+           ~~~~~~~~~~~~~^
+      GenerateResponse,
+      ^^^^^^^^^^^^^^^^^
+    ...<19 lines>...
+      stream=stream,
+      ^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Projects\data-extraction-redhat\backend\redhat\Lib\site-packages\ollama\_client.py", line 189, in _request
+    return cls(**self._request_raw(*args, **kwargs).json())
+                 ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Projects\data-extraction-redhat\backend\redhat\Lib\site-packages\ollama\_client.py", line 135, in _request_raw
+    raise ConnectionError(CONNECTION_ERROR_MESSAGE) from None
+ConnectionError: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+2025-11-24 10:41:51 - app.core.logging_config - WARNING - Make sure Ollama is running and models are pulled:
+2025-11-24 10:41:51 - app.core.logging_config - WARNING -   ollama pull qwen2.5:0.5b
+2025-11-24 10:41:51 - app.core.logging_config - WARNING -   ollama pull phi:latest
+2025-11-24 10:41:51 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-24 10:41:56 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-24 10:41:56 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-24 10:42:21 - app.core.logging_config - INFO - Checking Ollama models availability...
+2025-11-24 10:42:23 - app.core.logging_config - ERROR - Failed to connect to Ollama or model not found: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+Traceback (most recent call last):
+  File "C:\Projects\data-extraction-redhat\backend\app\main.py", line 105, in startup_event
+    ollama.generate(model=Config.QWEN_MODEL, prompt="test")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\data-extraction-redhat\backend\redhat\Lib\site-packages\ollama\_client.py", line 262, in generate
+    return self._request(
+           ~~~~~~~~~~~~~^
+      GenerateResponse,
+      ^^^^^^^^^^^^^^^^^
+    ...<19 lines>...
+      stream=stream,
+      ^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Projects\data-extraction-redhat\backend\redhat\Lib\site-packages\ollama\_client.py", line 189, in _request
+    return cls(**self._request_raw(*args, **kwargs).json())
+                 ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Projects\data-extraction-redhat\backend\redhat\Lib\site-packages\ollama\_client.py", line 135, in _request_raw
+    raise ConnectionError(CONNECTION_ERROR_MESSAGE) from None
+ConnectionError: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+2025-11-24 10:42:23 - app.core.logging_config - WARNING - Make sure Ollama is running and models are pulled:
+2025-11-24 10:42:23 - app.core.logging_config - WARNING -   ollama pull qwen2.5:0.5b
+2025-11-24 10:42:23 - app.core.logging_config - WARNING -   ollama pull phi:latest
+2025-11-24 10:42:23 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-24 10:42:29 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-24 10:42:29 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-24 10:50:07 - app.core.logging_config - INFO - Received question: hi
+2025-11-24 10:50:07 - app.core.logging_config - INFO - Conversation history: 1 previous messages
+2025-11-24 10:50:08 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-24 10:50:10 - app.core.logging_config - ERROR - Qwen2.5B generation failed: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+2025-11-24 10:51:34 - app.core.logging_config - INFO - Received question: hi
+2025-11-24 10:51:34 - app.core.logging_config - INFO - Conversation history: 3 previous messages
+2025-11-24 10:51:34 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-24 10:51:44 - app.core.logging_config - INFO - Generated answer (length: 89 chars, sources: 0)
+2025-11-24 10:52:28 - app.core.logging_config - INFO - Received question: how to configurelinux system settings?
+2025-11-24 10:52:28 - app.core.logging_config - INFO - Conversation history: 5 previous messages
+2025-11-24 10:52:28 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-24 10:52:28 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-24 10:52:44 - app.core.logging_config - INFO - Generated answer (length: 1316 chars, sources: 0)
+2025-11-24 11:22:43 - app.core.logging_config - INFO - Received question: HI, After i installed nvidia graphics driver, the server is stuck on bootscreen
+2025-11-24 11:22:43 - app.core.logging_config - INFO - Conversation history: 1 previous messages
+2025-11-24 11:22:44 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-24 11:22:44 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-24 11:22:54 - app.core.logging_config - INFO - Generated answer (length: 187 chars, sources: 0)
+2025-11-24 11:23:43 - app.core.logging_config - INFO - Received question: It is stuck, the boot screen, when i pressed a key, it shows terminal like window
+2025-11-24 11:23:43 - app.core.logging_config - INFO - Conversation history: 3 previous messages
+2025-11-24 11:23:43 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-24 11:23:43 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-24 11:23:57 - app.core.logging_config - INFO - Generated answer (length: 1089 chars, sources: 0)
+2025-11-24 11:24:32 - app.core.logging_config - INFO - Received question: im not able to log in to the system, so how can i do the above operations ?
+2025-11-24 11:24:32 - app.core.logging_config - INFO - Conversation history: 5 previous messages
+2025-11-24 11:24:32 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-24 11:24:32 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-24 11:24:52 - app.core.logging_config - INFO - Generated answer (length: 1306 chars, sources: 0)
+2025-11-24 11:25:35 - app.core.logging_config - INFO - Received question: How can i access the terminal without logging in, Can you guide me
+2025-11-24 11:25:35 - app.core.logging_config - INFO - Conversation history: 7 previous messages
+2025-11-24 11:25:36 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-24 11:25:36 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-24 11:26:03 - app.core.logging_config - INFO - Generated answer (length: 975 chars, sources: 0)
+2025-11-24 11:26:46 - app.core.logging_config - INFO - Received question: So, Tell me what was my first question of this chat ?
+2025-11-24 11:26:46 - app.core.logging_config - INFO - Conversation history: 9 previous messages
+2025-11-24 11:26:46 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-24 11:26:46 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-24 11:27:00 - app.core.logging_config - INFO - Generated answer (length: 899 chars, sources: 0)
+2025-11-24 11:27:32 - app.core.logging_config - INFO - Received question: Who is Mahendra singh dhoni, WHy is he hacking my system
+2025-11-24 11:27:32 - app.core.logging_config - INFO - Conversation history: 11 previous messages
+2025-11-24 11:27:32 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-24 11:27:32 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-24 11:27:50 - app.core.logging_config - INFO - Generated answer (length: 797 chars, sources: 0)
+2025-11-24 11:28:45 - app.core.logging_config - INFO - Received question: Tell me about todays toxic rate in delhi
+2025-11-24 11:28:45 - app.core.logging_config - INFO - Conversation history: 13 previous messages
+2025-11-24 11:28:45 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-24 11:28:45 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-24 11:29:04 - app.core.logging_config - INFO - Generated answer (length: 1136 chars, sources: 0)
+2025-11-24 11:29:34 - app.core.logging_config - INFO - Received question: What is todays delhis toxic rate, Because i think that is affecting my system
+2025-11-24 11:29:34 - app.core.logging_config - INFO - Conversation history: 15 previous messages
+2025-11-24 11:29:34 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-24 11:29:34 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-24 11:29:50 - app.core.logging_config - INFO - Generated answer (length: 697 chars, sources: 0)

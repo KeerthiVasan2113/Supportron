@@ -1,0 +1,592 @@
+2025-11-17 10:34:05,215 - __main__ - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-17 10:34:05,217 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-17 10:34:05,218 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-11-17 10:34:11,819 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-11-17 10:34:11,827 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-17 10:34:12,074 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-17 10:34:12,087 - __main__ - INFO - RAG model initialized successfully!
+2025-11-17 10:41:44,274 - __main__ - INFO - Received question: How to set up Thunderbird?
+2025-11-17 10:41:44,275 - build_rag_model - INFO - Processing query: How to set up Thunderbird?
+2025-11-17 10:41:45,017 - build_rag_model - INFO - Generated answer (length: 1068 chars, sources: 6)
+2025-11-17 10:41:45,019 - __main__ - INFO - Generated answer (length: 1068 chars)
+2025-11-17 10:42:20,287 - __main__ - INFO - Received question: How to set up mail user agents?
+2025-11-17 10:42:20,287 - build_rag_model - INFO - Processing query: How to set up mail user agents?
+2025-11-17 10:42:20,350 - build_rag_model - INFO - Generated answer (length: 990 chars, sources: 6)
+2025-11-17 10:42:20,350 - __main__ - INFO - Generated answer (length: 990 chars)
+2025-11-17 10:43:36,706 - __main__ - INFO - Received question: How To configure the mailbox format for Maildir?
+2025-11-17 10:43:36,706 - build_rag_model - INFO - Processing query: How To configure the mailbox format for Maildir?
+2025-11-17 10:43:36,790 - build_rag_model - INFO - Generated answer (length: 1279 chars, sources: 6)
+2025-11-17 10:43:36,790 - __main__ - INFO - Generated answer (length: 1279 chars)
+2025-11-17 11:03:25,292 - __main__ - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-17 11:03:25,294 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-17 11:03:25,294 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-11-17 11:03:31,268 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-11-17 11:03:31,272 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-17 11:03:31,332 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-17 11:03:31,338 - __main__ - INFO - RAG model initialized successfully!
+2025-11-17 11:04:41,071 - __main__ - INFO - Received question: What are the steps to configure system settings?
+2025-11-17 11:04:41,071 - build_rag_model - INFO - Processing query: What are the steps to configure system settings?
+2025-11-17 11:04:41,486 - build_rag_model - INFO - Generated answer (length: 1203 chars, sources: 6)
+2025-11-17 11:04:41,486 - __main__ - INFO - Generated answer (length: 1203 chars)
+2025-11-17 11:06:26,686 - __main__ - INFO - Received question: What are the steps to configure system settings?
+2025-11-17 11:06:26,686 - build_rag_model - INFO - Processing query: What are the steps to configure system settings?
+2025-11-17 11:06:26,753 - build_rag_model - INFO - Generated answer (length: 1203 chars, sources: 6)
+2025-11-17 11:06:26,755 - __main__ - INFO - Generated answer (length: 1203 chars)
+2025-11-17 11:10:25,457 - __main__ - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-17 11:10:25,458 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-17 11:10:25,458 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-11-17 11:10:31,201 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-11-17 11:10:31,205 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-17 11:10:31,251 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-17 11:10:31,253 - __main__ - INFO - RAG model initialized successfully!
+2025-11-17 11:11:00,086 - __main__ - INFO - Received question: What are the steps to configure system settings?
+2025-11-17 11:11:00,086 - build_rag_model - INFO - Processing query: What are the steps to configure system settings?
+2025-11-17 11:11:00,898 - build_rag_model - INFO - Generated answer (length: 1408 chars, sources: 6)
+2025-11-17 11:11:00,899 - __main__ - INFO - Generated answer (length: 1408 chars)
+2025-11-17 11:11:51,526 - __main__ - INFO - Received question: How To configure the mailbox format for Maildir?
+2025-11-17 11:11:51,526 - build_rag_model - INFO - Processing query: How To configure the mailbox format for Maildir?
+2025-11-17 11:11:51,647 - build_rag_model - INFO - Generated answer (length: 1356 chars, sources: 6)
+2025-11-17 11:11:51,648 - __main__ - INFO - Generated answer (length: 1356 chars)
+2025-11-17 12:03:08,980 - __main__ - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-17 12:03:08,982 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-17 12:03:08,982 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-11-17 12:03:16,514 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-11-17 12:03:16,520 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-17 12:03:16,584 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-17 12:03:16,589 - __main__ - INFO - RAG model initialized successfully!
+2025-11-17 12:04:36,378 - __main__ - INFO - Received question: How To configure the mailbox format for Maildir?
+2025-11-17 12:04:36,378 - build_rag_model - INFO - Processing query: How To configure the mailbox format for Maildir?
+2025-11-17 12:04:37,067 - build_rag_model - INFO - Generated answer (length: 1356 chars, sources: 6)
+2025-11-17 12:04:37,067 - __main__ - INFO - Generated answer (length: 1356 chars)
+2025-11-17 12:18:23,155 - __main__ - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-17 12:18:23,156 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-17 12:18:23,156 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-11-17 12:18:30,430 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-11-17 12:18:30,435 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-17 12:18:30,490 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-17 12:18:30,493 - __main__ - INFO - RAG model initialized successfully!
+2025-11-17 12:19:46,589 - __main__ - INFO - Received question: How To configure the mailbox format for Maildir?
+2025-11-17 12:19:46,590 - build_rag_model - INFO - Processing query: How To configure the mailbox format for Maildir?
+2025-11-17 12:19:47,300 - build_rag_model - INFO - Generated answer (length: 2460 chars, sources: 6)
+2025-11-17 12:19:47,301 - __main__ - INFO - Generated answer (length: 2460 chars)
+2025-11-17 12:27:39,351 - __main__ - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-17 12:27:39,353 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-17 12:27:39,353 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-11-17 12:27:52,279 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-11-17 12:27:52,284 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-17 12:27:52,356 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-17 12:27:52,379 - __main__ - INFO - RAG model initialized successfully!
+2025-11-17 12:28:34,834 - __main__ - INFO - Received question: How To configure the mailbox format for Maildir?
+2025-11-17 12:28:34,834 - build_rag_model - INFO - Processing query: How To configure the mailbox format for Maildir?
+2025-11-17 12:28:35,481 - build_rag_model - INFO - Generated answer (length: 2551 chars, sources: 6)
+2025-11-17 12:28:35,482 - __main__ - INFO - Generated answer (length: 2551 chars)
+2025-11-17 12:29:19,422 - __main__ - INFO - Received question: configure system settings?
+2025-11-17 12:29:19,423 - build_rag_model - INFO - Processing query: configure system settings?
+2025-11-17 12:29:19,708 - build_rag_model - INFO - Generated answer (length: 2523 chars, sources: 6)
+2025-11-17 12:29:19,710 - __main__ - INFO - Generated answer (length: 2523 chars)
+2025-11-17 13:29:13,205 - __main__ - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-17 13:29:13,207 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-17 13:29:13,208 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-11-17 13:29:20,075 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-11-17 13:29:20,080 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-17 13:29:20,134 - build_rag_model - INFO - Loading LLM: Qwen/Qwen2.5-0.5B-Instruct...
+2025-11-17 13:29:21,486 - build_rag_model - INFO - Using 8-bit quantization for CPU inference...
+2025-11-17 13:29:21,889 - build_rag_model - WARNING - Failed to load LLM: Using a `device_map`, `tp_plan`, `torch.device` context manager or setting `torch.set_default_device(device)` requires `accelerate`. You can install it with `pip install accelerate`. Falling back to template-based generation.
+2025-11-17 13:29:21,890 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-17 13:29:21,893 - __main__ - INFO - RAG model initialized successfully!
+2025-11-17 13:30:42,789 - __main__ - INFO - Received question: How to set up a web server?
+2025-11-17 13:30:42,789 - build_rag_model - INFO - Processing query: How to set up a web server?
+2025-11-17 13:30:43,306 - build_rag_model - INFO - Generated answer (length: 2226 chars, sources: 6)
+2025-11-17 13:30:43,306 - __main__ - INFO - Generated answer (length: 2226 chars)
+2025-11-17 13:39:02,778 - __main__ - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-17 13:39:02,779 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-17 13:39:02,780 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-11-17 13:39:09,007 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-11-17 13:39:09,011 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-17 13:39:09,060 - build_rag_model - INFO - Loading LLM: Qwen/Qwen2.5-0.5B-Instruct...
+2025-11-17 13:39:10,464 - build_rag_model - INFO - Using 8-bit quantization for CPU inference...
+2025-11-17 13:39:10,923 - build_rag_model - WARNING - Failed to load LLM: Using a `device_map`, `tp_plan`, `torch.device` context manager or setting `torch.set_default_device(device)` requires `accelerate`. You can install it with `pip install accelerate`. Falling back to template-based generation.
+2025-11-17 13:39:10,924 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-17 13:39:10,927 - __main__ - INFO - RAG model initialized successfully!
+2025-11-17 13:40:26,179 - __main__ - INFO - Received question: set up a web server
+2025-11-17 13:40:26,179 - build_rag_model - INFO - Processing query: set up a web server
+2025-11-17 13:40:26,927 - build_rag_model - INFO - Generated answer (length: 2325 chars, sources: 6)
+2025-11-17 13:40:26,927 - __main__ - INFO - Generated answer (length: 2325 chars)
+2025-11-17 13:48:06,075 - __main__ - INFO - Received question: configure system settings
+2025-11-17 13:48:06,075 - build_rag_model - INFO - Processing query: configure system settings
+2025-11-17 13:48:06,274 - build_rag_model - INFO - Generated answer (length: 2288 chars, sources: 6)
+2025-11-17 13:48:06,274 - __main__ - INFO - Generated answer (length: 2288 chars)
+2025-11-17 13:53:23,375 - __main__ - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-17 13:53:23,377 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-17 13:53:23,377 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-11-17 13:53:30,061 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-11-17 13:53:30,066 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-17 13:53:30,119 - build_rag_model - INFO - Loading LLM: Qwen/Qwen2.5-0.5B-Instruct...
+2025-11-17 13:53:31,560 - build_rag_model - INFO - Using 8-bit quantization for CPU inference...
+2025-11-17 13:53:31,977 - build_rag_model - WARNING - Failed to load LLM: Using a `device_map`, `tp_plan`, `torch.device` context manager or setting `torch.set_default_device(device)` requires `accelerate`. You can install it with `pip install accelerate`. Falling back to template-based generation.
+2025-11-17 13:53:31,979 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-17 13:53:31,983 - __main__ - INFO - RAG model initialized successfully!
+2025-11-17 13:54:37,142 - __main__ - INFO - Received question: Steps to set up a web browser
+2025-11-17 13:54:37,144 - build_rag_model - INFO - Processing query: Steps to set up a web browser
+2025-11-17 13:54:37,935 - build_rag_model - INFO - Generated answer (length: 2104 chars, sources: 6)
+2025-11-17 13:54:37,936 - __main__ - INFO - Generated answer (length: 2104 chars)
+2025-11-17 14:45:16,534 - __main__ - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-17 14:45:16,538 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-17 14:45:16,540 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-11-17 14:45:24,714 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-11-17 14:45:24,734 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-17 14:45:24,993 - build_rag_model - INFO - Loading LLM: Qwen/Qwen2.5-0.5B-Instruct...
+2025-11-17 14:45:26,717 - build_rag_model - INFO - Using 8-bit quantization for CPU inference...
+2025-11-17 14:45:27,051 - build_rag_model - WARNING - Failed to load LLM: Using a `device_map`, `tp_plan`, `torch.device` context manager or setting `torch.set_default_device(device)` requires `accelerate`. You can install it with `pip install accelerate`. Falling back to template-based generation.
+2025-11-17 14:45:27,056 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-17 14:45:27,059 - __main__ - INFO - RAG model initialized successfully!
+2025-11-17 14:46:42,034 - __main__ - INFO - Received question: How To configure the mailbox format for Maildir?
+2025-11-17 14:46:42,034 - build_rag_model - INFO - Processing query: How To configure the mailbox format for Maildir?
+2025-11-17 14:46:42,782 - build_rag_model - INFO - Generated answer (length: 2336 chars, sources: 6)
+2025-11-17 14:46:42,784 - __main__ - INFO - Generated answer (length: 2336 chars)
+2025-11-17 14:47:42,659 - __main__ - INFO - Received question: How To configure the mailbox format for Maildir?
+2025-11-17 14:47:42,659 - build_rag_model - INFO - Processing query: How To configure the mailbox format for Maildir?
+2025-11-17 14:47:42,756 - build_rag_model - INFO - Generated answer (length: 2336 chars, sources: 6)
+2025-11-17 14:47:42,757 - __main__ - INFO - Generated answer (length: 2336 chars)
+2025-11-17 14:47:44,864 - __main__ - INFO - Received question: How To configure the mailbox format for Maildir?
+2025-11-17 14:47:44,864 - build_rag_model - INFO - Processing query: How To configure the mailbox format for Maildir?
+2025-11-17 14:47:45,036 - build_rag_model - INFO - Generated answer (length: 2336 chars, sources: 6)
+2025-11-17 14:47:45,036 - __main__ - INFO - Generated answer (length: 2336 chars)
+2025-11-17 14:47:46,544 - __main__ - INFO - Received question: How To configure the mailbox format for Maildir?
+2025-11-17 14:47:46,545 - build_rag_model - INFO - Processing query: How To configure the mailbox format for Maildir?
+2025-11-17 14:47:46,683 - build_rag_model - INFO - Generated answer (length: 2336 chars, sources: 6)
+2025-11-17 14:47:46,684 - __main__ - INFO - Generated answer (length: 2336 chars)
+2025-11-17 14:51:34,903 - __main__ - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-17 14:51:34,904 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-17 14:51:34,906 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-11-17 14:51:43,016 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-11-17 14:51:43,026 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-17 14:51:43,085 - build_rag_model - INFO - Loading LLM: Qwen/Qwen2.5-0.5B-Instruct...
+2025-11-17 14:51:44,498 - build_rag_model - INFO - Using 8-bit quantization for CPU inference...
+2025-11-17 14:51:44,829 - build_rag_model - WARNING - Failed to load LLM: Using a `device_map`, `tp_plan`, `torch.device` context manager or setting `torch.set_default_device(device)` requires `accelerate`. You can install it with `pip install accelerate`. Falling back to template-based generation.
+2025-11-17 14:51:44,831 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-17 14:51:44,833 - __main__ - INFO - RAG model initialized successfully!
+2025-11-17 14:52:10,888 - __main__ - INFO - Received question: How To configure the mailbox format for Maildir?
+2025-11-17 14:52:10,888 - build_rag_model - INFO - Processing query: How To configure the mailbox format for Maildir?
+2025-11-17 14:52:11,559 - build_rag_model - INFO - Generated answer (length: 2336 chars, sources: 6)
+2025-11-17 14:52:11,559 - __main__ - INFO - Generated answer (length: 2336 chars)
+2025-11-17 14:55:13,734 - __main__ - INFO - Received question: hi
+2025-11-17 14:55:13,735 - build_rag_model - INFO - Processing query: hi
+2025-11-17 14:55:13,829 - build_rag_model - INFO - Generated answer (length: 86 chars, sources: 0)
+2025-11-17 14:55:13,829 - __main__ - INFO - Generated answer (length: 86 chars)
+2025-11-17 14:55:25,949 - __main__ - INFO - Received question: How do I configure system settings?
+2025-11-17 14:55:25,950 - build_rag_model - INFO - Processing query: How do I configure system settings?
+2025-11-17 14:55:26,115 - build_rag_model - INFO - Generated answer (length: 2341 chars, sources: 6)
+2025-11-17 14:55:26,116 - __main__ - INFO - Generated answer (length: 2341 chars)
+2025-11-17 14:55:38,889 - __main__ - INFO - Received question: What is Red Hat Enterprise Linux?
+2025-11-17 14:55:38,889 - build_rag_model - INFO - Processing query: What is Red Hat Enterprise Linux?
+2025-11-17 14:55:38,988 - build_rag_model - INFO - Generated answer (length: 2483 chars, sources: 6)
+2025-11-17 14:55:38,989 - __main__ - INFO - Generated answer (length: 2483 chars)
+2025-11-17 14:58:11,156 - __main__ - INFO - Received question: What is Red Hat Enterprise Linux?
+2025-11-17 14:58:11,156 - build_rag_model - INFO - Processing query: What is Red Hat Enterprise Linux?
+2025-11-17 14:58:11,222 - build_rag_model - INFO - Generated answer (length: 2483 chars, sources: 6)
+2025-11-17 14:58:11,222 - __main__ - INFO - Generated answer (length: 2483 chars)
+2025-11-17 14:58:22,134 - __main__ - INFO - Received question: How to set up a web server?
+2025-11-17 14:58:22,134 - build_rag_model - INFO - Processing query: How to set up a web server?
+2025-11-17 14:58:22,224 - build_rag_model - INFO - Generated answer (length: 2194 chars, sources: 6)
+2025-11-17 14:58:22,224 - __main__ - INFO - Generated answer (length: 2194 chars)
+2025-11-17 14:58:51,642 - __main__ - INFO - Received question: How to set up ethernet connection?
+2025-11-17 14:58:51,642 - build_rag_model - INFO - Processing query: How to set up ethernet connection?
+2025-11-17 14:58:51,715 - build_rag_model - INFO - Generated answer (length: 1900 chars, sources: 6)
+2025-11-17 14:58:51,715 - __main__ - INFO - Generated answer (length: 1900 chars)
+2025-11-17 15:13:59,998 - __main__ - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-17 15:13:59,999 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-17 15:14:00,000 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-11-17 15:14:10,963 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-11-17 15:14:10,972 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-17 15:14:11,048 - build_rag_model - INFO - Loading LLM: Qwen/Qwen2.5-0.5B-Instruct...
+2025-11-17 15:14:12,879 - build_rag_model - INFO - Using 8-bit quantization for CPU inference...
+2025-11-17 15:14:13,261 - build_rag_model - WARNING - Failed to load LLM: Using a `device_map`, `tp_plan`, `torch.device` context manager or setting `torch.set_default_device(device)` requires `accelerate`. You can install it with `pip install accelerate`. Falling back to template-based generation.
+2025-11-17 15:14:13,263 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-17 15:14:13,265 - __main__ - INFO - RAG model initialized successfully!
+2025-11-17 15:20:15,139 - __main__ - INFO - Received question: Firewall Config Setup
+2025-11-17 15:20:15,139 - build_rag_model - INFO - Processing query: Firewall Config Setup
+2025-11-17 15:20:15,891 - build_rag_model - INFO - Generated answer (length: 2126 chars, sources: 6)
+2025-11-17 15:20:15,897 - __main__ - INFO - Generated answer (length: 2126 chars)
+2025-11-17 15:26:19,639 - __main__ - INFO - Received question: System Settings Config
+2025-11-17 15:26:19,642 - build_rag_model - INFO - Processing query: System Settings Config
+2025-11-17 15:26:19,894 - build_rag_model - INFO - Generated answer (length: 2041 chars, sources: 6)
+2025-11-17 15:26:19,896 - __main__ - INFO - Generated answer (length: 2041 chars)
+2025-11-17 15:27:37,128 - __main__ - INFO - Received question: How to set up a web server?
+2025-11-17 15:27:37,128 - build_rag_model - INFO - Processing query: How to set up a web server?
+2025-11-17 15:27:37,243 - build_rag_model - INFO - Generated answer (length: 2194 chars, sources: 6)
+2025-11-17 15:27:37,243 - __main__ - INFO - Generated answer (length: 2194 chars)
+2025-11-17 15:29:29,363 - __main__ - INFO - Received question: What is Red Hat Enterprise Linux?
+2025-11-17 15:29:29,364 - build_rag_model - INFO - Processing query: What is Red Hat Enterprise Linux?
+2025-11-17 15:29:29,465 - build_rag_model - INFO - Generated answer (length: 2483 chars, sources: 6)
+2025-11-17 15:29:29,465 - __main__ - INFO - Generated answer (length: 2483 chars)
+2025-11-17 15:35:35,037 - __main__ - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-17 15:35:35,038 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-17 15:35:35,039 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-11-17 15:35:41,522 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-11-17 15:35:41,529 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-17 15:35:41,585 - build_rag_model - INFO - Loading LLM: Qwen/Qwen2.5-0.5B-Instruct...
+2025-11-17 15:35:43,476 - build_rag_model - INFO - Using 8-bit quantization for CPU inference...
+2025-11-17 15:35:43,882 - build_rag_model - WARNING - Failed to load LLM: Using a `device_map`, `tp_plan`, `torch.device` context manager or setting `torch.set_default_device(device)` requires `accelerate`. You can install it with `pip install accelerate`. Falling back to template-based generation.
+2025-11-17 15:35:43,886 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-17 15:35:43,895 - __main__ - INFO - RAG model initialized successfully!
+2025-11-17 15:49:59,254 - __main__ - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-17 15:49:59,255 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-17 15:49:59,256 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-11-17 15:50:05,664 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-11-17 15:50:05,667 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-17 15:50:05,717 - build_rag_model - INFO - Loading LLM: Qwen/Qwen2.5-0.5B-Instruct...
+2025-11-17 15:50:07,172 - build_rag_model - INFO - Using 8-bit quantization for CPU inference...
+2025-11-17 15:50:07,561 - build_rag_model - WARNING - Failed to load LLM: Using a `device_map`, `tp_plan`, `torch.device` context manager or setting `torch.set_default_device(device)` requires `accelerate`. You can install it with `pip install accelerate`. Falling back to template-based generation.
+2025-11-17 15:50:07,563 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-17 15:50:07,566 - __main__ - INFO - RAG model initialized successfully!
+2025-11-17 16:25:13,377 - __main__ - INFO - Received question: web server set up guide
+2025-11-17 16:25:13,387 - build_rag_model - INFO - Processing query: web server set up guide
+2025-11-17 16:25:15,048 - build_rag_model - INFO - Generated answer (length: 2238 chars, sources: 6)
+2025-11-17 16:25:15,061 - __main__ - INFO - Generated answer (length: 2238 chars)
+2025-11-17 16:25:26,864 - __main__ - INFO - Received question: web server set up guide
+2025-11-17 16:25:26,865 - build_rag_model - INFO - Processing query: web server set up guide
+2025-11-17 16:25:26,961 - build_rag_model - INFO - Generated answer (length: 2238 chars, sources: 6)
+2025-11-17 16:25:26,961 - __main__ - INFO - Generated answer (length: 2238 chars)
+2025-11-18 11:06:45,263 - __main__ - INFO - Checking Ollama models availability...
+2025-11-18 11:06:49,502 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/generate "HTTP/1.1 200 OK"
+2025-11-18 11:06:49,505 - __main__ - INFO - ✓ Qwen model 'qwen2.5:0.5b' is ready!
+2025-11-18 11:07:28,637 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/generate "HTTP/1.1 200 OK"
+2025-11-18 11:07:28,641 - __main__ - INFO - ✓ Phi-2 model 'phi:latest' is ready!
+2025-11-18 11:07:28,648 - __main__ - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-18 11:07:28,649 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-18 11:07:28,662 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-11-18 11:07:39,633 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-11-18 11:07:39,638 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-18 11:07:39,720 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-18 11:07:39,723 - __main__ - INFO - ✓ RAG model initialized successfully!
+2025-11-18 11:08:50,834 - __main__ - INFO - Received question: emails are not being sent
+2025-11-18 11:08:51,663 - __main__ - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-18 11:08:51,663 - __main__ - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-18 11:09:08,394 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/generate "HTTP/1.1 200 OK"
+2025-11-18 11:09:08,408 - __main__ - INFO - Generated answer (length: 970 chars, sources: 0)
+2025-11-18 11:09:15,332 - __main__ - INFO - Received question: emails are not being sent
+2025-11-18 11:09:15,409 - __main__ - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-18 11:09:15,409 - __main__ - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-18 11:09:27,654 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/generate "HTTP/1.1 200 OK"
+2025-11-18 11:09:27,657 - __main__ - INFO - Generated answer (length: 976 chars, sources: 0)
+2025-11-18 11:09:47,337 - __main__ - INFO - Received question: do you know about n8n?
+2025-11-18 11:09:47,438 - __main__ - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-18 11:09:47,444 - __main__ - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-18 11:10:04,393 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/generate "HTTP/1.1 200 OK"
+2025-11-18 11:10:04,397 - __main__ - INFO - Generated answer (length: 1752 chars, sources: 0)
+2025-11-18 11:10:30,540 - __main__ - INFO - Received question: Do you know google opal?
+2025-11-18 11:10:30,620 - __main__ - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-18 11:10:39,448 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/generate "HTTP/1.1 200 OK"
+2025-11-18 11:10:39,450 - __main__ - INFO - Generated answer (length: 944 chars, sources: 0)
+2025-11-18 11:17:06,829 - __main__ - INFO - Checking Ollama models availability...
+2025-11-18 11:17:11,688 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/generate "HTTP/1.1 200 OK"
+2025-11-18 11:17:11,693 - __main__ - INFO - ✓ Qwen model 'qwen2.5:0.5b' is ready!
+2025-11-18 11:17:33,880 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/generate "HTTP/1.1 200 OK"
+2025-11-18 11:17:33,881 - __main__ - INFO - ✓ Phi-2 model 'phi:latest' is ready!
+2025-11-18 11:17:33,881 - __main__ - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-18 11:17:33,882 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-18 11:17:33,884 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-11-18 11:17:41,970 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-11-18 11:17:41,977 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-18 11:17:42,034 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-18 11:17:42,038 - __main__ - INFO - ✓ RAG model initialized successfully!
+2025-11-18 11:20:43,660 - __main__ - INFO - Received question: mail dir setup how to?
+2025-11-18 11:20:44,479 - __main__ - INFO - Found 1 relevant RAG documents
+2025-11-18 11:20:44,480 - __main__ - INFO - Using RAG + Phi-2 + Qwen2.5B pipeline
+2025-11-18 11:21:58,297 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/generate "HTTP/1.1 200 OK"
+2025-11-18 11:22:25,493 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/generate "HTTP/1.1 200 OK"
+2025-11-18 11:22:25,520 - __main__ - INFO - Generated answer (length: 1476 chars, sources: 1)
+2025-11-18 11:35:42,627 - __main__ - INFO - Checking Ollama models availability...
+2025-11-18 11:35:47,719 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/generate "HTTP/1.1 200 OK"
+2025-11-18 11:35:47,723 - __main__ - INFO - ✓ Qwen model 'qwen2.5:0.5b' is ready!
+2025-11-18 11:36:06,257 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/generate "HTTP/1.1 200 OK"
+2025-11-18 11:36:06,257 - __main__ - INFO - ✓ Phi-2 model 'phi:latest' is ready!
+2025-11-18 11:36:06,258 - __main__ - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-18 11:36:06,258 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-18 11:36:06,260 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-11-18 11:36:13,053 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-11-18 11:36:13,061 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-18 11:36:13,122 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-18 11:36:13,125 - __main__ - INFO - ✓ RAG model initialized successfully!
+2025-11-18 11:37:45,296 - __main__ - INFO - Received question: web server set up steps
+2025-11-18 11:37:46,088 - __main__ - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-18 11:37:46,088 - __main__ - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-18 11:38:50,316 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/generate "HTTP/1.1 200 OK"
+2025-11-18 11:38:50,333 - __main__ - INFO - Generated answer (length: 4425 chars, sources: 0)
+2025-11-18 11:43:32,569 - __main__ - INFO - Received question: system settings config steps
+2025-11-18 11:43:32,681 - __main__ - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-18 11:43:32,682 - __main__ - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-18 11:43:54,173 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/generate "HTTP/1.1 200 OK"
+2025-11-18 11:43:54,178 - __main__ - INFO - Generated answer (length: 1550 chars, sources: 0)
+2025-11-18 12:28:58,857 - __main__ - INFO - Checking Ollama models availability...
+2025-11-18 12:29:07,366 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/generate "HTTP/1.1 200 OK"
+2025-11-18 12:29:07,370 - __main__ - INFO - ✓ Qwen model 'qwen2.5:0.5b' is ready!
+2025-11-18 12:29:22,892 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/generate "HTTP/1.1 200 OK"
+2025-11-18 12:29:22,893 - __main__ - INFO - ✓ Phi-2 model 'phi:latest' is ready!
+2025-11-18 12:29:22,909 - __main__ - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-18 12:29:22,913 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-18 12:29:22,933 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-11-18 12:29:37,836 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-11-18 12:29:37,842 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-18 12:29:37,905 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-18 12:29:37,910 - __main__ - INFO - ✓ RAG model initialized successfully!
+2025-11-18 12:34:00,347 - __main__ - INFO - Received question: hi
+2025-11-18 12:34:01,202 - __main__ - INFO - Trying expanded query: hi
+2025-11-18 12:34:01,270 - __main__ - INFO - No relevant RAG documents, using Qwen2.5B with enhanced prompting
+2025-11-18 12:35:29,856 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/generate "HTTP/1.1 200 OK"
+2025-11-18 12:35:29,900 - __main__ - INFO - Generated answer (length: 2936 chars, sources: 0)
+2025-11-18 13:44:05,621 - __main__ - INFO - Checking Ollama models availability...
+2025-11-18 13:44:07,664 - __main__ - ERROR - Failed to connect to Ollama or model not found: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+Traceback (most recent call last):
+  File "C:\Projects\data-extraction-redhat\backend\api.py", line 584, in startup_event
+    ollama.generate(model=Config.QWEN_MODEL, prompt="test")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\data-extraction-redhat\backend\redhat\Lib\site-packages\ollama\_client.py", line 262, in generate
+    return self._request(
+           ~~~~~~~~~~~~~^
+      GenerateResponse,
+      ^^^^^^^^^^^^^^^^^
+    ...<19 lines>...
+      stream=stream,
+      ^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Projects\data-extraction-redhat\backend\redhat\Lib\site-packages\ollama\_client.py", line 189, in _request
+    return cls(**self._request_raw(*args, **kwargs).json())
+                 ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Projects\data-extraction-redhat\backend\redhat\Lib\site-packages\ollama\_client.py", line 135, in _request_raw
+    raise ConnectionError(CONNECTION_ERROR_MESSAGE) from None
+ConnectionError: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+2025-11-18 13:44:07,673 - __main__ - WARNING - Make sure Ollama is running and models are pulled:
+2025-11-18 13:44:07,673 - __main__ - WARNING -   ollama pull qwen2.5:0.5b
+2025-11-18 13:44:07,673 - __main__ - WARNING -   ollama pull phi:latest
+2025-11-18 13:44:07,674 - __main__ - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-18 13:44:07,674 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-18 13:44:07,674 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-11-18 13:44:13,294 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-11-18 13:44:13,301 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-18 13:44:13,361 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-18 13:44:13,364 - __main__ - INFO - ✓ RAG model initialized successfully!
+2025-11-18 13:44:47,622 - __main__ - INFO - Received question: Hi
+2025-11-18 13:44:47,622 - __main__ - INFO - Detected greeting, returning greeting response
+2025-11-18 13:52:09,140 - __main__ - INFO - Checking Ollama models availability...
+2025-11-18 13:52:11,159 - __main__ - ERROR - Failed to connect to Ollama or model not found: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+Traceback (most recent call last):
+  File "C:\Projects\data-extraction-redhat\backend\api.py", line 551, in startup_event
+    ollama.generate(model=Config.QWEN_MODEL, prompt="test")
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\data-extraction-redhat\backend\redhat\Lib\site-packages\ollama\_client.py", line 262, in generate
+    return self._request(
+           ~~~~~~~~~~~~~^
+      GenerateResponse,
+      ^^^^^^^^^^^^^^^^^
+    ...<19 lines>...
+      stream=stream,
+      ^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Projects\data-extraction-redhat\backend\redhat\Lib\site-packages\ollama\_client.py", line 189, in _request
+    return cls(**self._request_raw(*args, **kwargs).json())
+                 ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Projects\data-extraction-redhat\backend\redhat\Lib\site-packages\ollama\_client.py", line 135, in _request_raw
+    raise ConnectionError(CONNECTION_ERROR_MESSAGE) from None
+ConnectionError: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+2025-11-18 13:52:11,165 - __main__ - WARNING - Make sure Ollama is running and models are pulled:
+2025-11-18 13:52:11,165 - __main__ - WARNING -   ollama pull qwen2.5:0.5b
+2025-11-18 13:52:11,165 - __main__ - WARNING -   ollama pull phi:latest
+2025-11-18 13:52:11,165 - __main__ - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-18 13:52:11,165 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-18 13:52:11,166 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-11-18 13:52:16,877 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-11-18 13:52:16,880 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-18 13:52:16,928 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-18 13:52:16,933 - __main__ - INFO - ✓ RAG model initialized successfully!
+2025-11-18 13:55:03,334 - __main__ - INFO - Received question: hi
+2025-11-18 13:55:07,269 - __main__ - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-18 13:55:09,302 - __main__ - ERROR - Qwen2.5B generation failed: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+2025-11-18 13:58:35,435 - __main__ - INFO - Received question: hi
+2025-11-18 13:58:36,667 - __main__ - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-18 13:58:41,846 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/generate "HTTP/1.1 200 OK"
+2025-11-18 13:58:41,901 - __main__ - INFO - Generated answer (length: 34 chars, sources: 0)
+2025-11-18 14:35:17,647 - __main__ - INFO - Checking Ollama models availability...
+2025-11-18 14:35:22,082 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/generate "HTTP/1.1 200 OK"
+2025-11-18 14:35:22,086 - __main__ - INFO - ✓ Qwen model 'qwen2.5:0.5b' is ready!
+2025-11-18 14:35:37,408 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/generate "HTTP/1.1 200 OK"
+2025-11-18 14:35:37,409 - __main__ - INFO - ✓ Phi-2 model 'phi:latest' is ready!
+2025-11-18 14:35:37,409 - __main__ - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-18 14:35:37,410 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-18 14:35:37,410 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-11-18 14:35:44,622 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-11-18 14:35:44,628 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-18 14:35:44,684 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-18 14:35:44,687 - __main__ - INFO - ✓ RAG model initialized successfully!
+2025-11-18 14:36:56,428 - __main__ - INFO - Received question: PHP server fail auth after update
+2025-11-18 14:36:57,217 - __main__ - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-18 14:36:57,217 - __main__ - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-18 14:37:28,757 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/generate "HTTP/1.1 200 OK"
+2025-11-18 14:37:28,777 - __main__ - INFO - Generated answer (length: 1359 chars, sources: 0)
+2025-11-18 14:40:02,518 - __main__ - INFO - Received question: MySQL query example for all Join types
+2025-11-18 14:40:02,574 - __main__ - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-18 14:40:02,575 - __main__ - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-18 14:40:40,256 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/generate "HTTP/1.1 200 OK"
+2025-11-18 14:40:40,262 - __main__ - INFO - Generated answer (length: 2815 chars, sources: 0)
+2025-11-18 14:41:39,618 - __main__ - INFO - Received question: MongoDB auth fails after update fix
+2025-11-18 14:41:39,684 - __main__ - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-18 14:41:39,684 - __main__ - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-18 14:41:52,206 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/generate "HTTP/1.1 200 OK"
+2025-11-18 14:41:52,211 - __main__ - INFO - Generated answer (length: 1230 chars, sources: 0)
+2025-11-18 14:42:38,442 - __main__ - INFO - Received question: How to set up unix mail directory?
+2025-11-18 14:42:38,532 - __main__ - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-18 14:42:38,532 - __main__ - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-18 14:43:06,437 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/generate "HTTP/1.1 200 OK"
+2025-11-18 14:43:06,439 - __main__ - INFO - Generated answer (length: 1900 chars, sources: 0)
+2025-11-18 15:02:20,717 - __main__ - INFO - Received question: how to set up web server?
+2025-11-18 15:02:20,889 - __main__ - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-18 15:02:20,889 - __main__ - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-18 15:03:18,049 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/generate "HTTP/1.1 200 OK"
+2025-11-18 15:03:18,055 - __main__ - INFO - Generated answer (length: 4034 chars, sources: 0)
+2025-11-18 15:14:27,890 - __main__ - INFO - Received question: System settings config linux
+2025-11-18 15:14:27,967 - __main__ - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-18 15:14:27,967 - __main__ - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-18 15:15:32,672 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/generate "HTTP/1.1 200 OK"
+2025-11-18 15:15:32,680 - __main__ - INFO - Generated answer (length: 3849 chars, sources: 0)
+2025-11-18 15:15:49,252 - __main__ - INFO - Received question: System settings config linux
+2025-11-18 15:15:49,308 - __main__ - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-18 15:15:49,308 - __main__ - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-18 15:16:06,415 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/generate "HTTP/1.1 200 OK"
+2025-11-18 15:16:06,416 - __main__ - INFO - Generated answer (length: 1531 chars, sources: 0)
+2025-11-18 16:56:37,036 - __main__ - INFO - Checking Ollama models availability...
+2025-11-18 16:56:40,942 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/generate "HTTP/1.1 200 OK"
+2025-11-18 16:56:41,069 - __main__ - INFO - ✓ Qwen model 'qwen2.5:0.5b' is ready!
+2025-11-18 16:57:03,135 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/generate "HTTP/1.1 200 OK"
+2025-11-18 16:57:03,136 - __main__ - INFO - ✓ Phi-2 model 'phi:latest' is ready!
+2025-11-18 16:57:03,137 - __main__ - INFO - Initializing RAG model from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-18 16:57:03,137 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-18 16:57:03,139 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-11-18 16:57:09,392 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-11-18 16:57:09,398 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-18 16:57:09,453 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-18 16:57:09,455 - __main__ - INFO - ✓ RAG model initialized successfully!
+2025-11-18 18:05:40,945 - __main__ - INFO - Received question: server disk usage is high
+2025-11-18 18:05:42,203 - __main__ - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-18 18:05:42,204 - __main__ - INFO - No relevant RAG documents, using Qwen2.5B directly
+2025-11-18 18:06:05,984 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/generate "HTTP/1.1 200 OK"
+2025-11-18 18:06:06,055 - __main__ - INFO - Generated answer (length: 1729 chars, sources: 0)
+2025-11-19 09:35:52 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-19 09:35:58 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-19 09:35:58 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-19 10:56:36 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-19 10:56:41 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-19 10:56:41 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-19 11:17:33 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-19 11:17:42 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-19 11:17:42 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-19 11:18:59 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-19 11:19:05 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-19 11:19:05 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-19 11:19:47 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-19 11:19:52 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-19 11:19:52 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-19 12:05:49 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-19 12:05:57 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-19 12:05:58 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-19 12:07:06 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-19 12:07:16 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-19 12:07:16 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-19 13:52:44 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-19 13:52:50 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-19 13:52:50 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-19 14:55:52 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-19 14:56:03 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-19 14:56:03 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-20 10:11:06 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-20 10:11:12 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-20 10:11:12 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-20 10:30:10 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-20 10:30:16 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-20 10:30:17 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-20 10:36:00 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-20 10:36:04 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-20 10:36:04 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-20 10:46:40 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-20 10:46:45 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-20 10:46:45 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-20 10:48:15 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-20 10:48:21 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-20 10:48:21 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-20 10:59:39 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-20 10:59:45 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-20 10:59:45 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-20 12:12:49 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-20 12:12:56 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-20 12:12:56 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-20 12:43:16 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-20 12:43:23 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-20 12:43:23 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-20 12:54:46 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-20 12:54:52 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-20 12:54:52 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-20 12:56:19 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-20 12:56:26 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-20 12:56:26 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-20 12:57:29 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-20 12:57:34 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-20 12:57:34 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-20 13:36:15 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-20 13:36:23 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-20 13:36:23 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-20 14:29:06 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-20 14:29:12 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-20 14:29:12 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-20 16:36:42 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-20 16:36:49 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-20 16:36:49 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-20 17:02:26 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-20 17:02:33 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-20 17:02:33 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-20 17:09:52 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-20 17:10:00 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-20 17:10:00 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-20 17:11:25 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-20 17:11:32 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-20 17:11:32 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-20 17:56:42 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-20 17:56:50 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-20 17:56:50 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-21 09:45:26 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-21 09:45:31 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-21 09:45:31 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-21 11:29:02 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-21 11:29:09 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-21 11:29:09 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-21 12:24:41 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-21 12:24:48 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-21 12:24:48 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-21 12:45:52 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-21 12:45:59 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-21 12:45:59 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-21 12:49:12 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-21 12:49:18 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-21 12:49:18 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-21 15:31:22 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-21 15:31:30 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-21 15:31:30 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-24 09:38:49 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-24 09:38:55 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-24 09:38:55 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-24 10:10:37 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-24 10:10:44 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-24 10:10:44 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-24 10:21:20 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-24 10:21:25 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-24 10:21:25 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-24 10:33:31 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-24 10:33:36 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-24 10:33:36 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-24 10:41:51 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-24 10:41:56 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-24 10:41:56 - build_rag_model - INFO - RAG model initialized. Total documents: 2511
+2025-11-24 10:42:23 - build_rag_model - INFO - Loading embedding model: all-MiniLM-L6-v2...
+2025-11-24 10:42:29 - build_rag_model - INFO - Loading FAISS index from C:\Projects\data-extraction-redhat\data-processing\vector_db...
+2025-11-24 10:42:29 - build_rag_model - INFO - RAG model initialized. Total documents: 2511

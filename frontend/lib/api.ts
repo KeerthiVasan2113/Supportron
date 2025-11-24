@@ -3,7 +3,7 @@
  * Centralized API endpoint management.
  */
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://supportron-api.loca.lt'
 const API_VERSION = 'v1' // Use v1 API
 
 /**
@@ -75,37 +75,43 @@ export interface ChatResponse {
 export const sendChatMessage = async (
   question: string,
   showSources: boolean = true,
-  includeHistory: boolean = false,
   conversationHistory?: MessageHistory[]
 ): Promise<ChatResponse> => {
   const endpoint = getChatEndpoint()
-
-  // Only include conversation_history in the payload if includeHistory === true
-  const history: MessageHistory[] | undefined = (includeHistory && conversationHistory)
-    ? conversationHistory.map(msg => ({ role: msg.role, content: msg.content }))
+  
+  // Format conversation history (exclude current question)
+  const history: MessageHistory[] | undefined = conversationHistory 
+    ? conversationHistory.map(msg => ({
+        role: msg.role,
+        content: msg.content
+      }))
     : undefined
-
-  const payload: any = {
-    question: question.trim(),
-    show_sources: showSources,
-    include_history: includeHistory,
-  }
-
-  if (history) {
-    payload.conversation_history = history
-  }
-
+  
   const response = await fetch(endpoint, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(payload as ChatRequest),
+    body: JSON.stringify({
+      question: question.trim(),
+      show_sources: showSources,
+      conversation_history: history,
+    } as ChatRequest),
   })
 
   if (!response.ok) {
+    // Handle localtunnel 511 error (Network Authentication Required)
+    if (response.status === 511) {
+      const backendUrl = API_BASE_URL
+      throw new Error(
+        `Tunnel authentication required. Please visit ${backendUrl} in your browser first to accept the connection, then try again.`
+      )
+    }
+    
     const errorData = await response.json().catch(() => ({ 
-      detail: 'Failed to get response' 
+      detail: response.status === 511 
+        ? 'Tunnel authentication required. Please visit the backend URL first.'
+        : 'Failed to get response' 
     }))
     throw new Error(errorData.detail || `Server error: ${response.status}`)
   }

@@ -26,7 +26,10 @@ class Config:
     # CORS origins
     ALLOWED_ORIGINS: List[str] = [
         "http://localhost:3000",
-        "http://127.0.0.1:3000"
+        "http://127.0.0.1:3000",
+        "https://supportron-demo.loca.lt",
+        "https://*.loca.lt",  # Allow all localtunnel HTTPS subdomains
+        "http://*.loca.lt",   # Allow all localtunnel HTTP subdomains
     ]
     
     # Server configuration

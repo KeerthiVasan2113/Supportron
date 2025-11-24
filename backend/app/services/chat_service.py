@@ -99,10 +99,9 @@ def format_conversation_history(history: Optional[List[dict]], include_all: bool
 
 
 def generate_with_rag_pipeline(
-    question: str,
+    question: str, 
     rag_docs: List[dict],
-    conversation_history: Optional[List[dict]] = None,
-    include_history: bool = False
+    conversation_history: Optional[List[dict]] = None
 ) -> Tuple[str, Optional[List[SourceDocument]]]:
     """
     Generate answer using RAG → Phi-2 → Qwen2.5B pipeline.
@@ -120,15 +119,13 @@ def generate_with_rag_pipeline(
     """
     logger.info("Using RAG + Phi-2 + Qwen2.5B pipeline")
     
-    # Determine whether to include conversation history in the prompts
+    # Check if question is about the conversation itself
     question_lower = question.lower()
-    is_about_conversation = False
-    if include_history:
-        is_about_conversation = any(keyword in question_lower for keyword in [
-            'first question', 'first message', 'earlier', 'previous', 'before', 
-            'what did i ask', 'what did you say', 'conversation', 'chat history',
-            'earlier in', 'mentioned', 'discussed', 'talked about'
-        ])
+    is_about_conversation = any(keyword in question_lower for keyword in [
+        'first question', 'first message', 'earlier', 'previous', 'before', 
+        'what did i ask', 'what did you say', 'conversation', 'chat history',
+        'earlier in', 'mentioned', 'discussed', 'talked about'
+    ])
     
     # Prepare context from RAG documents
     context_text = "\n\n".join([
@@ -138,10 +135,8 @@ def generate_with_rag_pipeline(
     ])
     
     # Format conversation history - include all if question is about the conversation
-    history_text = ""
+    history_text = format_conversation_history(conversation_history, include_all=is_about_conversation)
     history_context = ""
-    if include_history and conversation_history:
-        history_text = format_conversation_history(conversation_history, include_all=is_about_conversation)
     if history_text:
         history_context = f"""
 
@@ -154,7 +149,7 @@ This is the full conversation history up to this point. Use this to answer quest
 """
     
     # Step 1: Use Phi-2 for reasoning on the context
-    phi_prompt = f"""You are analyzing a user's question in the context of technical documentation.
+    phi_prompt = f"""You are analyzing a user's question in the context of technical documentation and conversation history.
 
 Technical Documentation:
 {context_text}{history_context}
@@ -170,9 +165,6 @@ IMPORTANT INSTRUCTIONS:
 
 Please analyze and provide a reasoned answer based on the documentation and conversation history."""
     
-    # Add brief instruction to use layman's terms and be concise
-    phi_prompt = phi_prompt + "\n\nNOTE: Answer in simple, layman's terms. Be concise and give a direct solution or steps. Only use the conversation history if it was explicitly requested by the user."
-
     try:
         phi_response = ollama.generate(
             model=Config.PHI_MODEL,
@@ -243,8 +235,7 @@ Provide your answer now:"""
 
 def generate_direct_answer(
     question: str,
-    conversation_history: Optional[List[dict]] = None,
-    include_history: bool = False
+    conversation_history: Optional[List[dict]] = None
 ) -> str:
     """
     Generate answer directly using Qwen2.5B.
@@ -261,25 +252,36 @@ def generate_direct_answer(
     """
     logger.info("No relevant RAG documents, using Qwen2.5B directly")
     
-    history_text = ""
-    if include_history and conversation_history:
-        # include full history when explicitly requested
-        history_text = format_conversation_history(conversation_history, include_all=True)
-
+    # Check if question is about the conversation itself
+    question_lower = question.lower()
+    is_about_conversation = any(keyword in question_lower for keyword in [
+        'first question', 'first message', 'earlier', 'previous', 'before', 
+        'what did i ask', 'what did you say', 'conversation', 'chat history',
+        'earlier in', 'mentioned', 'discussed', 'talked about'
+    ])
+    
+    # Format conversation history - include all if question is about the conversation
+    history_text = format_conversation_history(conversation_history, include_all=is_about_conversation)
+    
     if history_text:
-        prompt = f"""You are a helpful assistant having a conversation with a user. Below is the conversation history provided by the user.
+        prompt = f"""You are a helpful assistant having a conversation with a user. Below is the complete conversation history.
 
-=== PROVIDED CONVERSATION HISTORY ===
+=== COMPLETE CONVERSATION HISTORY ===
 {history_text}
-=== END OF PROVIDED CONVERSATION HISTORY ===
+=== END OF CONVERSATION HISTORY ===
 
 Current User Question: {question}
 
-NOTE: Answer in simple, layman's terms. Be concise and give direct steps or the solution. Only use the conversation history because the user explicitly requested it.
+IMPORTANT INSTRUCTIONS:
+1. If the question asks about the conversation itself (e.g., "what was the first question", "what did I ask earlier", "what did you say before"), you MUST look through the conversation history above to find the answer.
+2. The conversation history shows numbered messages - you can reference specific messages by their numbers (e.g., "In message 1, you asked...").
+3. For questions about the conversation, carefully review ALL messages in the conversation history.
+4. For general questions, use your knowledge while maintaining context from the conversation.
+5. Always maintain continuity with the conversation history.
 
 Provide a helpful, clear answer based on the conversation history and your knowledge."""
     else:
-        prompt = f"Please respond in simple, layman's terms, concisely: {question}"
+        prompt = question
     
     try:
         response = ollama.generate(
@@ -327,18 +329,9 @@ def process_chat_request(
         
         # Step 2: Process based on whether we have RAG docs
         if rag_docs:
-            answer, sources = generate_with_rag_pipeline(
-                question,
-                rag_docs,
-                conversation_history,
-                include_history=(conversation_history is not None)
-            )
+            answer, sources = generate_with_rag_pipeline(question, rag_docs, conversation_history)
         else:
-            answer = generate_direct_answer(
-                question,
-                conversation_history,
-                include_history=(conversation_history is not None)
-            )
+            answer = generate_direct_answer(question, conversation_history)
             sources = None
         
         if not answer:

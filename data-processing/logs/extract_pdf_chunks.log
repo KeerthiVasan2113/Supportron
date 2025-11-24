@@ -1,0 +1,64 @@
+2025-11-17 11:46:41,577 - __main__ - INFO - Found 2 PDF file(s)
+2025-11-17 11:46:41,685 - __main__ - INFO - Processing training-data\documentation-ubuntu-com-server-en-latest.pdf...
+2025-11-17 11:46:41,686 - __main__ - INFO - Total pages: 891
+2025-11-17 11:46:45,357 - __main__ - INFO - Extracted 2278 meaningful chunks from documentation-ubuntu-com-server-en-latest.pdf
+2025-11-17 11:46:45,401 - __main__ - INFO - Saved chunks to output\documentation-ubuntu-com-server-en-latest_chunks.jsonl
+2025-11-17 11:46:45,430 - __main__ - INFO - Processing training-data\Red_Hat_Enterprise_Linux-9-Configuring_basic_system_settings-en-US.pdf...
+2025-11-17 11:46:45,430 - __main__ - INFO - Total pages: 112
+2025-11-17 11:46:45,783 - __main__ - INFO - Extracted 233 meaningful chunks from Red_Hat_Enterprise_Linux-9-Configuring_basic_system_settings-en-US.pdf
+2025-11-17 11:46:45,791 - __main__ - INFO - Saved chunks to output\Red_Hat_Enterprise_Linux-9-Configuring_basic_system_settings-en-US_chunks.jsonl
+2025-11-17 11:46:45,836 - __main__ - INFO - Total chunks extracted: 2511
+2025-11-17 11:46:45,836 - __main__ - INFO - Combined chunks saved to output\all_chunks.jsonl
+2025-11-17 12:54:58,296 - faiss.loader - INFO - Loading faiss with AVX2 support.
+2025-11-17 12:54:58,507 - faiss.loader - INFO - Successfully loaded faiss with AVX2 support.
+2025-11-17 12:55:27,177 - __main__ - INFO - ============================================================
+2025-11-17 12:55:27,177 - __main__ - INFO - RAG Pipeline - Complete Workflow
+2025-11-17 12:55:27,177 - __main__ - INFO - ============================================================
+2025-11-17 12:55:27,177 - __main__ - INFO - [Step 1/4] Extracting PDF chunks...
+2025-11-17 12:55:27,177 - __main__ - INFO - ------------------------------------------------------------
+2025-11-17 12:55:27,179 - extract_pdf_chunks - INFO - Found 2 PDF file(s)
+2025-11-17 12:55:29,070 - extract_pdf_chunks - INFO - Processing training-data\documentation-ubuntu-com-server-en-latest.pdf...
+2025-11-17 12:55:29,070 - extract_pdf_chunks - INFO - Total pages: 891
+2025-11-17 12:55:33,391 - extract_pdf_chunks - INFO - Extracted 2278 meaningful chunks from documentation-ubuntu-com-server-en-latest.pdf
+2025-11-17 12:55:33,454 - extract_pdf_chunks - INFO - Saved chunks to output\documentation-ubuntu-com-server-en-latest_chunks.jsonl
+2025-11-17 12:55:33,566 - extract_pdf_chunks - INFO - Processing training-data\Red_Hat_Enterprise_Linux-9-Configuring_basic_system_settings-en-US.pdf...
+2025-11-17 12:55:33,566 - extract_pdf_chunks - INFO - Total pages: 112
+2025-11-17 12:55:34,121 - extract_pdf_chunks - INFO - Extracted 233 meaningful chunks from Red_Hat_Enterprise_Linux-9-Configuring_basic_system_settings-en-US.pdf
+2025-11-17 12:55:34,130 - extract_pdf_chunks - INFO - Saved chunks to output\Red_Hat_Enterprise_Linux-9-Configuring_basic_system_settings-en-US_chunks.jsonl
+2025-11-17 12:55:34,183 - extract_pdf_chunks - INFO - Total chunks extracted: 2511
+2025-11-17 12:55:34,183 - extract_pdf_chunks - INFO - Combined chunks saved to output\all_chunks.jsonl
+2025-11-17 12:55:34,184 - __main__ - INFO - [Step 2/4] Organizing and compiling chunks...
+2025-11-17 12:55:34,184 - __main__ - INFO - ------------------------------------------------------------
+2025-11-17 12:55:34,185 - organize_chunks - INFO - Found 4 chunk file(s)
+2025-11-17 12:55:34,185 - organize_chunks - INFO - Loading chunks from all_chunks.jsonl...
+2025-11-17 12:55:34,365 - organize_chunks - INFO -   Loaded 2511 chunks
+2025-11-17 12:55:34,365 - organize_chunks - INFO - Loading chunks from compiled_chunks.jsonl...
+2025-11-17 12:55:34,519 - organize_chunks - INFO -   Loaded 2507 chunks
+2025-11-17 12:55:34,519 - organize_chunks - INFO - Loading chunks from documentation-ubuntu-com-server-en-latest_chunks.jsonl...
+2025-11-17 12:55:34,687 - organize_chunks - INFO -   Loaded 2278 chunks
+2025-11-17 12:55:34,687 - organize_chunks - INFO - Loading chunks from Red_Hat_Enterprise_Linux-9-Configuring_basic_system_settings-en-US_chunks.jsonl...
+2025-11-17 12:55:34,710 - organize_chunks - INFO -   Loaded 233 chunks
+2025-11-17 12:55:34,710 - organize_chunks - INFO - Total chunks before organization: 7529
+2025-11-17 12:55:34,710 - organize_chunks - INFO - Removing duplicates...
+2025-11-17 13:01:46,726 - __main__ - INFO - Found 2 PDF file(s)
+2025-11-17 13:01:46,836 - __main__ - INFO - Processing training-data\documentation-ubuntu-com-server-en-latest.pdf...
+2025-11-17 13:01:46,837 - __main__ - INFO - Total pages: 891
+2025-11-17 13:01:51,520 - __main__ - INFO - Extracted 2278 meaningful chunks from documentation-ubuntu-com-server-en-latest.pdf
+2025-11-17 13:01:51,570 - __main__ - INFO - Saved chunks to output\documentation-ubuntu-com-server-en-latest_chunks.jsonl
+2025-11-17 13:01:51,604 - __main__ - INFO - Processing training-data\Red_Hat_Enterprise_Linux-9-Configuring_basic_system_settings-en-US.pdf...
+2025-11-17 13:01:51,604 - __main__ - INFO - Total pages: 112
+2025-11-17 13:01:51,982 - __main__ - INFO - Extracted 233 meaningful chunks from Red_Hat_Enterprise_Linux-9-Configuring_basic_system_settings-en-US.pdf
+2025-11-17 13:01:51,989 - __main__ - INFO - Saved chunks to output\Red_Hat_Enterprise_Linux-9-Configuring_basic_system_settings-en-US_chunks.jsonl
+2025-11-17 13:01:52,042 - __main__ - INFO - Total chunks extracted: 2511
+2025-11-17 13:01:52,042 - __main__ - INFO - Combined chunks saved to output\all_chunks.jsonl
+2025-11-17 13:06:52,275 - __main__ - INFO - Found 2 PDF file(s)
+2025-11-17 13:06:52,424 - __main__ - INFO - Processing training-data\documentation-ubuntu-com-server-en-latest.pdf...
+2025-11-17 13:06:52,424 - __main__ - INFO - Total pages: 891
+2025-11-17 13:06:56,652 - __main__ - INFO - Extracted 2278 meaningful chunks from documentation-ubuntu-com-server-en-latest.pdf
+2025-11-17 13:06:56,710 - __main__ - INFO - Saved chunks to output\documentation-ubuntu-com-server-en-latest_chunks.jsonl
+2025-11-17 13:06:56,725 - __main__ - INFO - Processing training-data\Red_Hat_Enterprise_Linux-9-Configuring_basic_system_settings-en-US.pdf...
+2025-11-17 13:06:56,725 - __main__ - INFO - Total pages: 112
+2025-11-17 13:06:57,162 - __main__ - INFO - Extracted 233 meaningful chunks from Red_Hat_Enterprise_Linux-9-Configuring_basic_system_settings-en-US.pdf
+2025-11-17 13:06:57,170 - __main__ - INFO - Saved chunks to output\Red_Hat_Enterprise_Linux-9-Configuring_basic_system_settings-en-US_chunks.jsonl
+2025-11-17 13:06:57,229 - __main__ - INFO - Total chunks extracted: 2511
+2025-11-17 13:06:57,229 - __main__ - INFO - Combined chunks saved to output\all_chunks.jsonl
