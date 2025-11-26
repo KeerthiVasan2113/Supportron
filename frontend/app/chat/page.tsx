@@ -29,7 +29,7 @@ export default function ChatPage() {
   const greetingSentRef = useRef(false)
   const isCreatingGreetingRef = useRef(false)
 
-  // Check if we should start a new chat (from landing page)
+  // Check if we should start a new chat (from home page)
   useEffect(() => {
     const shouldStartNew = getSessionItem(StorageKeys.START_NEW_CHAT) === 'true'
     if (shouldStartNew) {

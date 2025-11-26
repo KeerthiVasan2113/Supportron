@@ -761,3 +761,141 @@ ConnectionError: Failed to connect to Ollama. Please check that Ollama is downlo
 2025-11-26 10:17:11 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\Supportron\Supportron\data-processing\vector_db...
 2025-11-26 10:17:15 - app.core.logging_config - INFO - RAG model set successfully
 2025-11-26 10:17:15 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-26 11:06:19 - app.core.logging_config - INFO - Checking Ollama model availability...
+2025-11-26 11:06:35 - app.core.logging_config - INFO - ✓ Model 'llama3.2:3b' is ready!
+2025-11-26 11:06:35 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\Supportron\Supportron\data-processing\vector_db...
+2025-11-26 11:06:41 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-26 11:06:41 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-26 12:01:13 - app.core.logging_config - INFO - Received question: how to block certain dns in linux
+2025-11-26 12:01:13 - app.core.logging_config - INFO - Conversation history: 1 previous messages
+2025-11-26 12:01:14 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-26 12:01:14 - app.core.logging_config - INFO - No relevant RAG documents, using llama3.2:3b directly
+2025-11-26 12:02:48 - app.core.logging_config - INFO - Generated answer (length: 1096 chars, sources: 0)
+2025-11-26 12:04:31 - app.core.logging_config - INFO - Received question: how to block certain dns in linux
+2025-11-26 12:04:31 - app.core.logging_config - INFO - Conversation history: 2 previous messages
+2025-11-26 12:04:31 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-26 12:04:31 - app.core.logging_config - INFO - No relevant RAG documents, using llama3.2:3b directly
+2025-11-26 12:05:41 - app.core.logging_config - INFO - Generated answer (length: 918 chars, sources: 0)
+2025-11-26 12:13:38 - app.core.logging_config - INFO - Received question: how to block certain dns in linux
+2025-11-26 12:13:38 - app.core.logging_config - INFO - Conversation history: 2 previous messages
+2025-11-26 12:13:38 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-26 12:13:38 - app.core.logging_config - INFO - No relevant RAG documents, using llama3.2:3b directly
+2025-11-26 12:14:52 - app.core.logging_config - INFO - Generated answer (length: 796 chars, sources: 0)
+2025-11-26 12:15:32 - app.core.logging_config - INFO - Received question: how to install python in linux
+2025-11-26 12:15:32 - app.core.logging_config - INFO - Conversation history: 1 previous messages
+2025-11-26 12:15:32 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-26 12:15:32 - app.core.logging_config - INFO - No relevant RAG documents, using llama3.2:3b directly
+2025-11-26 12:16:40 - app.core.logging_config - INFO - Generated answer (length: 1014 chars, sources: 0)
+2025-11-26 16:20:46 - app.core.logging_config - INFO - Checking Ollama model availability...
+2025-11-26 16:20:48 - app.core.logging_config - ERROR - Failed to connect to Ollama or model not found: [WinError 10061] No connection could be made because the target machine actively refused it
+Traceback (most recent call last):
+  File "C:\Projects\Supportron\Supportron\backend\backend\lib\site-packages\httpx\_transports\default.py", line 72, in map_httpcore_exceptions
+    yield
+  File "C:\Projects\Supportron\Supportron\backend\backend\lib\site-packages\httpx\_transports\default.py", line 236, in handle_request
+    resp = self._pool.handle_request(req)
+  File "C:\Projects\Supportron\Supportron\backend\backend\lib\site-packages\httpcore\_sync\connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "C:\Projects\Supportron\Supportron\backend\backend\lib\site-packages\httpcore\_sync\connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+  File "C:\Projects\Supportron\Supportron\backend\backend\lib\site-packages\httpcore\_sync\connection.py", line 101, in handle_request
+    raise exc
+  File "C:\Projects\Supportron\Supportron\backend\backend\lib\site-packages\httpcore\_sync\connection.py", line 78, in handle_request
+    stream = self._connect(request)
+  File "C:\Projects\Supportron\Supportron\backend\backend\lib\site-packages\httpcore\_sync\connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+  File "C:\Projects\Supportron\Supportron\backend\backend\lib\site-packages\httpcore\_backends\sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+  File "C:\Users\Keerthivasan G\AppData\Local\Programs\Python\Python310\lib\contextlib.py", line 153, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "C:\Projects\Supportron\Supportron\backend\backend\lib\site-packages\httpcore\_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [WinError 10061] No connection could be made because the target machine actively refused it
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Projects\Supportron\Supportron\backend\app\main.py", line 96, in startup_event
+    ollama.generate(model=Config.MODEL, prompt="test")
+  File "C:\Projects\Supportron\Supportron\backend\backend\lib\site-packages\ollama\_client.py", line 162, in generate
+    return self._request_stream(
+  File "C:\Projects\Supportron\Supportron\backend\backend\lib\site-packages\ollama\_client.py", line 98, in _request_stream
+    return self._stream(*args, **kwargs) if stream else self._request(*args, **kwargs).json()
+  File "C:\Projects\Supportron\Supportron\backend\backend\lib\site-packages\ollama\_client.py", line 69, in _request
+    response = self._client.request(method, url, **kwargs)
+  File "C:\Projects\Supportron\Supportron\backend\backend\lib\site-packages\httpx\_client.py", line 837, in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+  File "C:\Projects\Supportron\Supportron\backend\backend\lib\site-packages\httpx\_client.py", line 926, in send
+    response = self._send_handling_auth(
+  File "C:\Projects\Supportron\Supportron\backend\backend\lib\site-packages\httpx\_client.py", line 954, in _send_handling_auth
+    response = self._send_handling_redirects(
+  File "C:\Projects\Supportron\Supportron\backend\backend\lib\site-packages\httpx\_client.py", line 991, in _send_handling_redirects
+    response = self._send_single_request(request)
+  File "C:\Projects\Supportron\Supportron\backend\backend\lib\site-packages\httpx\_client.py", line 1027, in _send_single_request
+    response = transport.handle_request(request)
+  File "C:\Projects\Supportron\Supportron\backend\backend\lib\site-packages\httpx\_transports\default.py", line 235, in handle_request
+    with map_httpcore_exceptions():
+  File "C:\Users\Keerthivasan G\AppData\Local\Programs\Python\Python310\lib\contextlib.py", line 153, in __exit__
+    self.gen.throw(typ, value, traceback)
+  File "C:\Projects\Supportron\Supportron\backend\backend\lib\site-packages\httpx\_transports\default.py", line 89, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [WinError 10061] No connection could be made because the target machine actively refused it
+2025-11-26 16:20:48 - app.core.logging_config - WARNING - Make sure Ollama is running and model is pulled:
+2025-11-26 16:20:48 - app.core.logging_config - WARNING -   ollama pull llama3.2:3b
+2025-11-26 16:20:48 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\Supportron\Supportron\data-processing\vector_db...
+2025-11-26 16:20:52 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-26 16:20:52 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-26 16:21:48 - app.core.logging_config - INFO - Received question: How to configure the networks in linux servers
+2025-11-26 16:21:48 - app.core.logging_config - INFO - Conversation history: 1 previous messages
+2025-11-26 16:21:49 - app.core.logging_config - INFO - Found 3 relevant RAG documents
+2025-11-26 16:21:49 - app.core.logging_config - INFO - Using RAG + llama3.2:3b pipeline
+2025-11-26 16:21:51 - app.core.logging_config - ERROR - Model generation failed: [WinError 10061] No connection could be made because the target machine actively refused it
+2025-11-26 16:23:22 - app.core.logging_config - INFO - Received question: Guidance to configure networks in linux systems.
+2025-11-26 16:23:22 - app.core.logging_config - INFO - Conversation history: 2 previous messages
+2025-11-26 16:23:22 - app.core.logging_config - INFO - Found 3 relevant RAG documents
+2025-11-26 16:23:22 - app.core.logging_config - INFO - Using RAG + llama3.2:3b pipeline
+2025-11-26 16:25:36 - app.core.logging_config - INFO - Generated answer (length: 1632 chars, sources: 3)
+2025-11-26 16:28:44 - app.core.logging_config - INFO - Received question: How to configure the networks in linux servers
+2025-11-26 16:28:44 - app.core.logging_config - INFO - Conversation history: 2 previous messages
+2025-11-26 16:28:44 - app.core.logging_config - INFO - Found 3 relevant RAG documents
+2025-11-26 16:28:44 - app.core.logging_config - INFO - Using RAG + llama3.2:3b pipeline
+2025-11-26 16:30:21 - app.core.logging_config - INFO - Generated answer (length: 1176 chars, sources: 3)
+2025-11-26 17:05:39 - app.core.logging_config - INFO - Checking Ollama model availability...
+2025-11-26 17:05:55 - app.core.logging_config - INFO - ✓ Model 'llama3.2:3b' is ready!
+2025-11-26 17:05:55 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\Supportron\Supportron\data-processing\vector_db...
+2025-11-26 17:05:59 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-26 17:05:59 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-26 17:26:52 - app.core.logging_config - INFO - Received question: docker install in linux server
+2025-11-26 17:26:52 - app.core.logging_config - INFO - Conversation history: 1 previous messages
+2025-11-26 17:26:52 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-26 17:26:52 - app.core.logging_config - INFO - No relevant RAG documents, using llama3.2:3b directly
+2025-11-26 17:28:01 - app.core.logging_config - INFO - Generated answer (length: 764 chars, sources: 0)
+2025-11-26 17:34:39 - app.core.logging_config - INFO - Checking Ollama model availability...
+2025-11-26 17:35:03 - app.core.logging_config - INFO - ✓ Model 'llama3.2:3b' is ready!
+2025-11-26 17:35:03 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\Supportron\Supportron\data-processing\vector_db...
+2025-11-26 17:35:12 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-26 17:35:12 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-26 17:36:27 - app.core.logging_config - INFO - Checking Ollama model availability...
+2025-11-26 17:36:33 - app.core.logging_config - INFO - ✓ Model 'llama3.2:3b' is ready!
+2025-11-26 17:36:33 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\Supportron\Supportron\data-processing\vector_db...
+2025-11-26 17:36:38 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-26 17:36:38 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-26 17:40:32 - app.core.logging_config - INFO - Checking Ollama model availability...
+2025-11-26 17:40:39 - app.core.logging_config - INFO - ✓ Model 'llama3.2:3b' is ready!
+2025-11-26 17:40:39 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\Supportron\Supportron\data-processing\vector_db...
+2025-11-26 17:40:45 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-26 17:40:45 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-26 17:50:00 - app.core.logging_config - INFO - Received question: How to configure network in ubuntu servers
+2025-11-26 17:50:00 - app.core.logging_config - INFO - Conversation history: 1 previous messages
+2025-11-26 17:50:01 - app.core.logging_config - INFO - Found 3 relevant RAG documents
+2025-11-26 17:50:01 - app.core.logging_config - INFO - Using RAG + llama3.2:3b pipeline
+2025-11-26 17:52:37 - app.core.logging_config - INFO - Generated answer (length: 2064 chars, sources: 3)
+2025-11-26 17:54:16 - app.core.logging_config - INFO - Received question: How to configure network in ubuntu servers
+2025-11-26 17:54:16 - app.core.logging_config - INFO - Conversation history: 2 previous messages
+2025-11-26 17:54:16 - app.core.logging_config - INFO - Found 3 relevant RAG documents
+2025-11-26 17:54:16 - app.core.logging_config - INFO - Using RAG + llama3.2:3b pipeline
+2025-11-26 17:56:12 - app.core.logging_config - INFO - Generated answer (length: 2827 chars, sources: 3)
+2025-11-26 17:57:13 - app.core.logging_config - INFO - Received question: How to install docker in linux
+2025-11-26 17:57:13 - app.core.logging_config - INFO - Conversation history: 3 previous messages
+2025-11-26 17:57:13 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-26 17:57:13 - app.core.logging_config - INFO - No relevant RAG documents, using llama3.2:3b directly
+2025-11-26 17:59:16 - app.core.logging_config - INFO - Generated answer (length: 1158 chars, sources: 0)

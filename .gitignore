@@ -21,6 +21,17 @@ wheels/
 *.egg
 MANIFEST
 
+# Python - Specific __pycache__ directories
+backend/__pycache__/
+backend/app/__pycache__/
+backend/app/api/__pycache__/
+backend/app/api/v1/__pycache__/
+backend/app/core/__pycache__/
+backend/app/db/__pycache__/
+backend/app/services/__pycache__/
+backend/app/utils/__pycache__/
+data-processing/__pycache__/
+
 # Virtual Environments
 venv/
 env/
@@ -29,32 +40,16 @@ backend/backend/
 data-processing/data-processing/
 .venv
 
-# IDEs
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# Logs
-*.log
-logs/
-*.log.*
+# Backend specific
+backend/databases/
 backend/logs/
-data-processing/logs/
-
-# Environment variables
-.env
-.env.local
-.env.*.local
 backend/.env
 
-# OS
-.DS_Store
-Thumbs.db
-desktop.ini
+# Data Processing specific
+data-processing/logs/
+data-processing/vector_db/
 
-# Node
+# Node.js / Frontend
 node_modules/
 npm-debug.log*
 yarn-debug.log*
@@ -69,18 +64,48 @@ dist/
 frontend/.next/
 frontend/node_modules/
 
+# Frontend specific (from frontend/.gitignore)
+frontend/.pnp
+frontend/.pnp.js
+frontend/coverage/
+frontend/.env*.local
+frontend/.env
+frontend/.vercel
+frontend/*.tsbuildinfo
+frontend/next-env.d.ts
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+logs/
+*.log.*
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
 # Database files
 *.db
 *.sqlite
 *.sqlite3
 databases/
-backend/databases/
 
 # Vector database
 vector_db/
 *.index
 *.pkl
-data-processing/vector_db/
 
 # Training data (optional - uncomment if you don't want to track PDFs)
 # training-data/
@@ -107,41 +132,7 @@ coverage.xml
 .dmypy.json
 dmypy.json
 
-# Specific Python cache directories
-backend/__pycache__/
-backend/app/__pycache__/
-backend/app/api/__pycache__/
-backend/app/api/v1/__pycache__/
-backend/app/core/__pycache__/
-backend/app/db/__pycache__/
-backend/app/services/__pycache__/
-backend/app/utils/__pycache__/
-data-processing/__pycache__/
-
-# Project-specific directories
-backend/backend/
-backend/databases/
-backend/logs/
-data-processing/data-processing/
-data-processing/logs/
-data-processing/vector_db/
-
-# Frontend build and dependencies
-frontend/.next/
-frontend/node_modules/
-
-# Frontend specific (from frontend/.gitignore)
-frontend/.pnp
-frontend/.pnp.js
-frontend/coverage/
-frontend/out/
-frontend/build/
-frontend/*.pem
-frontend/.vercel/
-frontend/*.tsbuildinfo
-frontend/next-env.d.ts
-
-# Documentation files (user requested)
+# Project documentation (user requested)
 ASSISTANT_PREFERENCES.md
 LICENSE
 README.md

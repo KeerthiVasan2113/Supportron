@@ -1,0 +1,9 @@
+{
+  "total_chunks": 2510,
+  "chunks_by_source": {
+    "documentation-ubuntu-com-server-en-latest.pdf": 2275,
+    "Red_Hat_Enterprise_Linux-9-Configuring_basic_system_settings-en-US.pdf": 235
+  },
+  "total_characters": 2303625,
+  "avg_chunk_size": 917.7788844621514
+}

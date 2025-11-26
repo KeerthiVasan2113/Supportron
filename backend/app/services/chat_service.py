@@ -164,6 +164,8 @@ IMPORTANT INSTRUCTIONS:
 5. Maintain continuity with previous messages in the conversation.
 6. Provide a clear, structured answer with proper formatting.
 7. Use code blocks for any code examples.
+8. CRITICAL: When providing commands (sudo, apt-get, systemctl, docker, etc.), ALWAYS provide COMPLETE, EXECUTABLE commands. Never truncate or cut off commands mid-way. Each command must be complete and ready to run.
+9. For installation or configuration steps, provide the full command including all necessary flags and arguments.
 
 Provide your answer now:"""
     
@@ -239,10 +241,17 @@ IMPORTANT INSTRUCTIONS:
 3. For questions about the conversation, carefully review ALL messages in the conversation history.
 4. For general questions, use your knowledge while maintaining context from the conversation.
 5. Always maintain continuity with the conversation history.
+6. CRITICAL: When providing commands (sudo, apt-get, systemctl, docker, etc.), ALWAYS provide COMPLETE, EXECUTABLE commands. Never truncate or cut off commands mid-way. Each command must be complete and ready to run.
 
 Provide a helpful, clear answer based on the conversation history and your knowledge."""
     else:
-        prompt = question
+        prompt = f"""You are a helpful assistant. Answer the following question clearly and completely.
+
+Question: {question}
+
+IMPORTANT: When providing commands (sudo, apt-get, systemctl, docker, etc.), ALWAYS provide COMPLETE, EXECUTABLE commands. Never truncate or cut off commands mid-way. Each command must be complete and ready to run.
+
+Provide your answer:"""
     
     try:
         response = ollama.generate(

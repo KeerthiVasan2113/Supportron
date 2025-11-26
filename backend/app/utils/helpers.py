@@ -185,19 +185,31 @@ def format_code_blocks(text: str) -> str:
     code_indicators = compile_regex_patterns()
     
     # Compile command patterns once for better performance
+    # Updated patterns to capture complete commands - use greedy matching for complete commands
     _command_patterns = [
-        re.compile(r'(sudo\s+[^\s]+(?:\s+(?:[^\s]+|[\'"][^\'"]*[\'"]))*?)', re.IGNORECASE),
-        re.compile(r'(postconf\s+[^\s]+(?:\s+(?:[^\s]+|[\'"][^\'"]*[\'"]))*?)', re.IGNORECASE),
-        re.compile(r'(curl\s+[^\s]+(?:\s+[^\s]+)*)', re.IGNORECASE),
-        re.compile(r'(npm\s+[^\s]+(?:\s+[^\s]+)*)', re.IGNORECASE),
-        re.compile(r'(pip\s+[^\s]+(?:\s+[^\s]+)*)', re.IGNORECASE),
-        re.compile(r'(git\s+[^\s]+(?:\s+[^\s]+)*)', re.IGNORECASE),
-        re.compile(r'(\$\s+[^\s]+(?:\s+[^\s]+)*)', re.IGNORECASE),
-        re.compile(r'(SELECT\s+.*?;)', re.IGNORECASE),
-        re.compile(r'(INSERT\s+.*?;)', re.IGNORECASE),
-        re.compile(r'(UPDATE\s+.*?;)', re.IGNORECASE),
-        re.compile(r'(DELETE\s+.*?;)', re.IGNORECASE),
-        re.compile(r'(CREATE\s+.*?;)', re.IGNORECASE),
+        # Complete apt-get commands (capture full command including all flags)
+        re.compile(r'(sudo\s+apt-get\s+(?:update|install|remove|upgrade|dist-upgrade|autoremove|clean|purge)\s+[^\n\.]+)', re.IGNORECASE),
+        # Complete apt commands
+        re.compile(r'(sudo\s+apt\s+(?:update|install|remove|upgrade|list|search|show)\s+[^\n\.]+)', re.IGNORECASE),
+        # Complete systemctl commands
+        re.compile(r'(sudo\s+systemctl\s+(?:start|stop|restart|enable|disable|status|reload)\s+[^\n\.]+)', re.IGNORECASE),
+        # Complete docker commands
+        re.compile(r'(sudo\s+docker\s+(?:run|build|pull|push|start|stop|restart|rm|rmi|ps|images|exec|logs)\s+[^\n\.]+)', re.IGNORECASE),
+        # Generic sudo commands (capture complete command line)
+        re.compile(r'(sudo\s+[a-zA-Z0-9_-]+(?:\s+[^\n\.]+)?)', re.IGNORECASE),
+        # Other common commands
+        re.compile(r'(postconf\s+[^\s]+(?:\s+(?:[^\s]+|[\'"][^\'"]*[\'"]))+)', re.IGNORECASE),
+        re.compile(r'(curl\s+[^\s]+(?:\s+[^\s]+)+)', re.IGNORECASE),
+        re.compile(r'(npm\s+[^\s]+(?:\s+[^\s]+)+)', re.IGNORECASE),
+        re.compile(r'(pip\s+[^\s]+(?:\s+[^\s]+)+)', re.IGNORECASE),
+        re.compile(r'(git\s+[^\s]+(?:\s+[^\s]+)+)', re.IGNORECASE),
+        re.compile(r'(\$\s+[^\s]+(?:\s+[^\s]+)+)', re.IGNORECASE),
+        # SQL commands
+        re.compile(r'(SELECT\s+.*?;)', re.IGNORECASE | re.DOTALL),
+        re.compile(r'(INSERT\s+.*?;)', re.IGNORECASE | re.DOTALL),
+        re.compile(r'(UPDATE\s+.*?;)', re.IGNORECASE | re.DOTALL),
+        re.compile(r'(DELETE\s+.*?;)', re.IGNORECASE | re.DOTALL),
+        re.compile(r'(CREATE\s+.*?;)', re.IGNORECASE | re.DOTALL),
     ]
     _trailing_words_pattern = re.compile(r'\s+(using|with|by|via|through)\s*$', re.IGNORECASE)
     

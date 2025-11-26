@@ -360,7 +360,7 @@ class SimpleRAGModel:
         messages = [
             {
                 "role": "system",
-                "content": "You are a helpful assistant that answers questions based on the provided documentation context. Provide clear, structured, and accurate answers. Use markdown formatting for headings (##), code blocks (```bash), bold text (**text**), and inline code (`text`)."
+                "content": "You are a helpful assistant that answers questions based on the provided documentation context. Provide clear, structured, and accurate answers. Use markdown formatting for headings (##), code blocks (```bash), bold text (**text**), and inline code (`text`). CRITICAL: When providing commands, ALWAYS provide COMPLETE, EXECUTABLE commands. Never truncate commands."
             },
             {
                 "role": "user",
@@ -373,7 +373,9 @@ Please provide a comprehensive answer based on the context above. Format your an
 - Headings (##) for major sections
 - Code blocks (```bash) for commands
 - Bold text (**text**) for important keywords, port numbers, and IP addresses
-- Inline code (`text`) for file paths"""
+- Inline code (`text`) for file paths
+
+CRITICAL: When providing commands (sudo, apt-get, systemctl, docker, etc.), ALWAYS provide COMPLETE, EXECUTABLE commands. Each command must be complete and ready to run. Never truncate or cut off commands mid-way."""
             }
         ]
         
@@ -480,60 +482,35 @@ Please provide a comprehensive answer based on the context above. Format your an
                 continue
             
             # Check if this line starts with a command
-            # Simple pattern: match command prefix
-            command_prefix_match = re.match(r'^(sudo\s+|apt\s+|yum\s+|systemctl\s+|postconf\s+|dpkg-reconfigure\s+|update-exim4\.conf|ufw\s+|iptables\s+|ifconfig\s+|vi\s+|nano\s+|setenforce\s+|sestatus\s+)', line_stripped, re.IGNORECASE)
+            # Enhanced pattern to match common command prefixes including docker, apt-get, etc.
+            command_prefix_match = re.match(r'^(sudo\s+(?:apt-get|apt|yum|dnf|systemctl|docker|service|postconf|dpkg-reconfigure|update-exim4\.conf|ufw|iptables|ifconfig|vi|nano|setenforce|sestatus|wget|curl|git|npm|pip)\s+|apt-get\s+|apt\s+|yum\s+|dnf\s+|systemctl\s+|docker\s+|service\s+|postconf\s+|dpkg-reconfigure\s+|update-exim4\.conf\s+|ufw\s+|iptables\s+|ifconfig\s+|vi\s+|nano\s+|setenforce\s+|sestatus\s+|wget\s+|curl\s+|git\s+|npm\s+|pip\s+)', line_stripped, re.IGNORECASE)
             
             if command_prefix_match:
-                # Extract command word by word, stopping at first capitalized word that starts a sentence
-                words = line_stripped.split()
-                command_words = []
+                # Extract complete command - take the entire line until we hit a period, newline, or clear sentence boundary
+                # For commands, we want to capture everything until a clear break
+                command_end_pattern = r'[\.\n]|(?:\s+)(?:This|The|You|If|When|After|Before|To|For|How|What|Where|Why|Note|Important|Warning|Error)(?:\s+[a-z])'
+                command_match = re.search(command_end_pattern, line_stripped)
                 
-                # Start with the command prefix
-                prefix_end = command_prefix_match.end()
-                prefix_text = line_stripped[:prefix_end].strip()
-                remaining_words = line_stripped[prefix_end:].strip().split()
+                if command_match:
+                    # Command ends at the match position
+                    command = line_stripped[:command_match.start()].strip()
+                    remaining_text = line_stripped[command_match.start():].strip()
+                else:
+                    # No clear end found, take the whole line as command
+                    command = line_stripped.strip()
+                    remaining_text = ''
                 
-                command_words.append(prefix_text.rstrip())
-                
-                # Add words until we hit a capitalized word that looks like sentence start
-                for i, word in enumerate(remaining_words):
-                    # Clean word (remove punctuation)
-                    clean_word = re.sub(r'[.,;:]$', '', word)
-                    
-                    # Stop BEFORE adding if word is capitalized and looks like sentence start
-                    is_capitalized = clean_word and clean_word[0].isupper()
-                    
-                    # Common sentence starters (words that typically start explanations)
-                    sentence_starters = ['Configure', 'Install', 'Setting', 'This', 'The', 'You', 'If', 'When', 'After', 'Before', 'To', 'For', 'How', 'What', 'Where', 'Why', 'Squid', 'Nginx', 'Apache', 'Dovecot', 'Postfix', 'Exim4', 'If', 'When', 'After']
-                    
-                    # Check if this capitalized word is likely starting a new sentence
-                    # It's a sentence starter if:
-                    # 1. It's in our list of sentence starters, OR
-                    # 2. It's capitalized AND the previous word was part of command AND next word is lowercase (new sentence pattern)
-                    if is_capitalized:
-                        is_sentence_starter = (
-                            clean_word in sentence_starters or
-                            (i > 0 and i+1 < len(remaining_words) and remaining_words[i+1][0].islower())
-                        )
-                        
-                        if is_sentence_starter:
-                            # This is the start of explanation, stop BEFORE adding it
-                            break
-                    
-                    # Add this word to command (it's part of the command)
-                    command_words.append(word)
-                
-                command = ' '.join(command_words).strip()
-                # Remove trailing punctuation
+                # Clean up command - remove trailing punctuation but keep the command intact
                 command = re.sub(r'[.,;:]$', '', command).strip()
                 
-                if command and len(command) > 5:  # Valid command
+                # Validate command - must have at least the prefix and one more word
+                command_parts = command.split()
+                if len(command_parts) >= 2 and len(command) > 5:  # Valid command
                     placeholder = f"__COMMAND_{command_index}__"
                     commands.append(command)
                     placeholders.append(placeholder)
                     
                     # Replace ONLY the command, keep everything after as regular text
-                    remaining_text = line_stripped[len(command):].strip()
                     if remaining_text:
                         text_with_placeholders_lines.append(placeholder + ' ' + remaining_text)
                     else:
@@ -543,55 +520,47 @@ Please provide a comprehensive answer based on the context above. Format your an
             
             # Also check for commands in the middle of sentences (but be VERY careful)
             # Only match if it's clearly a standalone command, not part of explanation
-            inline_command_pattern = r'\b(sudo\s+(?:apt|yum|systemctl|postconf|dpkg-reconfigure|update-exim4\.conf|ufw|iptables|ifconfig|vi|nano|setenforce|sestatus)\s+)'
+            inline_command_pattern = r'\b(sudo\s+(?:apt-get|apt|yum|dnf|systemctl|docker|service|postconf|dpkg-reconfigure|update-exim4\.conf|ufw|iptables|ifconfig|vi|nano|setenforce|sestatus|wget|curl|git|npm|pip)\s+)'
             match = re.search(inline_command_pattern, line_stripped, re.IGNORECASE)
             
             if match and match.start() > 0:  # Command not at start of line
-                # Extract command word by word, same logic as above
+                # Extract complete command from the match position
                 prefix_start = match.start()
                 prefix_end = match.end()
                 prefix_text = match.group(1).strip()
                 
                 # Get text after the command prefix
                 text_after_prefix = line_stripped[prefix_end:].strip()
-                remaining_words = text_after_prefix.split()
                 
-                command_words = [prefix_text]
+                # Find where the command ends (period, newline, or sentence starter)
+                command_end_pattern = r'[\.\n]|(?:\s+)(?:This|The|You|If|When|After|Before|To|For|How|What|Where|Why|Note|Important|Warning|Error)(?:\s+[a-z])'
+                end_match = re.search(command_end_pattern, text_after_prefix)
                 
-                # Add words until we hit a capitalized sentence starter
-                for i, word in enumerate(remaining_words):
-                    clean_word = re.sub(r'[.,;:]$', '', word)
-                    is_capitalized = clean_word and clean_word[0].isupper()
-                    
-                    sentence_starters = ['Configure', 'Install', 'Setting', 'This', 'The', 'You', 'If', 'When', 'After', 'Before', 'To', 'For', 'How', 'What', 'Where', 'Why', 'Squid', 'Nginx', 'Apache', 'Dovecot', 'Postfix', 'Exim4']
-                    
-                    if is_capitalized:
-                        is_sentence_starter = (
-                            clean_word in sentence_starters or
-                            (i > 0 and i+1 < len(remaining_words) and remaining_words[i+1][0].islower())
-                        )
-                        
-                        if is_sentence_starter:
-                            break
-                    
-                    command_words.append(word)
+                if end_match:
+                    command_suffix = text_after_prefix[:end_match.start()].strip()
+                    remaining_text = text_after_prefix[end_match.start():].strip()
+                else:
+                    # Take all remaining text as part of command
+                    command_suffix = text_after_prefix
+                    remaining_text = ''
                 
-                command = ' '.join(command_words).strip()
+                command = prefix_text + ' ' + command_suffix
                 command = re.sub(r'[.,;:]$', '', command).strip()
                 
-                if command and len(command) > 5:
+                # Validate command
+                command_parts = command.split()
+                if len(command_parts) >= 2 and len(command) > 5:
                     placeholder = f"__COMMAND_{command_index}__"
                     commands.append(command)
                     placeholders.append(placeholder)
                     
                     # Replace command, keep explanation as text
-                    remaining_text = line_stripped[prefix_start + len(command):].strip()
                     before_command = line_stripped[:prefix_start]
                     
                     if remaining_text:
                         text_with_placeholders_lines.append(before_command + placeholder + ' ' + remaining_text)
                     else:
-                        text_with_placeholders_lines.append(before_command + placeholder + line_stripped[prefix_start + len(command):])
+                        text_with_placeholders_lines.append(before_command + placeholder)
                     command_index += 1
                 else:
                     text_with_placeholders_lines.append(line)

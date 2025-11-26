@@ -1,8 +1,20 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import { Message } from '@/types/chat'
-import { FileText, ChevronDown, ChevronUp, Copy, RefreshCw, Edit2, Check, X, Loader2 } from 'lucide-react'
+import {
+  FileText,
+  ChevronDown,
+  ChevronUp,
+  Copy,
+  RefreshCw,
+  Edit2,
+  Check,
+  X,
+  Loader2,
+} from 'lucide-react'
+import { formatElapsedTime, calculateElapsedTime } from '@/utils/timer'
 
 interface MessageBubbleProps {
   message: Message
@@ -13,35 +25,45 @@ interface MessageBubbleProps {
 const MessageBubble = ({ message, onEdit, onRegenerate }: MessageBubbleProps) => {
   const isUser = message.role === 'user'
   const isGreeting = !isUser && message.id.startsWith('greeting-')
+
   const [sourcesOpen, setSourcesOpen] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
   const [editContent, setEditContent] = useState(message.content)
   const [isCopied, setIsCopied] = useState(false)
-  const [elapsedTime, setElapsedTime] = useState(0)
+  const [elapsedSeconds, setElapsedSeconds] = useState(0)
   const [shouldAnimate, setShouldAnimate] = useState(false)
 
-  // Trigger animation for new user messages
+  // Animation on NEW user messages only
   useEffect(() => {
     if (isUser && message.content) {
       setShouldAnimate(true)
-      // Remove animation class after animation completes to allow re-animation on edit
       const timer = setTimeout(() => setShouldAnimate(false), 800)
       return () => clearTimeout(timer)
     }
   }, [isUser, message.id])
 
-  // Timer for loading state
+  // Loading timer logic using universal timer utility
   useEffect(() => {
     if (message.isLoading && message.loadingStartTime) {
-      const interval = setInterval(() => {
-        const elapsed = ((Date.now() - message.loadingStartTime!) / 1000).toFixed(1)
-        setElapsedTime(parseFloat(elapsed))
+      const i = setInterval(() => {
+        const elapsed = calculateElapsedTime(message.loadingStartTime!)
+        setElapsedSeconds(elapsed)
       }, 100)
-      return () => clearInterval(interval)
+      return () => clearInterval(i)
+    } else if (!message.isLoading && message.responseTime) {
+      // When loading completes, use the responseTime from the message
+      setElapsedSeconds(message.responseTime)
     } else {
-      setElapsedTime(0)
+      setElapsedSeconds(0)
     }
-  }, [message.isLoading, message.loadingStartTime])
+  }, [message.isLoading, message.loadingStartTime, message.responseTime])
+  
+  // Format elapsed time using universal timer utility
+  // Use responseTime if available and not loading, otherwise use live elapsedSeconds
+  const timeToFormat = (!message.isLoading && message.responseTime) 
+    ? message.responseTime 
+    : elapsedSeconds
+  const formattedTime = formatElapsedTime(timeToFormat)
 
   const handleCopy = async () => {
     try {
@@ -49,7 +71,7 @@ const MessageBubble = ({ message, onEdit, onRegenerate }: MessageBubbleProps) =>
       setIsCopied(true)
       setTimeout(() => setIsCopied(false), 2000)
     } catch (error) {
-      console.error('Failed to copy:', error)
+      console.error('Copy failed:', error)
     }
   }
 
@@ -70,330 +92,336 @@ const MessageBubble = ({ message, onEdit, onRegenerate }: MessageBubbleProps) =>
     setEditContent(message.content)
   }
 
-  // Simple markdown renderer
+  // --- Markdown Renderer (improved code block handling) ---
   const renderMarkdown = (text: string) => {
-    const lines = text.split('\n')
+    // First, normalize the text to handle any malformed code blocks
+    let normalizedText = text
+    
+    // Split by lines for processing
+    const lines = normalizedText.split('\n')
     const elements: JSX.Element[] = []
-    let inCodeBlock = false
-    let codeBlockContent: string[] = []
-    let codeBlockLanguage = ''
+
+    let inBlock = false
+    let blockLang = ''
+    let blockLines: string[] = []
+    let blockStartIndex = 0
 
     lines.forEach((line, index) => {
-      // Handle code blocks
-      if (line.startsWith('```')) {
-        if (inCodeBlock) {
-          // End code block
-          elements.push(
-            <pre key={`code-${index}`} className="bg-slate-900/80 border border-cyan-500/30 text-cyan-100 p-2 sm:p-4 rounded-lg overflow-x-auto my-2 sm:my-4 text-xs sm:text-sm font-mono cyber-glow">
-              <code>{codeBlockContent.join('\n')}</code>
-            </pre>
-          )
-          codeBlockContent = []
-          inCodeBlock = false
-          codeBlockLanguage = ''
+      // Check for code block markers (``` or ```language) - check trimmed version
+      const trimmedLine = line.trim()
+      
+      // Check if this line is a code block marker
+      // Matches: ``` or ```language (where language is alphanumeric, dash, or underscore)
+      const isCodeBlockMarker = trimmedLine === '```' || 
+        (trimmedLine.startsWith('```') && /^```[a-zA-Z0-9_-]*$/.test(trimmedLine))
+      
+      if (isCodeBlockMarker) {
+        if (inBlock) {
+          // Closing code block - save accumulated lines
+          if (blockLines.length > 0) {
+            elements.push(
+              <pre
+                key={`code-${blockStartIndex}`}
+                className="bg-slate-900/80 border border-cyan-500/30 text-cyan-100 p-3 rounded-lg overflow-x-auto text-xs sm:text-sm font-mono cyber-glow my-2"
+              >
+                <code>{blockLines.join('\n')}</code>
+              </pre>
+            )
+          } else {
+            // Empty code block - still render it but with a note
+            elements.push(
+              <pre
+                key={`code-empty-${blockStartIndex}`}
+                className="bg-slate-900/80 border border-cyan-500/30 text-cyan-100 p-3 rounded-lg overflow-x-auto text-xs sm:text-sm font-mono cyber-glow my-2"
+              >
+                <code className="text-cyan-400/50 italic">(empty code block)</code>
+              </pre>
+            )
+          }
+          inBlock = false
+          blockLines = []
+          blockLang = ''
         } else {
-          // Start code block
-          codeBlockLanguage = line.replace('```', '').trim()
-          inCodeBlock = true
+          // Opening code block - extract language if present
+          const langMatch = trimmedLine.match(/^```([a-zA-Z0-9_-]*)$/)
+          blockLang = langMatch ? langMatch[1] : ''
+          inBlock = true
+          blockStartIndex = index
+          blockLines = []
         }
+        return // Skip processing the marker line itself
+      }
+
+      // If we're inside a code block, accumulate lines (preserve original formatting)
+      if (inBlock) {
+        blockLines.push(line)
         return
       }
 
-      if (inCodeBlock) {
-        codeBlockContent.push(line)
-        return
-      }
-
-      // Handle headings
-      if (line.startsWith('## ')) {
-        elements.push(
-          <h2 key={`h2-${index}`} className="text-lg sm:text-xl font-bold mt-4 sm:mt-6 mb-2 sm:mb-3 bg-gradient-to-r from-cyan-400 to-teal-400 bg-clip-text text-transparent">
-            {line.replace('## ', '')}
-          </h2>
-        )
-        return
-      }
-
+      // ### Heading
       if (line.startsWith('### ')) {
         elements.push(
-          <h3 key={`h3-${index}`} className="text-base sm:text-lg font-semibold mt-3 sm:mt-4 mb-1 sm:mb-2 text-cyan-300">
-            {line.replace('### ', '')}
+          <h3 key={`h3-${index}`} className="text-base sm:text-lg font-semibold mt-4 mb-2 text-cyan-300">
+            {line.substring(4)}
           </h3>
         )
         return
       }
 
-      // Handle empty lines
-      if (line.trim() === '') {
-        elements.push(<br key={`br-${index}`} />)
+      // ## Heading
+      if (line.startsWith('## ')) {
+        elements.push(
+          <h2
+            key={`h2-${index}`}
+            className="text-lg sm:text-xl font-bold mt-6 mb-3 bg-gradient-to-r from-cyan-400 to-teal-400 bg-clip-text text-transparent"
+          >
+            {line.substring(3)}
+          </h2>
+        )
         return
       }
 
-      // Handle bold text and inline code
+      // Blank line → spacing only
+      if (line.trim() === '') {
+        elements.push(<div key={`sp-${index}`} className="h-2" />)
+        return
+      }
+
+      // Process inline markdown (only if not in code block)
+      let html: (string | JSX.Element)[] = []
+
       const boldRegex = /\*\*([^*]+)\*\*/g
-      const codeRegex = /`([^`]+)`/g
-      const parts: (string | JSX.Element)[] = []
-      let processedLine = line
-      let partIndex = 0
-
-      // First, replace bold text with placeholders
-      const boldPlaceholders: { [key: string]: JSX.Element } = {}
-      processedLine = processedLine.replace(boldRegex, (match, text) => {
-             const placeholder = `__BOLD_${partIndex}__`
-               boldPlaceholders[placeholder] = (
-                 <strong key={`bold-${partIndex}`} className="font-semibold text-cyan-300 text-sm sm:text-base">
-                   {text}
-                 </strong>
-               )
-        partIndex++
-        return placeholder
-      })
-
-      // Then, replace inline code with placeholders
-      const codePlaceholders: { [key: string]: JSX.Element } = {}
-      processedLine = processedLine.replace(codeRegex, (match, text) => {
-             const placeholder = `__CODE_${partIndex}__`
-               codePlaceholders[placeholder] = (
-                 <code key={`inline-code-${partIndex}`} className="bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 px-1 sm:px-1.5 py-0.5 rounded text-xs sm:text-sm font-mono">
-                   {text}
-                 </code>
-               )
-        partIndex++
-        return placeholder
-      })
-
-      // Split by placeholders and reconstruct
-      const allPlaceholders = { ...boldPlaceholders, ...codePlaceholders }
-      const placeholderRegex = /(__(?:BOLD|CODE)_\d+__)/g
-      let lastIndex = 0
-      let match
-
-      while ((match = placeholderRegex.exec(processedLine)) !== null) {
-        if (match.index > lastIndex) {
-          const text = processedLine.substring(lastIndex, match.index)
-          if (text) parts.push(text)
+      
+      // Helper function to find inline code (single backticks, not triple backticks)
+      const findInlineCode = (text: string): Array<{start: number, end: number, content: string}> => {
+        const matches: Array<{start: number, end: number, content: string}> = []
+        let i = 0
+        while (i < text.length) {
+          if (text[i] === '`') {
+            // Check if it's triple backticks (code block marker)
+            if (i + 2 < text.length && text[i + 1] === '`' && text[i + 2] === '`') {
+              // Skip triple backticks
+              i += 3
+              continue
+            }
+            // Found single backtick - find matching closing backtick
+            const start = i
+            i++
+            let content = ''
+            while (i < text.length && text[i] !== '`') {
+              content += text[i]
+              i++
+            }
+            if (i < text.length && text[i] === '`') {
+              // Found closing backtick - check it's not part of triple
+              if (i + 1 >= text.length || text[i + 1] !== '`') {
+                matches.push({ start, end: i + 1, content })
+              }
+              i++
+            } else {
+              // No closing backtick found, treat as regular text
+              i = start + 1
+            }
+          } else {
+            i++
+          }
         }
-        if (allPlaceholders[match[0]]) {
-          parts.push(allPlaceholders[match[0]])
-        }
-        lastIndex = match.index + match[0].length
-      }
-      if (lastIndex < processedLine.length) {
-        parts.push(processedLine.substring(lastIndex))
+        return matches
       }
 
-             if (parts.length > 0) {
-               elements.push(
-                 <p key={`p-${index}`} className="mb-1 sm:mb-2 text-sm sm:text-base text-slate-200">
-                   {parts}
-                 </p>
-               )
-             } else {
-               elements.push(
-                 <p key={`p-${index}`} className="mb-1 sm:mb-2 text-sm sm:text-base text-slate-200">
-                   {line}
-                 </p>
-               )
-             }
+      let processed = line
+      let placeholderIndex = 0
+      const placeholders: Record<string, JSX.Element> = {}
+
+      // Process bold text first
+      processed = processed.replace(boldRegex, (match, content) => {
+        // Skip if this is inside a code block context (shouldn't happen here, but safety check)
+        if (match.includes('```')) {
+          return match
+        }
+        const key = `__BOLD_${placeholderIndex}__`
+        placeholders[key] = (
+          <strong key={key} className="font-semibold text-cyan-300">
+            {content}
+          </strong>
+        )
+        placeholderIndex++
+        return key
+      })
+
+      // Process inline code using our helper function
+      const inlineCodeMatches = findInlineCode(processed)
+      // Process matches in reverse order to maintain indices
+      for (let i = inlineCodeMatches.length - 1; i >= 0; i--) {
+        const match = inlineCodeMatches[i]
+        const key = `__CODE_${placeholderIndex}__`
+        placeholders[key] = (
+          <code
+            key={key}
+            className="bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 px-1 py-0.5 rounded text-xs sm:text-sm font-mono"
+          >
+            {match.content}
+          </code>
+        )
+        // Replace the matched text with placeholder
+        processed = processed.substring(0, match.start) + key + processed.substring(match.end)
+        placeholderIndex++
+      }
+
+      const parts = processed.split(/(__BOLD_\d+__|__CODE_\d+__)/g)
+
+      html = parts.map((p, i) => placeholders[p] || p)
+
+      elements.push(
+        <p key={`p-${index}`} className="mb-2 text-sm sm:text-base text-slate-200">
+          {html}
+        </p>
+      )
     })
 
-           // Handle any remaining code block
-           if (inCodeBlock && codeBlockContent.length > 0) {
-             elements.push(
-               <pre key="code-final" className="bg-slate-900/80 border border-cyan-500/30 text-cyan-100 p-2 sm:p-4 rounded-lg overflow-x-auto my-2 sm:my-4 text-xs sm:text-sm font-mono cyber-glow">
-                 <code>{codeBlockContent.join('\n')}</code>
-               </pre>
-             )
-           }
+    // If code block left open at end (malformed markdown)
+    if (inBlock && blockLines.length > 0) {
+      elements.push(
+        <pre
+          key="final-block"
+          className="bg-slate-900/80 border border-cyan-500/30 text-cyan-100 p-3 rounded-lg overflow-x-auto text-xs sm:text-sm font-mono cyber-glow my-2"
+        >
+          <code>{blockLines.join('\n')}</code>
+        </pre>
+      )
+    }
 
-           return elements.length > 0 ? elements : <p className="text-slate-200">{text}</p>
+    return elements
   }
 
-  // Get unique source files (brief)
   const uniqueSources = message.sources
-    ? Array.from(new Set(message.sources.map(s => s.source_file)))
-        .map(filename => {
-          const source = message.sources!.find(s => s.source_file === filename)
-          return {
-            filename: filename.replace('.pdf', '').replace(/_/g, ' '),
-            original: filename,
-            distance: source?.distance
-          }
-        })
+    ? Array.from(
+        new Map(
+          message.sources.map((s) => [
+            s.source_file,
+            {
+              filename: s.source_file.replace('.pdf', '').replace(/_/g, ' '),
+              original: s.source_file,
+            },
+          ])
+        ).values()
+      )
     : []
 
   return (
-    <article 
-      className={`group flex items-start max-w-3xl w-full px-2 sm:px-4 ${isUser ? 'ml-auto' : 'mr-auto space-x-2 sm:space-x-3'} ${isUser && shouldAnimate ? 'animate-message-fly-in' : ''}`}
-      role="article"
-      aria-label={isUser ? "Your message" : "Assistant response"}
+    <article
+      className={`group flex items-start w-full px-2 sm:px-3 ${
+        isUser ? 'ml-auto justify-end' : 'mr-auto space-x-3'
+      } ${isUser && shouldAnimate ? 'animate-message-fly-in' : ''}`}
     >
-      {/* Avatar for Assistant (left side) */}
+      {/* Assistant avatar */}
       {!isUser && (
-        <div className="flex-shrink-0 w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center bg-gradient-to-br from-cyan-500 to-teal-500 cyber-glow" aria-hidden="true">
-          <svg
-            className="w-4 h-4 sm:w-5 sm:h-5 text-white"
-            fill="none"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
+        <div className="flex-shrink-0 w-8 h-8 rounded-full overflow-hidden bg-gradient-to-br from-cyan-500 to-teal-500 cyber-glow ring-2 ring-cyan-500/50">
+          <Image
+            src="/icons/AI.png"
+            alt="AI Assistant"
+            width={32}
+            height={32}
+            className="w-full h-full object-cover"
             aria-hidden="true"
-          >
-            <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-          </svg>
+          />
         </div>
       )}
 
-      {/* Message Content */}
+      {/* Message container */}
       <div className={`flex-1 ${isUser ? 'flex flex-col items-end relative' : ''}`}>
-        {/* Edit Button (User messages only) - Faded, visible on hover - positioned absolutely next to message */}
+        {/* Edit (user message) */}
         {isUser && onEdit && !isEditing && (
           <button
             onClick={handleEdit}
-            aria-label="Edit message"
-            className="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1 text-cyan-400/70 hover:text-cyan-300 hover:bg-cyan-500/20 rounded right-full mr-1 sm:mr-1.5 top-0 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
-            title="Edit"
+            className="absolute opacity-0 group-hover:opacity-100 transition p-1 text-cyan-400/70 hover:text-cyan-300 hover:bg-cyan-500/20 rounded right-full mr-1"
           >
-            <Edit2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" aria-hidden="true" />
+            <Edit2 className="w-4 h-4" />
           </button>
         )}
+
+        {/* Editing mode */}
         {isEditing && isUser ? (
-          <div className="w-full max-w-3xl" role="dialog" aria-label="Edit message">
-            <label htmlFor={`edit-message-${message.id}`} className="sr-only">
-              Edit your message
-            </label>
+          <div className="w-full max-w-3xl">
             <textarea
-              id={`edit-message-${message.id}`}
               value={editContent}
               onChange={(e) => setEditContent(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Escape') {
-                  handleCancelEdit()
-                }
-              }}
-              className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border border-cyan-500/30 rounded-xl sm:rounded-2xl glass-effect-light text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 resize-none"
+              onKeyDown={(e) => e.key === 'Escape' && handleCancelEdit()}
+              className="w-full px-4 py-3 text-base border border-cyan-500/30 rounded-2xl glass-effect-light text-slate-200 focus:ring-2 focus:ring-cyan-500/50"
               rows={Math.min(editContent.split('\n').length, 10)}
-              aria-label="Edit message text"
             />
-            <div className="flex items-center space-x-2 mt-2 justify-end" role="group" aria-label="Edit actions">
-              <button
-                onClick={handleSaveEdit}
-                aria-label="Save changes"
-                className="p-1.5 text-cyan-400 hover:bg-cyan-500/20 rounded transition-colors focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
-                title="Save"
-              >
-                <Check className="w-4 h-4" aria-hidden="true" />
+
+            <div className="flex items-center space-x-2 mt-2 justify-end">
+              <button onClick={handleSaveEdit} className="p-1.5 text-cyan-400 hover:bg-cyan-500/20 rounded">
+                <Check className="w-4 h-4" />
               </button>
-              <button
-                onClick={handleCancelEdit}
-                aria-label="Cancel editing"
-                className="p-1.5 text-red-400 hover:bg-red-500/20 rounded transition-colors focus:outline-none focus:ring-2 focus:ring-red-500/50"
-                title="Cancel"
-              >
-                <X className="w-4 h-4" aria-hidden="true" />
+
+              <button onClick={handleCancelEdit} className="p-1.5 text-red-400 hover:bg-red-500/20 rounded">
+                <X className="w-4 h-4" />
               </button>
             </div>
           </div>
         ) : (
           <div
-            className={`rounded-xl sm:rounded-2xl px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base ${
+            className={`rounded-2xl px-4 py-3 text-base max-w-full ${
               isUser
                 ? 'bg-gradient-to-r from-teal-500 to-cyan-500 text-white cyber-glow'
                 : 'glass-effect-light text-slate-200 border border-cyan-500/20'
             }`}
+            style={{ maxWidth: 'min(100%, 48rem)' }}
           >
             {!isUser && message.isLoading ? (
-              <div className="flex items-center space-x-3 py-2" role="status" aria-live="polite" aria-label="Generating response">
-                <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 text-cyan-400 animate-spin" aria-hidden="true" />
-                <div className="flex flex-col">
-                  <span className="text-cyan-300 font-medium">Re-Inventing Solutions 💡</span>
-                  <span className="text-xs text-cyan-400/70 mt-0.5" aria-label={`Elapsed time: ${elapsedTime} seconds`}>{elapsedTime}s</span>
-                </div>
+              <div className="flex items-center space-x-3 py-2">
+                <Loader2 className="w-5 h-5 text-cyan-400 animate-spin flex-shrink-0" />
+                <span className="text-cyan-300 font-medium whitespace-nowrap">⚙ Re-Inventing Solution! 🛠️</span>
+                <span className="text-xs text-cyan-400/70 whitespace-nowrap" aria-label={`Elapsed time: ${formattedTime}`}>{formattedTime}</span>
               </div>
             ) : !isUser ? (
-              <div className="prose prose-sm dark:prose-invert max-w-none" role="article">
-                {renderMarkdown(message.content)}
-              </div>
+              <div className="prose prose-sm dark:prose-invert max-w-none break-words overflow-wrap-anywhere">{renderMarkdown(message.content)}</div>
             ) : (
-              <div className="whitespace-pre-wrap break-words">{message.content}</div>
+              <div className="whitespace-pre-wrap break-words overflow-wrap-anywhere">{message.content}</div>
             )}
           </div>
         )}
 
-        {/* Footer Actions - Regenerate, Copy, Response Time, Sources */}
+        {/* Footer actions */}
         {!isUser && !message.isLoading && (
-          <div className="flex items-center space-x-2 sm:space-x-3 mt-2 flex-wrap">
-            {/* Regenerate - Hidden for greeting messages */}
+          <div className="flex items-center space-x-3 mt-2 flex-wrap">
             {onRegenerate && !isGreeting && (
-              <button
-                onClick={() => onRegenerate(message.id)}
-                aria-label="Regenerate response"
-                className="p-1 sm:p-1.5 text-cyan-400/70 hover:text-cyan-300 hover:bg-cyan-500/20 rounded transition-colors focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
-                title="Regenerate"
-              >
-                <RefreshCw className="w-3 h-3 sm:w-4 sm:h-4" aria-hidden="true" />
+              <button className="p-1.5 text-cyan-400/70 hover:text-cyan-300 hover:bg-cyan-500/20 rounded" onClick={() => onRegenerate(message.id)}>
+                <RefreshCw className="w-4 h-4" />
               </button>
             )}
-            
-            {/* Copy - Hidden for greeting messages */}
+
             {!isGreeting && (
-              <button
-                onClick={handleCopy}
-                aria-label={isCopied ? "Copied to clipboard" : "Copy message"}
-                aria-live="polite"
-                className="p-1 sm:p-1.5 text-cyan-400/70 hover:text-cyan-300 hover:bg-cyan-500/20 rounded transition-colors focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
-                title="Copy"
-              >
-                {isCopied ? (
-                  <Check className="w-3 h-3 sm:w-4 sm:h-4 text-cyan-400" aria-hidden="true" />
-                ) : (
-                  <Copy className="w-3 h-3 sm:w-4 sm:h-4" aria-hidden="true" />
-                )}
+              <button className="p-1.5 text-cyan-400/70 hover:text-cyan-300 hover:bg-cyan-500/20 rounded" onClick={handleCopy}>
+                {isCopied ? <Check className="w-4 h-4 text-cyan-400" /> : <Copy className="w-4 h-4" />}
               </button>
             )}
-            
-            {/* Response Time */}
+
             {message.responseTime && (
-              <span className="text-xs text-cyan-400/50 font-mono" aria-label={`Response time: ${message.responseTime} seconds`}>
-                {message.responseTime}s
+              <span className="text-xs text-cyan-400/50 font-mono" aria-label={`Response time: ${formattedTime}`}>
+                {formattedTime}
               </span>
             )}
-            
-            {/* Sources Dropdown */}
+
             {uniqueSources.length > 0 && (
               <div className="relative">
                 <button
+                  className="flex items-center space-x-1 text-xs text-cyan-400/70 hover:text-cyan-300 rounded"
                   onClick={() => setSourcesOpen(!sourcesOpen)}
-                  aria-expanded={sourcesOpen}
-                  aria-controls={`sources-${message.id}`}
-                  aria-label={`${sourcesOpen ? 'Hide' : 'Show'} ${uniqueSources.length} source${uniqueSources.length !== 1 ? 's' : ''}`}
-                  className="flex items-center space-x-1 text-xs text-cyan-400/70 hover:text-cyan-300 transition-colors focus:outline-none focus:ring-2 focus:ring-cyan-500/50 rounded"
                 >
-                  <FileText className="w-3 h-3" aria-hidden="true" />
-                  <span>{uniqueSources.length} source{uniqueSources.length !== 1 ? 's' : ''}</span>
-                  {sourcesOpen ? (
-                    <ChevronUp className="w-3 h-3" aria-hidden="true" />
-                  ) : (
-                    <ChevronDown className="w-3 h-3" aria-hidden="true" />
-                  )}
+                  <FileText className="w-3 h-3" />
+                  <span>{uniqueSources.length} source(s)</span>
+                  {sourcesOpen ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
                 </button>
+
                 {sourcesOpen && (
-                  <div 
-                    id={`sources-${message.id}`}
-                    className="absolute bottom-full left-0 mb-2 glass-effect-light border border-cyan-500/20 rounded-lg p-2 space-y-1 min-w-[200px] z-10"
-                    role="list"
-                    aria-label="Source documents"
-                  >
-                    {uniqueSources.map((source, index) => (
-                      <div
-                        key={index}
-                        className="text-xs text-cyan-300/80 flex items-center space-x-1"
-                        role="listitem"
-                      >
-                        <FileText className="w-3 h-3 flex-shrink-0" aria-hidden="true" />
-                        <span className="truncate">{source.filename}</span>
+                  <div className="absolute bottom-full left-0 mb-2 glass-effect-light border border-cyan-500/20 rounded-lg p-2 min-w-[200px] z-10">
+                    {uniqueSources.map((s, i) => (
+                      <div key={i} className="text-xs text-cyan-300/80 flex items-center space-x-1">
+                        <FileText className="w-3 h-3" />
+                        <span className="truncate">{s.filename}</span>
                       </div>
                     ))}
                   </div>
@@ -402,27 +430,22 @@ const MessageBubble = ({ message, onEdit, onRegenerate }: MessageBubbleProps) =>
             )}
           </div>
         )}
-
       </div>
 
-      {/* Avatar for User (right side) */}
+      {/* User avatar */}
       {isUser && (
-        <div className="flex-shrink-0 w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center bg-gradient-to-br from-teal-500 to-cyan-500 cyber-glow ml-1 sm:ml-1.5" aria-hidden="true">
-          <svg
-            className="w-4 h-4 sm:w-5 sm:h-5 text-white"
-            fill="none"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
+        <div className="flex-shrink-0 w-8 h-8 rounded-full overflow-hidden bg-gradient-to-br from-teal-500 to-cyan-500 cyber-glow ml-1 ring-2 ring-teal-500/50">
+          <Image
+            src="/icons/User.png"
+            alt="User"
+            width={32}
+            height={32}
+            className="w-full h-full object-cover"
             aria-hidden="true"
-          >
-            <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-          </svg>
+          />
         </div>
       )}
-    </div>
+    </article>
   )
 }
 

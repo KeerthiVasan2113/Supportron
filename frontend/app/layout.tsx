@@ -4,6 +4,9 @@ import './globals.css'
 export const metadata: Metadata = {
   title: 'Supportron - AI Support Assistant',
   description: 'Your intelligent AI assistant for Linux server configuration, hosting support, and system administration',
+  icons: {
+    icon: '/icons/favicon.png',
+  },
 }
 
 export default function RootLayout({
