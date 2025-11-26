@@ -1,7 +1,13 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { Message } from '@/types/chat'
+import { 
+  getStorageItem, 
+  setStorageItem, 
+  removeStorageItem,
+  StorageKeys 
+} from '@/utils/storage'
 
 export interface Chat {
   id: string
@@ -12,7 +18,8 @@ export interface Chat {
   greetingSent?: boolean
 }
 
-const STORAGE_KEY = 'supportron_chats'
+const STORAGE_KEY = StorageKeys.CHATS
+const LAST_CHAT_KEY = StorageKeys.LAST_CHAT_ID
 
 export const useChatStorage = () => {
   const [chatHistory, setChatHistory] = useState<Chat[]>([])
@@ -22,48 +29,41 @@ export const useChatStorage = () => {
   // Load chats from localStorage on mount
   useEffect(() => {
     try {
-      const stored = localStorage.getItem(STORAGE_KEY)
-      if (stored) {
-        const parsed = JSON.parse(stored)
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          const chats = parsed.map((chat: any) => ({
-            ...chat,
-            messages: chat.messages?.map((msg: any) => ({
-              ...msg,
-              timestamp: new Date(msg.timestamp),
-            })) || [],
-            createdAt: new Date(chat.createdAt),
-            updatedAt: new Date(chat.updatedAt),
-          }))
-          setChatHistory(chats)
-          hasLoadedFromStorage.current = true
-          
-          // Restore last active chat if available
-          const lastChatId = localStorage.getItem('supportron_last_chat_id')
-          if (lastChatId) {
-            const chatExists = chats.find((c: Chat) => c.id === lastChatId)
-            if (chatExists) {
-              setCurrentChatId(lastChatId)
-            } else {
-              // Last chat ID doesn't exist, use most recent chat
-              if (chats.length > 0) {
-                const mostRecent = chats.sort((a: Chat, b: Chat) => 
-                  new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
-                )[0]
-                setCurrentChatId(mostRecent.id)
-                localStorage.setItem('supportron_last_chat_id', mostRecent.id)
-              }
-            }
+      const stored = getStorageItem<Chat[]>(STORAGE_KEY, [])
+      if (Array.isArray(stored) && stored.length > 0) {
+        const chats = stored.map((chat) => ({
+          ...chat,
+          messages: chat.messages?.map((msg) => ({
+            ...msg,
+            timestamp: new Date(msg.timestamp),
+          })) || [],
+          createdAt: new Date(chat.createdAt),
+          updatedAt: new Date(chat.updatedAt),
+        }))
+        setChatHistory(chats)
+        hasLoadedFromStorage.current = true
+        
+        // Restore last active chat if available
+        const lastChatId = getStorageItem<string | null>(LAST_CHAT_KEY, null)
+        if (lastChatId) {
+          const chatExists = chats.find((c) => c.id === lastChatId)
+          if (chatExists) {
+            setCurrentChatId(lastChatId)
           } else if (chats.length > 0) {
-            // No last chat ID, use most recent chat
-            const mostRecent = chats.sort((a: Chat, b: Chat) => 
-              new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+            // Last chat ID doesn't exist, use most recent chat
+            const mostRecent = [...chats].sort(
+              (a, b) => b.updatedAt.getTime() - a.updatedAt.getTime()
             )[0]
             setCurrentChatId(mostRecent.id)
-            localStorage.setItem('supportron_last_chat_id', mostRecent.id)
+            setStorageItem(LAST_CHAT_KEY, mostRecent.id)
           }
-        } else {
-          hasLoadedFromStorage.current = true
+        } else if (chats.length > 0) {
+          // No last chat ID, use most recent chat
+          const mostRecent = [...chats].sort(
+            (a, b) => b.updatedAt.getTime() - a.updatedAt.getTime()
+          )[0]
+          setCurrentChatId(mostRecent.id)
+          setStorageItem(LAST_CHAT_KEY, mostRecent.id)
         }
       } else {
         hasLoadedFromStorage.current = true
@@ -81,40 +81,32 @@ export const useChatStorage = () => {
       return
     }
     
-    try {
-      // Serialize dates properly
-      const serialized = chatHistory.map((chat) => ({
-        ...chat,
-        messages: chat.messages.map((msg) => ({
-          ...msg,
-          timestamp: msg.timestamp.toISOString(),
-        })),
-        createdAt: chat.createdAt.toISOString(),
-        updatedAt: chat.updatedAt.toISOString(),
-      }))
-      
-      if (chatHistory.length > 0) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(serialized))
-      } else {
-        // Only remove if explicitly cleared by user (after initial load)
-        localStorage.removeItem(STORAGE_KEY)
-      }
-      
-      if (currentChatId) {
-        localStorage.setItem('supportron_last_chat_id', currentChatId)
-      } else {
-        localStorage.removeItem('supportron_last_chat_id')
-      }
-    } catch (error) {
-      console.error('Error saving chats to storage:', error)
-      // Handle quota exceeded error
-      if (error instanceof Error && error.name === 'QuotaExceededError') {
-        console.warn('localStorage quota exceeded. Consider clearing old chats.')
-      }
+    // Serialize dates properly
+    const serialized = chatHistory.map((chat) => ({
+      ...chat,
+      messages: chat.messages.map((msg) => ({
+        ...msg,
+        timestamp: msg.timestamp.toISOString(),
+      })),
+      createdAt: chat.createdAt.toISOString(),
+      updatedAt: chat.updatedAt.toISOString(),
+    }))
+    
+    if (chatHistory.length > 0) {
+      setStorageItem(STORAGE_KEY, serialized)
+    } else {
+      // Only remove if explicitly cleared by user (after initial load)
+      removeStorageItem(STORAGE_KEY)
+    }
+    
+    if (currentChatId) {
+      setStorageItem(LAST_CHAT_KEY, currentChatId)
+    } else {
+      removeStorageItem(LAST_CHAT_KEY)
     }
   }, [chatHistory, currentChatId])
 
-  const createChat = (messages: Message[]): string => {
+  const createChat = useCallback((messages: Message[]): string => {
     const newChatId = Date.now().toString()
     // Keep "New Chat" until first user message is sent
     const firstUserMessage = messages.find(msg => msg.role === 'user')
@@ -132,35 +124,31 @@ export const useChatStorage = () => {
       messages,
       createdAt: now,
       updatedAt: now,
-      greetingSent: isGreetingChat, // Mark as sent if this is a greeting chat
+      greetingSent: isGreetingChat,
     }
     
     setChatHistory((prev) => {
       const updated = [newChat, ...prev]
       // Immediately save to localStorage
-      try {
-        const serialized = updated.map((chat) => ({
-          ...chat,
-          messages: chat.messages.map((msg) => ({
-            ...msg,
-            timestamp: msg.timestamp.toISOString(),
-          })),
-          createdAt: chat.createdAt.toISOString(),
-          updatedAt: chat.updatedAt.toISOString(),
-          greetingSent: chat.greetingSent || false,
-        }))
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(serialized))
-        localStorage.setItem('supportron_last_chat_id', newChatId)
-      } catch (error) {
-        console.error('Error saving chat to storage:', error)
-      }
+      const serialized = updated.map((chat) => ({
+        ...chat,
+        messages: chat.messages.map((msg) => ({
+          ...msg,
+          timestamp: msg.timestamp.toISOString(),
+        })),
+        createdAt: chat.createdAt.toISOString(),
+        updatedAt: chat.updatedAt.toISOString(),
+        greetingSent: chat.greetingSent || false,
+      }))
+      setStorageItem(STORAGE_KEY, serialized)
+      setStorageItem(LAST_CHAT_KEY, newChatId)
       return updated
     })
     setCurrentChatId(newChatId)
     return newChatId
-  }
+  }, [])
 
-  const updateChat = (chatId: string, messages: Message[]) => {
+  const updateChat = useCallback((chatId: string, messages: Message[]) => {
     setChatHistory((prev) => {
       const updated = prev.map((chat) => {
         if (chat.id === chatId) {
@@ -169,10 +157,8 @@ export const useChatStorage = () => {
           let title = chat.title
           
           if (chat.title === 'New Chat' && firstUserMessage) {
-            // Update title to first user message (shortened)
             title = firstUserMessage.content.substring(0, 50).trim() || 'New Chat'
           } else if (chat.title !== 'New Chat') {
-            // Keep existing title if it's not "New Chat"
             title = chat.title
           }
           
@@ -187,7 +173,28 @@ export const useChatStorage = () => {
       })
       
       // Immediately save to localStorage
-      try {
+      const serialized = updated.map((chat) => ({
+        ...chat,
+        messages: chat.messages.map((msg) => ({
+          ...msg,
+          timestamp: msg.timestamp.toISOString(),
+        })),
+        createdAt: chat.createdAt.toISOString(),
+        updatedAt: chat.updatedAt.toISOString(),
+        greetingSent: chat.greetingSent || false,
+      }))
+      setStorageItem(STORAGE_KEY, serialized)
+      
+      return updated
+    })
+  }, [])
+
+  const deleteChat = useCallback((chatId: string) => {
+    setChatHistory((prev) => {
+      const updated = prev.filter((chat) => chat.id !== chatId)
+      
+      // Immediately save to localStorage
+      if (updated.length > 0) {
         const serialized = updated.map((chat) => ({
           ...chat,
           messages: chat.messages.map((msg) => ({
@@ -198,38 +205,9 @@ export const useChatStorage = () => {
           updatedAt: chat.updatedAt.toISOString(),
           greetingSent: chat.greetingSent || false,
         }))
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(serialized))
-      } catch (error) {
-        console.error('Error saving chat update to storage:', error)
-      }
-      
-      return updated
-    })
-  }
-
-  const deleteChat = (chatId: string) => {
-    setChatHistory((prev) => {
-      const updated = prev.filter((chat) => chat.id !== chatId)
-      
-      // Immediately save to localStorage
-      try {
-        if (updated.length > 0) {
-          const serialized = updated.map((chat) => ({
-            ...chat,
-            messages: chat.messages.map((msg) => ({
-              ...msg,
-              timestamp: msg.timestamp.toISOString(),
-            })),
-            createdAt: chat.createdAt.toISOString(),
-            updatedAt: chat.updatedAt.toISOString(),
-            greetingSent: chat.greetingSent || false,
-          }))
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(serialized))
-        } else {
-          localStorage.removeItem(STORAGE_KEY)
-        }
-      } catch (error) {
-        console.error('Error saving chat deletion to storage:', error)
+        setStorageItem(STORAGE_KEY, serialized)
+      } else {
+        removeStorageItem(STORAGE_KEY)
       }
       
       return updated
@@ -237,11 +215,11 @@ export const useChatStorage = () => {
     
     if (currentChatId === chatId) {
       setCurrentChatId(null)
-      localStorage.removeItem('supportron_last_chat_id')
+      removeStorageItem(LAST_CHAT_KEY)
     }
-  }
+  }, [currentChatId])
 
-  const renameChat = (chatId: string, newTitle: string) => {
+  const renameChat = useCallback((chatId: string, newTitle: string) => {
     setChatHistory((prev) => {
       const updated = prev.map((chat) =>
         chat.id === chatId
@@ -250,40 +228,32 @@ export const useChatStorage = () => {
       )
       
       // Immediately save to localStorage
-      try {
-        const serialized = updated.map((chat) => ({
-          ...chat,
-          messages: chat.messages.map((msg) => ({
-            ...msg,
-            timestamp: msg.timestamp.toISOString(),
-          })),
-          createdAt: chat.createdAt.toISOString(),
-          updatedAt: chat.updatedAt.toISOString(),
-          greetingSent: chat.greetingSent || false,
-        }))
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(serialized))
-      } catch (error) {
-        console.error('Error saving chat rename to storage:', error)
-      }
+      const serialized = updated.map((chat) => ({
+        ...chat,
+        messages: chat.messages.map((msg) => ({
+          ...msg,
+          timestamp: msg.timestamp.toISOString(),
+        })),
+        createdAt: chat.createdAt.toISOString(),
+        updatedAt: chat.updatedAt.toISOString(),
+        greetingSent: chat.greetingSent || false,
+      }))
+      setStorageItem(STORAGE_KEY, serialized)
       
       return updated
     })
-  }
+  }, [])
 
-  const selectChat = (chatId: string) => {
+  const selectChat = useCallback((chatId: string) => {
     setCurrentChatId(chatId)
-  }
+  }, [])
 
-  const clearAllChats = () => {
+  const clearAllChats = useCallback(() => {
     setChatHistory([])
     setCurrentChatId(null)
-    try {
-      localStorage.removeItem(STORAGE_KEY)
-      localStorage.removeItem('supportron_last_chat_id')
-    } catch (error) {
-      console.error('Error clearing all chats from storage:', error)
-    }
-  }
+    removeStorageItem(STORAGE_KEY)
+    removeStorageItem(LAST_CHAT_KEY)
+  }, [])
 
   return {
     chatHistory,

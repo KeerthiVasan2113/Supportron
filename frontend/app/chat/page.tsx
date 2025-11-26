@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation'
 import ChatInterface from '@/components/ChatInterface'
 import { Message } from '@/types/chat'
 import { useChatStorage } from '@/hooks/useChatStorage'
+import { getSessionItem, removeSessionItem, removeStorageItem, getStorageItem, StorageKeys } from '@/utils/storage'
 
 export default function ChatPage() {
   const searchParams = useSearchParams()
@@ -26,17 +27,21 @@ export default function ChatPage() {
   const pendingChatIdRef = useRef<string | null>(null)
   const isInitialLoad = useRef(true)
   const greetingSentRef = useRef(false)
+  const isCreatingGreetingRef = useRef(false)
 
   // Check if we should start a new chat (from landing page)
   useEffect(() => {
-    const shouldStartNew = sessionStorage.getItem('startNewChat') === 'true'
+    const shouldStartNew = getSessionItem(StorageKeys.START_NEW_CHAT) === 'true'
     if (shouldStartNew) {
-      sessionStorage.removeItem('startNewChat')
+      removeSessionItem(StorageKeys.START_NEW_CHAT)
       setCurrentChatId(null)
       setMessages([])
       pendingChatIdRef.current = null
-      localStorage.removeItem('supportron_last_chat_id')
+      removeStorageItem(StorageKeys.LAST_CHAT_ID)
       isInitialLoad.current = false
+      // Reset greeting flags to allow new greeting to be sent
+      greetingSentRef.current = false
+      isCreatingGreetingRef.current = false
     }
   }, [setCurrentChatId])
 
@@ -63,7 +68,7 @@ export default function ChatPage() {
       // Don't clear messages yet
       isInitialLoad.current = false
       // Check if restored chat has greeting
-      const lastChatId = localStorage.getItem('supportron_last_chat_id')
+      const lastChatId = getStorageItem<string | null>(StorageKeys.LAST_CHAT_ID, null)
       if (lastChatId) {
         const restoredChat = chatHistory.find(c => c.id === lastChatId)
         if (restoredChat && restoredChat.greetingSent) {
@@ -88,7 +93,10 @@ export default function ChatPage() {
     // 4. Initial load is complete
     // 5. No initial question (which would create a chat with user message)
     // 6. Greeting hasn't been sent yet in this session
-    if (!currentChatId && messages.length === 0 && !isInitialLoad.current && !initialQuestion && !greetingSentRef.current) {
+    // 7. Not already in the process of creating a greeting (prevents double creation)
+    if (!currentChatId && messages.length === 0 && !isInitialLoad.current && !initialQuestion && !greetingSentRef.current && !isCreatingGreetingRef.current) {
+      // Set flag immediately to prevent double execution
+      isCreatingGreetingRef.current = true
       greetingSentRef.current = true
       
       const greetingMessage: Message = {
@@ -103,6 +111,11 @@ export default function ChatPage() {
       setCurrentChatId(newChatId)
       pendingChatIdRef.current = newChatId
       setMessages([greetingMessage])
+      
+      // Reset the creating flag after a short delay to allow state to settle
+      setTimeout(() => {
+        isCreatingGreetingRef.current = false
+      }, 100)
     }
   }, [currentChatId, messages.length, isInitialLoad.current, initialQuestion, createChat])
   
@@ -164,7 +177,7 @@ export default function ChatPage() {
     setMessages([])
     setCurrentChatId(null)
     pendingChatIdRef.current = null
-    localStorage.removeItem('supportron_last_chat_id')
+    removeStorageItem(StorageKeys.LAST_CHAT_ID)
   }
 
   const handleNewChat = () => {

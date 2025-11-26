@@ -7,20 +7,21 @@ from pathlib import Path
 from typing import Optional, Dict, Any, List
 from contextlib import contextmanager
 
+from app.core.config import Config
 from app.core.logging_config import logger
 
 
 class DatabaseManager:
     """Manages database connections and operations."""
     
-    def __init__(self, db_directory: str = "databases"):
+    def __init__(self, db_directory: Optional[str] = None):
         """
         Initialize database manager.
         
         Args:
-            db_directory: Directory where database files are stored
+            db_directory: Directory where database files are stored (defaults to Config.DB_DIRECTORY)
         """
-        self.db_directory = Path(db_directory)
+        self.db_directory = Path(db_directory or Config.DB_DIRECTORY)
         self.db_directory.mkdir(parents=True, exist_ok=True)
         self._connections: Dict[str, sqlite3.Connection] = {}
     
@@ -97,6 +98,9 @@ class DatabaseManager:
         """
         with self.get_connection(db_name) as conn:
             cursor = conn.cursor()
+            # Sanitize table name - only allow alphanumeric, underscore, hyphen
+            if not all(c.isalnum() or c in ('_', '-') for c in table_name):
+                raise ValueError(f"Invalid table name: {table_name}")
             cursor.execute(f"PRAGMA table_info({table_name})")
             columns = cursor.fetchall()
             

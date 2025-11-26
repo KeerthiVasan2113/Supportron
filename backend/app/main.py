@@ -29,62 +29,53 @@ app = FastAPI(
 
 # Configure CORS for frontend
 # Use allow_origin_regex to support localtunnel subdomains
-import re
 app.add_middleware(
     CORSMiddleware,
     allow_origins=Config.ALLOWED_ORIGINS,
     allow_origin_regex=r"https?://.*\.loca\.lt",  # Allow all localtunnel subdomains
     allow_credentials=True,
-    allow_methods=["GET", "POST"],
-    allow_headers=["Content-Type", "Authorization"],
+    allow_methods=["GET", "POST", "OPTIONS"],  # Explicitly allow only needed methods
+    allow_headers=["Content-Type", "Authorization", "Accept"],  # Explicit headers only
+    expose_headers=["Content-Type"],
+    max_age=3600,  # Cache preflight requests for 1 hour
 )
 
 # Include routers
 app.include_router(v1_routes.router)
 
-# Also include legacy routes for backward compatibility
+# Legacy routes for backward compatibility - delegate to v1 router
 from app.api.dependencies import get_rag_model
 from app.api.v1.schemas import ChatRequest, ChatResponse
-from app.services.chat_service import check_ollama_available
+from app.services.chat_service import check_ollama_available, process_chat_request
 
 @app.get("/", tags=["health"])
 async def root_legacy() -> dict:
-    """Root endpoint (legacy)."""
+    """Root endpoint (legacy - delegates to v1)."""
     return {
         "status": "online",
         "service": "Hybrid Chat API",
-        "models": {
-            "qwen": Config.QWEN_MODEL,
-            "phi": Config.PHI_MODEL
-        },
+        "model": Config.MODEL,
         "rag_available": get_rag_model() is not None,
         "model_available": check_ollama_available()
     }
-
 
 @app.get("/health", tags=["health"])
 async def health_legacy() -> dict:
-    """Health check endpoint (legacy)."""
+    """Health check endpoint (legacy - delegates to v1)."""
     return {
         "status": "healthy",
-        "models": {
-            "qwen": Config.QWEN_MODEL,
-            "phi": Config.PHI_MODEL
-        },
+        "model": Config.MODEL,
         "rag_available": get_rag_model() is not None,
         "model_available": check_ollama_available()
     }
 
-
-@app.post("/api/chat", tags=["chat"])
+@app.post("/api/chat", response_model=ChatResponse, tags=["chat"])
 async def chat_legacy(request: ChatRequest) -> ChatResponse:
-    """Chat endpoint (legacy - redirects to v1)."""
-    from app.services.chat_service import process_chat_request
-    
-    # Convert Pydantic models to dicts for service layer
-    history = None
-    if request.conversation_history:
-        history = [{"role": msg.role, "content": msg.content} for msg in request.conversation_history]
+    """Chat endpoint (legacy - delegates to v1)."""
+    history = [
+        {"role": msg.role, "content": msg.content} 
+        for msg in request.conversation_history
+    ] if request.conversation_history else None
     
     answer, sources = process_chat_request(request.question, history)
     
@@ -98,21 +89,16 @@ async def chat_legacy(request: ChatRequest) -> ChatResponse:
 @app.on_event("startup")
 async def startup_event() -> None:
     """Initialize Ollama models and RAG on startup."""
-    # Verify Ollama models are available
+    # Verify Ollama model is available
     try:
-        logger.info("Checking Ollama models availability...")
-        # Test Qwen
-        ollama.generate(model=Config.QWEN_MODEL, prompt="test")
-        logger.info(f"✓ Qwen model '{Config.QWEN_MODEL}' is ready!")
-        
-        # Test Phi-2
-        ollama.generate(model=Config.PHI_MODEL, prompt="test")
-        logger.info(f"✓ Phi-2 model '{Config.PHI_MODEL}' is ready!")
+        logger.info("Checking Ollama model availability...")
+        # Test model
+        ollama.generate(model=Config.MODEL, prompt="test")
+        logger.info(f"✓ Model '{Config.MODEL}' is ready!")
     except Exception as e:
         logger.error(f"Failed to connect to Ollama or model not found: {e}", exc_info=True)
-        logger.warning("Make sure Ollama is running and models are pulled:")
-        logger.warning("  ollama pull qwen2.5:0.5b")
-        logger.warning("  ollama pull phi:latest")
+        logger.warning("Make sure Ollama is running and model is pulled:")
+        logger.warning(f"  ollama pull {Config.MODEL}")
         # Don't raise - allow server to start, but chat will fail gracefully
     
     # Initialize RAG model
@@ -124,19 +110,19 @@ async def startup_event() -> None:
         logger.info(f"Initializing RAG model from {vector_db_path}...")
         rag_model = SimpleRAGModel(
             str(vector_db_path),
-            use_llm=False,  # We'll use Ollama models instead
-            llm_model_name="Qwen/Qwen2.5-0.5B-Instruct",
+            use_llm=False,  # We use Ollama models instead
+            llm_model_name="Qwen/Qwen2.5-0.5B-Instruct",  # Not used when use_llm=False
             use_quantization=False
         )
         set_rag_model(rag_model)
         logger.info("✓ RAG model initialized successfully!")
     except FileNotFoundError as e:
         logger.error(f"Vector database not found: {e}")
-        logger.warning("RAG will not be available. Chat will use Qwen2.5B directly.")
+        logger.warning("RAG will not be available. Chat will use model directly.")
         set_rag_model(None)
     except Exception as e:
         logger.error(f"Failed to initialize RAG model: {e}", exc_info=True)
-        logger.warning("RAG will not be available. Chat will use Qwen2.5B directly.")
+        logger.warning("RAG will not be available. Chat will use model directly.")
         set_rag_model(None)
 
 

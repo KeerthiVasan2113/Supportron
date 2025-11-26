@@ -77,11 +77,15 @@ const ChatInput = ({ onSendMessage, isLoading }: ChatInputProps) => {
   }, [])
 
   return (
-    <div className="glass-effect border-t border-cyan-500/20 px-3 sm:px-4 py-3 sm:py-4 flex-shrink-0">
+    <div className="glass-effect border-t border-cyan-500/20 px-3 sm:px-4 py-3 sm:py-4 flex-shrink-0" role="region" aria-label="Chat input">
       <div className="max-w-3xl mx-auto w-full">
         <div className="flex items-end space-x-2 sm:space-x-3">
           <div className="flex-1 relative">
+            <label htmlFor="chat-input" className="sr-only">
+              Type your message
+            </label>
             <textarea
+              id="chat-input"
               ref={textareaRef}
               value={input}
               onChange={(e) => {
@@ -93,6 +97,10 @@ const ChatInput = ({ onSendMessage, isLoading }: ChatInputProps) => {
               className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border border-cyan-500/30 rounded-xl sm:rounded-2xl glass-effect-light text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 resize-none"
               rows={1}
               disabled={isLoading}
+              aria-label="Message input"
+              aria-describedby="input-instructions"
+              aria-disabled={isLoading}
+              aria-required="true"
               style={{
                 overflowY: 'hidden',
                 minHeight: '42px',
@@ -103,7 +111,9 @@ const ChatInput = ({ onSendMessage, isLoading }: ChatInputProps) => {
           <button
             onClick={handleSend}
             disabled={!input.trim() || isLoading}
-            className={`flex-shrink-0 w-auto aspect-square rounded-xl sm:rounded-2xl bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-400 hover:to-teal-400 disabled:from-slate-700 disabled:to-slate-700 disabled:cursor-not-allowed text-white flex items-center justify-center transition-all duration-200 cyber-glow disabled:shadow-none ${
+            aria-label={isLoading ? "Sending message" : "Send message"}
+            aria-disabled={!input.trim() || isLoading}
+            className={`flex-shrink-0 w-auto aspect-square rounded-xl sm:rounded-2xl bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-400 hover:to-teal-400 disabled:from-slate-700 disabled:to-slate-700 disabled:cursor-not-allowed text-white flex items-center justify-center transition-all duration-200 cyber-glow disabled:shadow-none focus:outline-none focus:ring-2 focus:ring-cyan-500/50 ${
               isSending ? 'animate-paperplane-fly' : ''
             }`}
             style={{
@@ -113,15 +123,20 @@ const ChatInput = ({ onSendMessage, isLoading }: ChatInputProps) => {
             }}
           >
             {isLoading ? (
-              <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
+              <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" aria-hidden="true" />
             ) : (
-              <Send className={`w-4 h-4 sm:w-5 sm:h-5 ${isSending ? 'animate-paperplane-icon' : ''}`} />
+              <Send className={`w-4 h-4 sm:w-5 sm:h-5 ${isSending ? 'animate-paperplane-icon' : ''}`} aria-hidden="true" />
             )}
           </button>
         </div>
-        <div className="mt-1 sm:mt-2 text-[10px] sm:text-xs text-cyan-400/50 text-center font-mono">
+        <div id="input-instructions" className="mt-1 sm:mt-2 text-[10px] sm:text-xs text-cyan-400/50 text-center font-mono" role="note" aria-live="polite">
           Press Enter to send, Shift+Enter for new line
         </div>
+        {isLoading && (
+          <div className="sr-only" aria-live="polite" aria-atomic="true">
+            Processing your message
+          </div>
+        )}
       </div>
     </div>
   )

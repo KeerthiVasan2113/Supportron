@@ -1,38 +1,30 @@
-# Data Processing Dependencies
-# Optimized for Windows 10 with limited RAM (1GB available)
-# CPU-only configuration (no GPU support)
+pymupdf==1.23.8
 
-# Core PDF processing - lightweight and fast
-pymupdf>=1.23.0,<2.0.0
+# Core NLP / Embeddings
+sentence-transformers==2.3.1
+transformers==4.38.2
+tokenizers==0.15.2
 
-# Embeddings - using smaller model for low memory
-sentence-transformers>=2.2.0,<2.8.0
+# Vector search
+faiss-cpu==1.7.4
 
-# NumPy - required for FAISS and sentence-transformers
-numpy>=1.24.0,<2.0.0
+# ML frameworks
+torch==2.1.2
 
-# Vector database - FAISS for efficient similarity search
-faiss-cpu>=1.7.0,<2.0.0  # CPU-only version, lightweight and fast
+# HuggingFace ecosystem
+huggingface-hub==0.22.2
+datasets==2.16.1
+accelerate==0.27.2
+sentencepiece==0.1.99
+peft==0.8.2
 
-# Progress bars
-tqdm>=4.65.0,<5.0.0
+# SciPy stack
+numpy==1.26.4
+scikit-learn==1.4.2
+scipy==1.12.0
 
-# LLM support for Qwen2.5
-transformers>=4.35.0,<5.0.0
-accelerate>=0.24.0,<1.0.0
-sentencepiece>=0.1.99  # Tokenizer for Qwen
-
-# Fine-tuning support (LoRA)
-peft>=0.6.0,<1.0.0  # Parameter-Efficient Fine-Tuning (LoRA)
-datasets>=2.14.0,<3.0.0  # Hugging Face datasets library
-
-# Note: bitsandbytes is NOT needed for CPU-only training
-# It's only for GPU quantization and causes issues with Python 3.14+
-
-# Note: PyTorch CPU-only version should be installed separately:
-# pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
-# This avoids the large GPU version and saves ~2GB of disk space and RAM
-
-# Note: For CPU-only inference, transformers will work but bitsandbytes is GPU-only
-# For CPU, we'll use 8-bit quantization via transformers directly
-
+# Utilities
+tqdm==4.66.4
+requests==2.31.0
+pyyaml==6.0.1
+regex==2023.12.25

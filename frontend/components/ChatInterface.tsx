@@ -265,13 +265,22 @@ const ChatInterface = ({
   }
 
   return (
-    <div className="flex flex-col h-screen w-full bg-slate-950">
+    <div className="flex flex-col h-screen w-full bg-slate-950" role="application" aria-label="Chat interface">
       {/* Header */}
-      <div className="glass-effect border-b border-cyan-500/20 px-3 sm:px-4 py-2 sm:py-3 flex items-center justify-between flex-shrink-0 relative z-20">
+      <header className="glass-effect border-b border-cyan-500/20 px-3 sm:px-4 py-2 sm:py-3 flex items-center justify-between flex-shrink-0 relative z-20" role="banner">
         <div className="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-1">
           <h1 
             onClick={() => router.push('/landing')}
-            className="text-lg sm:text-xl font-bold bg-gradient-to-r from-cyan-400 via-teal-400 to-cyan-300 bg-clip-text text-transparent truncate cursor-pointer hover:opacity-80 transition-opacity"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault()
+                router.push('/landing')
+              }
+            }}
+            tabIndex={0}
+            role="button"
+            aria-label="Go to landing page"
+            className="text-lg sm:text-xl font-bold bg-gradient-to-r from-cyan-400 via-teal-400 to-cyan-300 bg-clip-text text-transparent truncate cursor-pointer hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-cyan-500/50 rounded"
           >
             Supportron
           </h1>
@@ -291,9 +300,11 @@ const ChatInterface = ({
             <button
               onClick={onNewChat}
               disabled={messages.length === 0}
-              className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-1.5 text-xs sm:text-sm font-medium text-slate-950 bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-400 hover:to-teal-400 disabled:from-slate-700 disabled:to-slate-700 disabled:cursor-not-allowed rounded-lg transition-all duration-200 cyber-glow disabled:shadow-none"
+              aria-label="Start a new chat"
+              aria-disabled={messages.length === 0}
+              className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-1.5 text-xs sm:text-sm font-medium text-slate-950 bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-400 hover:to-teal-400 disabled:from-slate-700 disabled:to-slate-700 disabled:cursor-not-allowed rounded-lg transition-all duration-200 cyber-glow disabled:shadow-none focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
             >
-              <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
+              <Plus className="w-3 h-3 sm:w-4 sm:h-4" aria-hidden="true" />
               <span className="hidden sm:inline">New Chat</span>
             </button>
           )}
@@ -301,13 +312,21 @@ const ChatInterface = ({
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto w-full bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 relative z-10">
+      <main 
+        id="main-content"
+        className="flex-1 overflow-y-auto w-full bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 relative z-10"
+        role="log"
+        aria-label="Chat messages"
+        aria-live="polite"
+        aria-atomic="false"
+        tabIndex={-1}
+      >
         {messages.length === 0 ? (
-          <div className="flex items-center justify-center h-full px-4">
+          <div className="flex items-center justify-center h-full px-4" role="region" aria-label="Welcome message">
             <div className="text-center max-w-md w-full">
               <div className="mb-6 flex justify-center">
-                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-cyan-500/20 to-teal-500/20 border border-cyan-500/30 flex items-center justify-center cyber-glow">
-                  <svg className="w-10 h-10 text-cyan-400" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
+                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-cyan-500/20 to-teal-500/20 border border-cyan-500/30 flex items-center justify-center cyber-glow" aria-hidden="true">
+                  <svg className="w-10 h-10 text-cyan-400" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                     <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                   </svg>
                 </div>
@@ -320,17 +339,17 @@ const ChatInterface = ({
               </p>
               <div className="space-y-2 text-left">
                 <p className="text-xs sm:text-sm text-cyan-400/70 font-semibold">Try asking:</p>
-                <ul className="text-xs sm:text-sm text-slate-400 space-y-2">
-                  <li className="flex items-center space-x-2">
-                    <span className="text-cyan-500">▸</span>
+                <ul className="text-xs sm:text-sm text-slate-400 space-y-2" role="list">
+                  <li className="flex items-center space-x-2" role="listitem">
+                    <span className="text-cyan-500" aria-hidden="true">▸</span>
                     <span>How do I configure system settings?</span>
                   </li>
-                  <li className="flex items-center space-x-2">
-                    <span className="text-cyan-500">▸</span>
+                  <li className="flex items-center space-x-2" role="listitem">
+                    <span className="text-cyan-500" aria-hidden="true">▸</span>
                     <span>What is Red Hat Enterprise Linux?</span>
                   </li>
-                  <li className="flex items-center space-x-2">
-                    <span className="text-cyan-500">▸</span>
+                  <li className="flex items-center space-x-2" role="listitem">
+                    <span className="text-cyan-500" aria-hidden="true">▸</span>
                     <span>How to set up a web server?</span>
                   </li>
                 </ul>
@@ -345,8 +364,8 @@ const ChatInterface = ({
             onRegenerate={handleRegenerate}
           />
         )}
-        <div ref={messagesEndRef} />
-      </div>
+        <div ref={messagesEndRef} aria-hidden="true" />
+      </main>
 
       {/* Input */}
       <ChatInput onSendMessage={handleSendMessage} isLoading={isLoading} />

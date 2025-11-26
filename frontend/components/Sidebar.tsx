@@ -61,6 +61,7 @@ const Sidebar = ({
         <div
           className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
           onClick={onToggle}
+          aria-hidden="true"
         />
       )}
 
@@ -69,47 +70,57 @@ const Sidebar = ({
         className={`fixed lg:static inset-y-0 left-0 z-50 w-64 bg-gray-900 text-white transform transition-transform duration-300 ease-in-out ${
           isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         }`}
+        role="complementary"
+        aria-label="Chat history sidebar"
       >
         <div className="flex flex-col h-full">
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b border-gray-800">
             <button
               onClick={onNewChat}
-              className="flex items-center space-x-2 px-3 py-2 bg-primary-500 hover:bg-primary-600 rounded-lg transition-colors w-full"
+              aria-label="Start a new chat"
+              className="flex items-center space-x-2 px-3 py-2 bg-primary-500 hover:bg-primary-600 rounded-lg transition-colors w-full focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
             >
-              <Plus className="w-4 h-4" />
+              <Plus className="w-4 h-4" aria-hidden="true" />
               <span className="text-sm font-medium">New Chat</span>
             </button>
             <button
               onClick={onToggle}
-              className="lg:hidden ml-2 p-2 hover:bg-gray-800 rounded-lg transition-colors"
+              aria-label="Close sidebar"
+              aria-expanded={isOpen}
+              className="lg:hidden ml-2 p-2 hover:bg-gray-800 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
             >
-              <X className="w-5 h-5" />
+              <X className="w-5 h-5" aria-hidden="true" />
             </button>
           </div>
 
           {/* Chat History */}
-          <div className="flex-1 overflow-y-auto p-2">
+          <nav className="flex-1 overflow-y-auto p-2" aria-label="Chat history">
             {chatHistory.length === 0 ? (
-              <div className="text-center text-gray-400 mt-8 px-4">
-                <MessageSquare className="w-12 h-12 mx-auto mb-3 opacity-50" />
+              <div className="text-center text-gray-400 mt-8 px-4" role="status" aria-live="polite">
+                <MessageSquare className="w-12 h-12 mx-auto mb-3 opacity-50" aria-hidden="true" />
                 <p className="text-sm">No chat history</p>
                 <p className="text-xs mt-1">Start a new conversation</p>
               </div>
             ) : (
-              <div className="space-y-1">
+              <ul className="space-y-1" role="list">
                 {chatHistory.map((chat) => (
-                  <div
+                  <li
                     key={chat.id}
                     className={`group relative w-full rounded-lg transition-colors ${
                       currentChatId === chat.id
                         ? 'bg-gray-800 text-white'
                         : 'text-gray-300 hover:bg-gray-800 hover:text-white'
                     }`}
+                    role="listitem"
                   >
                     {editingId === chat.id ? (
-                      <div className="flex items-center space-x-2 px-3 py-2">
+                      <div className="flex items-center space-x-2 px-3 py-2" role="group" aria-label="Rename chat">
+                        <label htmlFor={`sidebar-rename-${chat.id}`} className="sr-only">
+                          Rename chat
+                        </label>
                         <input
+                          id={`sidebar-rename-${chat.id}`}
                           type="text"
                           value={editTitle}
                           onChange={(e) => setEditTitle(e.target.value)}
@@ -119,55 +130,71 @@ const Sidebar = ({
                           }}
                           className="flex-1 px-2 py-1 bg-gray-700 text-white rounded text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
                           autoFocus
+                          aria-label="Chat title"
                         />
                         <button
                           onClick={() => handleSaveRename(chat.id)}
-                          className="p-1 hover:bg-gray-700 rounded text-green-400"
+                          aria-label="Save chat name"
+                          className="p-1 hover:bg-gray-700 rounded text-green-400 focus:outline-none focus:ring-2 focus:ring-green-500/50"
                         >
-                          <Check className="w-4 h-4" />
+                          <Check className="w-4 h-4" aria-hidden="true" />
                         </button>
                         <button
                           onClick={handleCancelRename}
-                          className="p-1 hover:bg-gray-700 rounded text-red-400"
+                          aria-label="Cancel renaming"
+                          className="p-1 hover:bg-gray-700 rounded text-red-400 focus:outline-none focus:ring-2 focus:ring-red-500/50"
                         >
-                          <X className="w-4 h-4" />
+                          <X className="w-4 h-4" aria-hidden="true" />
                         </button>
                       </div>
                     ) : (
                       <>
                         <button
                           onClick={() => onSelectChat(chat.id)}
-                          className="w-full text-left px-3 py-2 flex items-center space-x-2"
+                          aria-label={`Select chat: ${chat.title}${currentChatId === chat.id ? ' (current)' : ''}`}
+                          aria-current={currentChatId === chat.id ? 'true' : 'false'}
+                          className="w-full text-left px-3 py-2 flex items-center space-x-2 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 rounded"
                         >
-                          <MessageSquare className="w-4 h-4 flex-shrink-0" />
+                          <MessageSquare className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
                           <span className="text-sm truncate flex-1">{chat.title}</span>
                         </button>
                         {(onDeleteChat || onRenameChat) && (
-                          <div className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <div className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity focus-within:opacity-100" role="group" aria-label="Chat actions">
                             <div className="relative">
                               <button
                                 onClick={() => setMenuOpenId(menuOpenId === chat.id ? null : chat.id)}
-                                className="p-1 hover:bg-gray-700 rounded"
+                                aria-expanded={menuOpenId === chat.id}
+                                aria-haspopup="true"
+                                aria-label={`More options for ${chat.title}`}
+                                className="p-1 hover:bg-gray-700 rounded focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
                               >
-                                <MoreVertical className="w-4 h-4" />
+                                <MoreVertical className="w-4 h-4" aria-hidden="true" />
                               </button>
                               {menuOpenId === chat.id && (
-                                <div className="absolute right-0 mt-1 w-32 bg-gray-800 rounded-lg shadow-lg z-10 border border-gray-700">
+                                <div 
+                                  className="absolute right-0 mt-1 w-32 bg-gray-800 rounded-lg shadow-lg z-10 border border-gray-700"
+                                  role="menu"
+                                  aria-label="Chat options"
+                                >
                                   {onRenameChat && (
                                     <button
                                       onClick={() => handleStartRename(chat.id, chat.title)}
-                                      className="w-full text-left px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 flex items-center space-x-2"
+                                      aria-label={`Rename chat: ${chat.title}`}
+                                      className="w-full text-left px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 flex items-center space-x-2 focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
+                                      role="menuitem"
                                     >
-                                      <Edit2 className="w-3 h-3" />
+                                      <Edit2 className="w-3 h-3" aria-hidden="true" />
                                       <span>Rename</span>
                                     </button>
                                   )}
                                   {onDeleteChat && (
                                     <button
                                       onClick={() => handleDelete(chat.id)}
-                                      className="w-full text-left px-3 py-2 text-sm text-red-400 hover:bg-gray-700 flex items-center space-x-2"
+                                      aria-label={`Delete chat: ${chat.title}`}
+                                      className="w-full text-left px-3 py-2 text-sm text-red-400 hover:bg-gray-700 flex items-center space-x-2 focus:outline-none focus:ring-2 focus:ring-red-500/50"
+                                      role="menuitem"
                                     >
-                                      <Trash2 className="w-3 h-3" />
+                                      <Trash2 className="w-3 h-3" aria-hidden="true" />
                                       <span>Delete</span>
                                     </button>
                                   )}
@@ -178,11 +205,11 @@ const Sidebar = ({
                         )}
                       </>
                     )}
-                  </div>
+                  </li>
                 ))}
-              </div>
+              </ul>
             )}
-          </div>
+          </nav>
 
           {/* Footer */}
           <div className="p-4 border-t border-gray-800">
@@ -197,9 +224,11 @@ const Sidebar = ({
       {!isOpen && (
         <button
           onClick={onToggle}
-          className="fixed top-4 left-4 z-50 lg:hidden p-2 bg-gray-900 text-white rounded-lg shadow-lg"
+          aria-label="Open sidebar"
+          aria-expanded={isOpen}
+          className="fixed top-4 left-4 z-50 lg:hidden p-2 bg-gray-900 text-white rounded-lg shadow-lg focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
         >
-          <Menu className="w-5 h-5" />
+          <Menu className="w-5 h-5" aria-hidden="true" />
         </button>
       )}
     </>

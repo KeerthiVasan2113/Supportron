@@ -2,6 +2,7 @@
 Universal database service for dynamic CRUD operations.
 """
 
+import re
 from typing import Dict, Any, List, Optional
 from sqlite3 import IntegrityError
 
@@ -10,6 +11,50 @@ from app.db.session import db_manager
 
 
 class DatabaseService:
+    """Service for performing dynamic database operations."""
+    
+    # SQL identifier pattern - only alphanumeric, underscore, and hyphen
+    _IDENTIFIER_PATTERN = re.compile(r'^[a-zA-Z_][a-zA-Z0-9_-]*$')
+    
+    @staticmethod
+    def _sanitize_identifier(identifier: str) -> str:
+        """
+        Sanitize SQL identifier (table/column name) to prevent injection.
+        
+        Args:
+            identifier: Identifier to sanitize
+            
+        Returns:
+            Sanitized identifier
+            
+        Raises:
+            ValueError: If identifier is invalid
+        """
+        if not identifier or not isinstance(identifier, str):
+            raise ValueError("Identifier must be a non-empty string")
+        
+        # Remove any whitespace
+        identifier = identifier.strip()
+        
+        # Validate pattern
+        if not DatabaseService._IDENTIFIER_PATTERN.match(identifier):
+            raise ValueError(f"Invalid identifier: {identifier}. Only alphanumeric, underscore, and hyphen allowed.")
+        
+        # SQLite doesn't require quoting for valid identifiers, but we validate strictly
+        return identifier
+    
+    @staticmethod
+    def _sanitize_identifiers(identifiers: List[str]) -> List[str]:
+        """
+        Sanitize a list of SQL identifiers.
+        
+        Args:
+            identifiers: List of identifiers to sanitize
+            
+        Returns:
+            List of sanitized identifiers
+        """
+        return [DatabaseService._sanitize_identifier(ident) for ident in identifiers]
     """Service for performing dynamic database operations."""
     
     @staticmethod
@@ -105,23 +150,32 @@ class DatabaseService:
         Returns:
             Dictionary with created record and rowid
         """
+        # Sanitize identifiers
+        db_name = DatabaseService._sanitize_identifier(db_name)
+        table_name = DatabaseService._sanitize_identifier(table_name)
+        
         DatabaseService.validate_table_exists(db_name, table_name)
         
         schema = db_manager.get_table_schema(db_name, table_name)
         DatabaseService.validate_values(schema, values)
         
-        # Filter values to only include existing columns
+        # Filter values to only include existing columns and sanitize column names
         existing_columns = {col["name"] for col in schema}
-        filtered_values = {k: v for k, v in values.items() if k in existing_columns}
+        filtered_values = {
+            DatabaseService._sanitize_identifier(k): v 
+            for k, v in values.items() 
+            if k in existing_columns
+        }
         
         if not filtered_values:
             raise ValueError("No valid columns provided")
         
-        columns = list(filtered_values.keys())
+        columns = DatabaseService._sanitize_identifiers(list(filtered_values.keys()))
         placeholders = ", ".join(["?" for _ in columns])
         column_names = ", ".join(columns)
         values_list = [filtered_values[col] for col in columns]
         
+        # Use parameterized query with validated identifiers
         query = f"INSERT INTO {table_name} ({column_names}) VALUES ({placeholders})"
         
         try:
@@ -130,7 +184,7 @@ class DatabaseService:
                 cursor.execute(query, values_list)
                 rowid = cursor.lastrowid
                 
-                # Fetch the created record
+                # Fetch the created record (table_name is already sanitized)
                 cursor.execute(f"SELECT * FROM {table_name} WHERE rowid = ?", (rowid,))
                 record = dict(cursor.fetchone())
                 
@@ -163,15 +217,20 @@ class DatabaseService:
         Returns:
             List of record dictionaries
         """
+        # Sanitize identifiers
+        db_name = DatabaseService._sanitize_identifier(db_name)
+        table_name = DatabaseService._sanitize_identifier(table_name)
+        
         DatabaseService.validate_table_exists(db_name, table_name)
         
         schema = db_manager.get_table_schema(db_name, table_name)
         existing_columns = {col["name"] for col in schema}
         
-        # Validate columns if specified
+        # Validate and sanitize columns if specified
         if columns:
             DatabaseService.validate_columns(db_name, table_name, columns)
-            column_list = ", ".join(columns)
+            sanitized_columns = DatabaseService._sanitize_identifiers(columns)
+            column_list = ", ".join(sanitized_columns)
         else:
             column_list = "*"
         
@@ -180,18 +239,22 @@ class DatabaseService:
         
         # Add WHERE clause if filters provided
         if filters:
-            filter_columns = list(filters.keys())
+            filter_columns = DatabaseService._sanitize_identifiers(list(filters.keys()))
             DatabaseService.validate_columns(db_name, table_name, filter_columns)
             where_clauses = [f"{col} = ?" for col in filter_columns]
             query += " WHERE " + " AND ".join(where_clauses)
             params.extend([filters[col] for col in filter_columns])
         
-        # Add LIMIT and OFFSET
-        if limit:
-            query += f" LIMIT ?"
+        # Add LIMIT and OFFSET with validation
+        if limit is not None:
+            if not isinstance(limit, int) or limit < 0:
+                raise ValueError("Limit must be a non-negative integer")
+            query += " LIMIT ?"
             params.append(limit)
-            if offset:
-                query += f" OFFSET ?"
+            if offset is not None:
+                if not isinstance(offset, int) or offset < 0:
+                    raise ValueError("Offset must be a non-negative integer")
+                query += " OFFSET ?"
                 params.append(offset)
         
         with db_manager.get_connection(db_name) as conn:
@@ -221,6 +284,10 @@ class DatabaseService:
         Returns:
             Dictionary with number of affected rows
         """
+        # Sanitize identifiers
+        db_name = DatabaseService._sanitize_identifier(db_name)
+        table_name = DatabaseService._sanitize_identifier(table_name)
+        
         DatabaseService.validate_table_exists(db_name, table_name)
         
         if not filters:
@@ -231,18 +298,26 @@ class DatabaseService:
         DatabaseService.validate_columns(db_name, table_name, list(values.keys()))
         DatabaseService.validate_columns(db_name, table_name, list(filters.keys()))
         
-        # Filter values to only include existing columns
+        # Filter values to only include existing columns and sanitize
         existing_columns = {col["name"] for col in schema}
-        filtered_values = {k: v for k, v in values.items() if k in existing_columns}
+        filtered_values = {
+            DatabaseService._sanitize_identifier(k): v 
+            for k, v in values.items() 
+            if k in existing_columns
+        }
         
         if not filtered_values:
             raise ValueError("No valid columns provided for update")
         
-        set_clauses = [f"{col} = ?" for col in filtered_values.keys()]
-        where_clauses = [f"{col} = ?" for col in filters.keys()]
+        # Sanitize filter column names
+        sanitized_filter_keys = DatabaseService._sanitize_identifiers(list(filters.keys()))
+        sanitized_value_keys = DatabaseService._sanitize_identifiers(list(filtered_values.keys()))
+        
+        set_clauses = [f"{col} = ?" for col in sanitized_value_keys]
+        where_clauses = [f"{col} = ?" for col in sanitized_filter_keys]
         
         query = f"UPDATE {table_name} SET {', '.join(set_clauses)} WHERE {' AND '.join(where_clauses)}"
-        params = list(filtered_values.values()) + list(filters.values())
+        params = list(filtered_values.values()) + [filters[k] for k in filters.keys()]
         
         try:
             with db_manager.get_connection(db_name) as conn:
@@ -269,6 +344,10 @@ class DatabaseService:
         Returns:
             Dictionary with number of affected rows
         """
+        # Sanitize identifiers
+        db_name = DatabaseService._sanitize_identifier(db_name)
+        table_name = DatabaseService._sanitize_identifier(table_name)
+        
         DatabaseService.validate_table_exists(db_name, table_name)
         
         if not filters:
@@ -276,9 +355,11 @@ class DatabaseService:
         
         DatabaseService.validate_columns(db_name, table_name, list(filters.keys()))
         
-        where_clauses = [f"{col} = ?" for col in filters.keys()]
+        # Sanitize filter column names
+        sanitized_filter_keys = DatabaseService._sanitize_identifiers(list(filters.keys()))
+        where_clauses = [f"{col} = ?" for col in sanitized_filter_keys]
         query = f"DELETE FROM {table_name} WHERE {' AND '.join(where_clauses)}"
-        params = list(filters.values())
+        params = [filters[k] for k in filters.keys()]
         
         with db_manager.get_connection(db_name) as conn:
             cursor = conn.cursor()
@@ -300,13 +381,18 @@ class DatabaseService:
         Returns:
             Dictionary with table schema and metadata
         """
+        # Sanitize identifiers
+        db_name = DatabaseService._sanitize_identifier(db_name)
+        table_name = DatabaseService._sanitize_identifier(table_name)
+        
         DatabaseService.validate_table_exists(db_name, table_name)
         
         schema = db_manager.get_table_schema(db_name, table_name)
         
-        # Get row count
+        # Get row count using parameterized query
         with db_manager.get_connection(db_name) as conn:
             cursor = conn.cursor()
+            # Note: SQLite doesn't support table name as parameter, but we've sanitized it
             cursor.execute(f"SELECT COUNT(*) FROM {table_name}")
             row_count = cursor.fetchone()[0]
         

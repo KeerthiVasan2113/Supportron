@@ -104,7 +104,7 @@ def generate_with_rag_pipeline(
     conversation_history: Optional[List[dict]] = None
 ) -> Tuple[str, Optional[List[SourceDocument]]]:
     """
-    Generate answer using RAG → Phi-2 → Qwen2.5B pipeline.
+    Generate answer using RAG with llama3.2:3b model.
     
     Args:
         question: User's question
@@ -117,7 +117,7 @@ def generate_with_rag_pipeline(
     Raises:
         HTTPException: If generation fails
     """
-    logger.info("Using RAG + Phi-2 + Qwen2.5B pipeline")
+    logger.info("Using RAG + llama3.2:3b pipeline")
     
     # Check if question is about the conversation itself
     question_lower = question.lower()
@@ -148,8 +148,8 @@ This is the full conversation history up to this point. Use this to answer quest
 === END OF CONVERSATION HISTORY ===
 """
     
-    # Step 1: Use Phi-2 for reasoning on the context
-    phi_prompt = f"""You are analyzing a user's question in the context of technical documentation and conversation history.
+    # Use llama3.2:3b to generate answer with RAG context
+    prompt = f"""You are a helpful assistant analyzing a user's question in the context of technical documentation and conversation history.
 
 Technical Documentation:
 {context_text}{history_context}
@@ -162,59 +162,20 @@ IMPORTANT INSTRUCTIONS:
 3. For questions about the conversation, look through ALL the messages in the conversation history.
 4. For technical questions, use both the documentation and conversation context.
 5. Maintain continuity with previous messages in the conversation.
-
-Please analyze and provide a reasoned answer based on the documentation and conversation history."""
-    
-    try:
-        phi_response = ollama.generate(
-            model=Config.PHI_MODEL,
-            prompt=phi_prompt,
-            stream=False
-        )
-        phi_reasoning = phi_response.get("response", "").strip()
-    except Exception as e:
-        logger.error(f"Phi-2 reasoning failed: {e}")
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="Reasoning service temporarily unavailable"
-        )
-    
-    # Step 2: Use Qwen2.5B to structure the reasoned answer
-    # Reuse the formatted history from step 1
-    history_context_for_qwen = ""
-    if history_text:
-        history_context_for_qwen = f"""
-
-=== CONVERSATION HISTORY ===
-{history_text}
-=== END OF CONVERSATION HISTORY ===
-"""
-    
-    qwen_prompt = f"""Based on the reasoned analysis below, provide a clear, well-structured answer to the user's question.
-
-Reasoned Analysis:
-{phi_reasoning}{history_context_for_qwen}
-
-Current User Question: {question}
-
-INSTRUCTIONS:
-1. If the question is about the conversation (e.g., "first question", "what I asked", "earlier message"), use the conversation history above to find and reference the specific messages.
-2. Reference message numbers from the conversation history when answering questions about the conversation.
-3. Provide a clear, structured answer with proper formatting.
-4. Use code blocks for any code examples.
-5. Maintain continuity and context from the conversation history.
+6. Provide a clear, structured answer with proper formatting.
+7. Use code blocks for any code examples.
 
 Provide your answer now:"""
     
     try:
-        qwen_response = ollama.generate(
-            model=Config.QWEN_MODEL,
-            prompt=qwen_prompt,
+        response = ollama.generate(
+            model=Config.MODEL,
+            prompt=prompt,
             stream=False
         )
-        answer = qwen_response.get("response", "").strip()
+        answer = response.get("response", "").strip()
     except Exception as e:
-        logger.error(f"Qwen2.5B generation failed: {e}")
+        logger.error(f"Model generation failed: {e}")
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="Generation service temporarily unavailable"
@@ -238,7 +199,7 @@ def generate_direct_answer(
     conversation_history: Optional[List[dict]] = None
 ) -> str:
     """
-    Generate answer directly using Qwen2.5B.
+    Generate answer directly using llama3.2:3b.
     
     Args:
         question: User's question
@@ -250,7 +211,7 @@ def generate_direct_answer(
     Raises:
         HTTPException: If generation fails
     """
-    logger.info("No relevant RAG documents, using Qwen2.5B directly")
+    logger.info("No relevant RAG documents, using llama3.2:3b directly")
     
     # Check if question is about the conversation itself
     question_lower = question.lower()
@@ -285,13 +246,13 @@ Provide a helpful, clear answer based on the conversation history and your knowl
     
     try:
         response = ollama.generate(
-            model=Config.QWEN_MODEL,
+            model=Config.MODEL,
             prompt=prompt,
             stream=False
         )
         return response.get("response", "").strip()
     except Exception as e:
-        logger.error(f"Qwen2.5B generation failed: {e}")
+        logger.error(f"Model generation failed: {e}")
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="Generation service temporarily unavailable. Make sure Ollama is running."

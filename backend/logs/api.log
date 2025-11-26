@@ -696,3 +696,68 @@ ConnectionError: Failed to connect to Ollama. Please check that Ollama is downlo
 2025-11-24 11:29:34 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
 2025-11-24 11:29:34 - app.core.logging_config - INFO - No relevant RAG documents, using Qwen2.5B directly
 2025-11-24 11:29:50 - app.core.logging_config - INFO - Generated answer (length: 697 chars, sources: 0)
+2025-11-25 16:08:40 - app.core.logging_config - INFO - Checking Ollama model availability...
+2025-11-25 16:08:54 - app.core.logging_config - INFO - ✓ Model 'llama3.2:3b' is ready!
+2025-11-25 16:08:54 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\Supportron\Supportron\data-processing\vector_db...
+2025-11-25 16:09:11 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-25 16:09:11 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-25 16:15:31 - app.core.logging_config - INFO - Checking Ollama model availability...
+2025-11-25 16:15:45 - app.core.logging_config - INFO - ✓ Model 'llama3.2:3b' is ready!
+2025-11-25 16:15:45 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\Supportron\Supportron\data-processing\vector_db...
+2025-11-25 16:15:49 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-25 16:15:49 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-25 16:17:36 - app.core.logging_config - INFO - Received question: how to configure networks in linux
+2025-11-25 16:17:36 - app.core.logging_config - INFO - Conversation history: 1 previous messages
+2025-11-25 16:17:38 - app.core.logging_config - INFO - Found 3 relevant RAG documents
+2025-11-25 16:17:38 - app.core.logging_config - INFO - Using RAG + llama3.2:3b pipeline
+2025-11-25 16:19:34 - app.core.logging_config - INFO - Generated answer (length: 2278 chars, sources: 3)
+2025-11-25 16:21:17 - app.core.logging_config - INFO - Received question: how to config mail dir in linux
+2025-11-25 16:21:17 - app.core.logging_config - INFO - Conversation history: 1 previous messages
+2025-11-25 16:21:17 - app.core.logging_config - INFO - Found 1 relevant RAG documents
+2025-11-25 16:21:17 - app.core.logging_config - INFO - Using RAG + llama3.2:3b pipeline
+2025-11-25 16:22:09 - app.core.logging_config - INFO - Generated answer (length: 1100 chars, sources: 1)
+2025-11-25 16:24:19 - app.core.logging_config - INFO - Received question: Ubuntu Server LXDE Problem
+2025-11-25 16:24:19 - app.core.logging_config - INFO - Conversation history: 3 previous messages
+2025-11-25 16:24:19 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-25 16:24:19 - app.core.logging_config - INFO - No relevant RAG documents, using llama3.2:3b directly
+2025-11-25 16:25:03 - app.core.logging_config - INFO - Generated answer (length: 709 chars, sources: 0)
+2025-11-25 16:25:35 - app.core.logging_config - INFO - Received question: Ubuntu Server LXDE Problem
+2025-11-25 16:25:35 - app.core.logging_config - INFO - Conversation history: 1 previous messages
+2025-11-25 16:25:35 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-25 16:25:35 - app.core.logging_config - INFO - No relevant RAG documents, using llama3.2:3b directly
+2025-11-25 16:25:54 - app.core.logging_config - INFO - Generated answer (length: 464 chars, sources: 0)
+2025-11-25 17:22:13 - app.core.logging_config - INFO - Received question: How to Install Docker on Linux and Run Your First Container
+2025-11-25 17:22:13 - app.core.logging_config - INFO - Conversation history: 1 previous messages
+2025-11-25 17:22:13 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-25 17:22:13 - app.core.logging_config - INFO - No relevant RAG documents, using llama3.2:3b directly
+2025-11-25 17:23:40 - app.core.logging_config - INFO - Generated answer (length: 1384 chars, sources: 0)
+2025-11-25 17:29:52 - app.core.logging_config - INFO - Received question: Grep command in Linux w/ examples
+2025-11-25 17:29:52 - app.core.logging_config - INFO - Conversation history: 3 previous messages
+2025-11-25 17:29:52 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
+2025-11-25 17:29:52 - app.core.logging_config - INFO - No relevant RAG documents, using llama3.2:3b directly
+2025-11-25 17:32:07 - app.core.logging_config - INFO - Generated answer (length: 1630 chars, sources: 0)
+2025-11-26 09:39:39 - app.core.logging_config - INFO - Checking Ollama model availability...
+2025-11-26 09:39:53 - app.core.logging_config - INFO - ✓ Model 'llama3.2:3b' is ready!
+2025-11-26 09:39:53 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\Supportron\Supportron\data-processing\vector_db...
+2025-11-26 09:39:57 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-26 09:39:57 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-26 10:03:33 - app.core.logging_config - INFO - Checking Ollama model availability...
+2025-11-26 10:03:43 - app.core.logging_config - INFO - ✓ Model 'llama3.2:3b' is ready!
+2025-11-26 10:03:43 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\Supportron\Supportron\data-processing\vector_db...
+2025-11-26 10:03:46 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-26 10:03:46 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-26 10:11:32 - app.core.logging_config - INFO - Checking Ollama model availability...
+2025-11-26 10:11:49 - app.core.logging_config - INFO - ✓ Model 'llama3.2:3b' is ready!
+2025-11-26 10:11:49 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\Supportron\Supportron\data-processing\vector_db...
+2025-11-26 10:11:53 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-26 10:11:53 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-26 10:12:26 - app.core.logging_config - INFO - Checking Ollama model availability...
+2025-11-26 10:12:32 - app.core.logging_config - INFO - ✓ Model 'llama3.2:3b' is ready!
+2025-11-26 10:12:32 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\Supportron\Supportron\data-processing\vector_db...
+2025-11-26 10:12:36 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-26 10:12:36 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-26 10:17:04 - app.core.logging_config - INFO - Checking Ollama model availability...
+2025-11-26 10:17:11 - app.core.logging_config - INFO - ✓ Model 'llama3.2:3b' is ready!
+2025-11-26 10:17:11 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\Supportron\Supportron\data-processing\vector_db...
+2025-11-26 10:17:15 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-26 10:17:15 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!

@@ -26,10 +26,7 @@ async def root() -> dict:
         "status": "online",
         "service": "Hybrid Chat API",
         "version": "1.0.0",
-        "models": {
-            "qwen": Config.QWEN_MODEL,
-            "phi": Config.PHI_MODEL
-        },
+        "model": Config.MODEL,
         "rag_available": get_rag_model() is not None,
         "model_available": check_ollama_available()
     }
@@ -40,10 +37,7 @@ async def health() -> dict:
     """Health check endpoint for monitoring."""
     return {
         "status": "healthy",
-        "models": {
-            "qwen": Config.QWEN_MODEL,
-            "phi": Config.PHI_MODEL
-        },
+        "model": Config.MODEL,
         "rag_available": get_rag_model() is not None,
         "model_available": check_ollama_available()
     }
@@ -55,8 +49,8 @@ async def chat(request: ChatRequest) -> ChatResponse:
     Hybrid chat endpoint with conversation context support.
     
     Pipeline:
-    - If RAG has relevant docs: Use RAG → Phi-2 reasoning → Qwen2.5B structuring
-    - If no RAG docs: Use Qwen2.5B directly
+    - If RAG has relevant docs: Use RAG → llama3.2:3b
+    - If no RAG docs: Use llama3.2:3b directly
     - Conversation history is included in prompts for context awareness
     
     Args:
