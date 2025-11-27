@@ -58,10 +58,10 @@ def retrieve_rag_documents(question: str) -> List[dict]:
             logger.info(f"Found {len(relevant_docs)} relevant RAG documents")
             return relevant_docs[:Config.RAG_TOP_DOCS]
         
-        logger.info("RAG documents found but distance too high, using direct Qwen")
+        logger.info("RAG documents found but distance too high, using direct Ollama")
         return []
     except Exception as e:
-        logger.warning(f"RAG retrieval failed: {e}, falling back to direct Qwen")
+        logger.warning(f"RAG retrieval failed: {e}, falling back to direct Ollama")
         return []
 
 
@@ -104,7 +104,7 @@ def generate_with_rag_pipeline(
     conversation_history: Optional[List[dict]] = None
 ) -> Tuple[str, Optional[List[SourceDocument]]]:
     """
-    Generate answer using RAG with llama3.2:3b model.
+    Generate answer using RAG with Ollama qwen3.2:3b model.
     
     Args:
         question: User's question
@@ -117,7 +117,7 @@ def generate_with_rag_pipeline(
     Raises:
         HTTPException: If generation fails
     """
-    logger.info("Using RAG + llama3.2:3b pipeline")
+    logger.info("Using RAG + Ollama qwen3.2:3b pipeline")
     
     # Check if question is about the conversation itself
     question_lower = question.lower()
@@ -148,7 +148,7 @@ This is the full conversation history up to this point. Use this to answer quest
 === END OF CONVERSATION HISTORY ===
 """
     
-    # Use llama3.2:3b to generate answer with RAG context
+    # Use Ollama qwen3.2:3b to generate answer with RAG context
     prompt = f"""You are a helpful assistant analyzing a user's question in the context of technical documentation and conversation history.
 
 Technical Documentation:
@@ -201,7 +201,7 @@ def generate_direct_answer(
     conversation_history: Optional[List[dict]] = None
 ) -> str:
     """
-    Generate answer directly using llama3.2:3b.
+    Generate answer directly using Ollama qwen3.2:3b.
     
     Args:
         question: User's question
@@ -213,7 +213,7 @@ def generate_direct_answer(
     Raises:
         HTTPException: If generation fails
     """
-    logger.info("No relevant RAG documents, using llama3.2:3b directly")
+    logger.info("No relevant RAG documents, using Ollama qwen3.2:3b directly")
     
     # Check if question is about the conversation itself
     question_lower = question.lower()

@@ -10,7 +10,7 @@ class Config:
     """Application configuration with environment variable support."""
     
     # Model configuration
-    MODEL: str = os.getenv("OLLAMA_MODEL", "llama3.2:3b")
+    MODEL: str = os.getenv("OLLAMA_MODEL", "qwen3.2:3b")
     
     # RAG configuration
     RAG_MAX_DISTANCE: float = float(os.getenv("RAG_MAX_DISTANCE", "0.8"))

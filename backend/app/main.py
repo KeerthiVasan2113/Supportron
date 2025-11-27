@@ -24,7 +24,7 @@ from build_rag_model import SimpleRAGModel
 app = FastAPI(
     title="Hybrid Chat API",
     version="1.0.0",
-    description="Hybrid chat system using Qwen2.5B, Phi-2, and RAG"
+    description="Hybrid chat system using Ollama qwen3.2:3b and RAG"
 )
 
 # Configure CORS for frontend
@@ -111,7 +111,7 @@ async def startup_event() -> None:
         rag_model = SimpleRAGModel(
             str(vector_db_path),
             use_llm=False,  # We use Ollama models instead
-            llm_model_name="Qwen/Qwen2.5-0.5B-Instruct",  # Not used when use_llm=False
+            llm_model_name="qwen3.2:3b",  # Not used when use_llm=False, but kept for reference
             use_quantization=False
         )
         set_rag_model(rag_model)

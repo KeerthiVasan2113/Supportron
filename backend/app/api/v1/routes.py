@@ -49,8 +49,8 @@ async def chat(request: ChatRequest) -> ChatResponse:
     Hybrid chat endpoint with conversation context support.
     
     Pipeline:
-    - If RAG has relevant docs: Use RAG → llama3.2:3b
-    - If no RAG docs: Use llama3.2:3b directly
+    - If RAG has relevant docs: Use RAG → Ollama qwen3.2:3b
+    - If no RAG docs: Use Ollama qwen3.2:3b directly
     - Conversation history is included in prompts for context awareness
     
     Args:

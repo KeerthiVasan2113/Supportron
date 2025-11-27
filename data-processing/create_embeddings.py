@@ -34,7 +34,7 @@ def load_chunks_from_jsonl(file_path: str) -> List[Dict]:
 
 
 def create_embeddings(
-    chunks_file: str = "output/all_chunks.jsonl",
+    chunks_file: str = "output/compiled_chunks.jsonl",
     vector_db_path: str = "vector_db",
     embedding_model: str = "all-MiniLM-L6-v2"  # Lightweight model for low-memory systems
 ) -> None:
@@ -175,7 +175,7 @@ def create_embeddings(
 
 
 if __name__ == "__main__":
-    chunks_file = "output/all_chunks.jsonl"
+    chunks_file = "output/compiled_chunks.jsonl"
     vector_db_path = "vector_db"
     
     create_embeddings(chunks_file, vector_db_path)

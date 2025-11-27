@@ -1,6 +1,6 @@
 # Supportron
 
-A hybrid chat system using llama3.2:3b and RAG (Retrieval-Augmented Generation) for technical documentation support.
+A hybrid chat system using Ollama qwen3.2:3b and RAG (Retrieval-Augmented Generation) for technical documentation support.
 
 ## Project Structure
 
@@ -36,7 +36,7 @@ Supportron/
 Before running the application, you need to pull the required Ollama model:
 
 ```powershell
-ollama pull llama3.2:3b
+ollama pull qwen3.2:3b
 ```
 
 ### 2. Backend Setup
@@ -171,7 +171,7 @@ The frontend will be available at: `http://localhost:3000`
 ### Backend Configuration
 
 Edit `backend/app/core/config.py` to modify:
-- Model name (default: llama3.2:3b)
+- Model name (default: qwen3.2:3b)
 - RAG configuration (distance thresholds, top docs)
 - CORS origins
 - Server host and port
@@ -249,7 +249,7 @@ npm run dev -- -p 3001
 
 ## Project Features
 
-- **Chat System**: Uses llama3.2:3b for intelligent responses
+- **Chat System**: Uses Ollama qwen3.2:3b for intelligent responses
 - **RAG Integration**: Retrieves relevant technical documentation for context-aware answers
 - **Conversation History**: Maintains context across multiple messages
 - **Code Formatting**: Automatically detects and formats code blocks in responses

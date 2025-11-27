@@ -1,6 +1,10 @@
 """
-Fine-tune Qwen2.5-0.5B-Instruct model on RAG data using LoRA (Low-Rank Adaptation).
+Fine-tune Qwen model on RAG data using LoRA (Low-Rank Adaptation).
 Optimized for CPU-only training with limited RAM.
+
+Note: This script fine-tunes a local HuggingFace model. The main application uses
+Ollama qwen3.2:3b via the backend. If you want to fine-tune for local use, you can
+use this script, but the primary model is Ollama qwen3.2:3b.
 """
 
 # Prevent bitsandbytes import to avoid Python 3.14+ compatibility issues
@@ -42,7 +46,7 @@ def prepare_training_data(
     max_samples: int = 300
 ) -> str:
     """
-    Prepare training data from chunks in ChatML format for Qwen.
+    Prepare training data from chunks in ChatML format for model fine-tuning.
     
     Args:
         chunks_file: Path to compiled chunks JSONL file
@@ -90,8 +94,8 @@ def prepare_training_data(
             # Fallback question
             question = "What is this about?"
         
-        # Format in ChatML format for Qwen
-        # Qwen uses: <|im_start|>system\n...<|im_end|>\n<|im_start|>user\n...<|im_end|>\n<|im_start|>assistant\n...<|im_end|>
+        # Format in ChatML format for model fine-tuning
+        # ChatML format: <|im_start|>system\n...<|im_end|>\n<|im_start|>user\n...<|im_end|>\n<|im_start|>assistant\n...<|im_end|>
         system_prompt = "You are a helpful assistant that answers questions based on the provided documentation context. Provide clear, structured, and accurate answers."
         
         # Truncate text to reasonable length for training (max 500 chars)
@@ -137,7 +141,7 @@ def create_tokenize_function(tokenizer, max_length: int = 512):
 
 
 def fine_tune_qwen(
-    model_name: str = "Qwen/Qwen2.5-0.5B-Instruct",
+    model_name: str = "Qwen/Qwen2.5-3B-Instruct",  # HuggingFace model (base for Ollama qwen3.2:3b)
     training_data_file: str = "output/training_data.jsonl",
     output_dir: str = "fine_tuned_qwen",
     num_epochs: int = 2,
@@ -149,8 +153,11 @@ def fine_tune_qwen(
     """
     Fine-tune Qwen model using LoRA for efficient training.
     
+    Note: This fine-tunes a local HuggingFace model. The main application uses
+    Ollama qwen3.2:3b via the backend. This script is for optional local fine-tuning.
+    
     Args:
-        model_name: Base model name
+        model_name: Base model name (HuggingFace model path)
         training_data_file: Path to training data JSONL file
         output_dir: Directory to save fine-tuned model
         num_epochs: Number of training epochs
@@ -160,7 +167,7 @@ def fine_tune_qwen(
         max_length: Maximum sequence length
     """
     logger.info("="*60)
-    logger.info("Fine-tuning Qwen2.5-0.5B with LoRA")
+    logger.info(f"Fine-tuning {model_name} with LoRA")
     logger.info("="*60)
     
     # Check if training data exists
@@ -184,7 +191,7 @@ def fine_tune_qwen(
     model = AutoModelForCausalLM.from_pretrained(
         model_name,
         trust_remote_code=True,
-        dtype=torch.float32,  # Use float32 for CPU
+        torch_dtype=torch.float32,  # Use float32 for CPU (changed from dtype to torch_dtype)
         low_cpu_mem_usage=True,
         device_map="cpu"
     )
@@ -285,7 +292,7 @@ def main():
     """Main function to run fine-tuning."""
     import argparse
     
-    parser = argparse.ArgumentParser(description="Fine-tune Qwen2.5-0.5B on RAG data")
+    parser = argparse.ArgumentParser(description="Fine-tune Qwen model on RAG data (for local use; main app uses Ollama qwen3.2:3b)")
     parser.add_argument(
         "--chunks-file",
         type=str,
