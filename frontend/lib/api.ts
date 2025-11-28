@@ -3,23 +3,22 @@
  * Centralized API endpoint management.
  */
 
-// Use environment variable, or localhost in development, or fallback to localtunnel
+// Get API base URL from environment variable (REQUIRED)
 const getApiBaseUrl = (): string => {
   if (process.env.NEXT_PUBLIC_API_URL) {
     return process.env.NEXT_PUBLIC_API_URL
   }
-  // In browser, check if we're on localhost
+  // Fallback for development only - should be set in .env.local
   if (typeof window !== 'undefined') {
     if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
       return 'http://localhost:8000'
     }
   }
-  // Fallback to localtunnel
-  return 'https://supportron-api.loca.lt'
+  throw new Error('NEXT_PUBLIC_API_URL environment variable must be set. See .env.example for configuration.')
 }
 
 const API_BASE_URL = getApiBaseUrl()
-const API_VERSION = 'v1' // Use v1 API
+const API_VERSION = process.env.NEXT_PUBLIC_API_VERSION || 'v1'
 
 /**
  * API endpoints configuration.

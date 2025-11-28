@@ -2,10 +2,22 @@
 Main application entry point.
 """
 
+import asyncio
 import sys
 from pathlib import Path
 
-import ollama
+# Load environment variables from .env file BEFORE importing Config
+from dotenv import load_dotenv
+
+# Find .env file in backend directory
+backend_dir = Path(__file__).parent.parent
+env_path = backend_dir / ".env"
+if env_path.exists():
+    load_dotenv(dotenv_path=env_path)
+else:
+    # Fallback: try to load from current directory
+    load_dotenv()
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -13,31 +25,30 @@ from app.api.dependencies import set_rag_model
 from app.api.v1 import routes as v1_routes
 from app.core.config import Config
 from app.core.logging_config import logger
+from app.services.ollama_service import ensure_ollama_ready
 
 # RAG model imports
-project_root = Path(__file__).parent.parent.parent
-data_processing_path = project_root / "data-processing"
+data_processing_path = Config.get_data_processing_path()
 sys.path.insert(0, str(data_processing_path))
 from build_rag_model import SimpleRAGModel
 
 # Initialize FastAPI app
 app = FastAPI(
-    title="Hybrid Chat API",
-    version="1.0.0",
-    description="Hybrid chat system using Ollama qwen3.2:3b and RAG"
+    title=Config.APP_TITLE,
+    version=Config.APP_VERSION,
+    description=Config.APP_DESCRIPTION
 )
 
 # Configure CORS for frontend
-# Use allow_origin_regex to support localtunnel subdomains
 app.add_middleware(
     CORSMiddleware,
     allow_origins=Config.ALLOWED_ORIGINS,
-    allow_origin_regex=r"https?://.*\.loca\.lt",  # Allow all localtunnel subdomains
+    allow_origin_regex=Config.CORS_ORIGIN_REGEX,
     allow_credentials=True,
-    allow_methods=["GET", "POST", "OPTIONS"],  # Explicitly allow only needed methods
-    allow_headers=["Content-Type", "Authorization", "Accept"],  # Explicit headers only
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization", "Accept"],
     expose_headers=["Content-Type"],
-    max_age=3600,  # Cache preflight requests for 1 hour
+    max_age=3600,
 )
 
 # Include routers
@@ -51,23 +62,27 @@ from app.services.chat_service import check_ollama_available, process_chat_reque
 @app.get("/", tags=["health"])
 async def root_legacy() -> dict:
     """Root endpoint (legacy - delegates to v1)."""
-    return {
+    response = {
         "status": "online",
-        "service": "Hybrid Chat API",
-        "model": Config.MODEL,
+        "service": Config.APP_TITLE,
         "rag_available": get_rag_model() is not None,
         "model_available": check_ollama_available()
     }
+    if not Config.HIDE_MODEL_INFO:
+        response["model"] = Config.MODEL
+    return response
 
 @app.get("/health", tags=["health"])
 async def health_legacy() -> dict:
     """Health check endpoint (legacy - delegates to v1)."""
-    return {
+    response = {
         "status": "healthy",
-        "model": Config.MODEL,
         "rag_available": get_rag_model() is not None,
         "model_available": check_ollama_available()
     }
+    if not Config.HIDE_MODEL_INFO:
+        response["model"] = Config.MODEL
+    return response
 
 @app.post("/api/chat", response_model=ChatResponse, tags=["chat"])
 async def chat_legacy(request: ChatRequest) -> ChatResponse:
@@ -89,41 +104,47 @@ async def chat_legacy(request: ChatRequest) -> ChatResponse:
 @app.on_event("startup")
 async def startup_event() -> None:
     """Initialize Ollama models and RAG on startup."""
-    # Verify Ollama model is available
-    try:
-        logger.info("Checking Ollama model availability...")
-        # Test model
-        ollama.generate(model=Config.MODEL, prompt="test")
-        logger.info(f"✓ Model '{Config.MODEL}' is ready!")
-    except Exception as e:
-        logger.error(f"Failed to connect to Ollama or model not found: {e}", exc_info=True)
-        logger.warning("Make sure Ollama is running and model is pulled:")
-        logger.warning(f"  ollama pull {Config.MODEL}")
-        # Don't raise - allow server to start, but chat will fail gracefully
+    # Start RAG initialization and Ollama check in parallel
+    async def init_rag_model() -> None:
+        """Initialize RAG model asynchronously."""
+        try:
+            vector_db_path = Config.get_vector_db_path()
+            if not vector_db_path.exists():
+                raise FileNotFoundError(f"Vector database path does not exist: {vector_db_path}")
+            
+            logger.info(f"Initializing RAG model from {vector_db_path}...")
+            rag_model = SimpleRAGModel(
+                str(vector_db_path),
+                use_llm=False,  # We use Ollama models instead
+                llm_model_name=Config.MODEL,  # Not used when use_llm=False, but kept for reference
+                use_quantization=False
+            )
+            set_rag_model(rag_model)
+            logger.info("✓ RAG model initialized successfully!")
+        except FileNotFoundError as e:
+            logger.error(f"Vector database not found: {e}")
+            logger.warning("RAG will not be available. Chat will use model directly.")
+            set_rag_model(None)
+        except Exception as e:
+            logger.error(f"Failed to initialize RAG model: {e}", exc_info=True)
+            logger.warning("RAG will not be available. Chat will use model directly.")
+            set_rag_model(None)
     
-    # Initialize RAG model
-    try:
-        vector_db_path = project_root / "data-processing" / "vector_db"
-        if not vector_db_path.exists():
-            raise FileNotFoundError(f"Vector database path does not exist: {vector_db_path}")
+    async def init_ollama_model() -> None:
+        """Initialize Ollama model asynchronously in background."""
+        logger.info("Checking Ollama model availability...")
+        is_ready = await ensure_ollama_ready(max_wait_time=60)
         
-        logger.info(f"Initializing RAG model from {vector_db_path}...")
-        rag_model = SimpleRAGModel(
-            str(vector_db_path),
-            use_llm=False,  # We use Ollama models instead
-            llm_model_name="qwen3.2:3b",  # Not used when use_llm=False, but kept for reference
-            use_quantization=False
-        )
-        set_rag_model(rag_model)
-        logger.info("✓ RAG model initialized successfully!")
-    except FileNotFoundError as e:
-        logger.error(f"Vector database not found: {e}")
-        logger.warning("RAG will not be available. Chat will use model directly.")
-        set_rag_model(None)
-    except Exception as e:
-        logger.error(f"Failed to initialize RAG model: {e}", exc_info=True)
-        logger.warning("RAG will not be available. Chat will use model directly.")
-        set_rag_model(None)
+        if not is_ready:
+            logger.warning("Ollama model not ready. Make sure Ollama is running and model is pulled:")
+            logger.warning(f"  ollama pull {Config.MODEL}")
+            logger.warning("Server will continue, but chat may have limited functionality.")
+    
+    # Run both initializations concurrently
+    await asyncio.gather(
+        init_rag_model(),
+        init_ollama_model()
+    )
 
 
 if __name__ == "__main__":

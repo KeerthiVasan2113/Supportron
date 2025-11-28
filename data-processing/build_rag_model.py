@@ -1,6 +1,6 @@
 """
 Script to build a custom RAG (Retrieval-Augmented Generation) model.
-Uses template-based answer generation from retrieved context (Ollama qwen3.2:3b is used via the backend).
+Uses template-based answer generation from retrieved context (Ollama llama3.2:3b is used via the backend).
 Uses FAISS for vector search.
 """
 
@@ -18,15 +18,15 @@ logger = setup_logger("logs/build_rag_model.log")
 
 
 class SimpleRAGModel:
-    """RAG model with template-based generation (Ollama qwen3.2:3b is used via the backend for answer generation)."""
+    """RAG model with template-based generation (Ollama llama3.2:3b is used via the backend for answer generation)."""
     
     def __init__(
         self,
         vector_db_path: str = "vector_db",
         embedding_model: str = "all-MiniLM-L6-v2",  # Lightweight model optimized for low-memory systems
         top_k: int = 6,  # Increased for better context retrieval
-        use_llm: bool = False,  # We use Ollama qwen3.2:3b via backend instead
-        llm_model_name: str = "qwen3.2:3b",  # Model name for reference (not used when use_llm=False)
+        use_llm: bool = False,  # We use Ollama llama3.2:3b via backend instead
+        llm_model_name: str = "llama3.2:3b",  # Model name for reference (not used when use_llm=False)
         use_quantization: bool = True  # Use 8-bit quantization for CPU
     ):
         """
@@ -99,11 +99,11 @@ class SimpleRAGModel:
         print(f"Total documents: {self.index.ntotal}")
         print(f"Embedding dimension: {self.index.d}")
         print(f"Top-K retrieval: {self.top_k}")
-        print(f"Answer generation: {'LLM (local)' if self.use_llm else 'Template-based (Ollama qwen3.2:3b via backend)'}")
+        print(f"Answer generation: {'LLM (local)' if self.use_llm else 'Template-based (Ollama via backend)'}")
         print(f"{'='*60}\n")
     
     def _load_llm(self, model_name: str, use_quantization: bool = True):
-        """Load LLM with optional quantization for low memory usage (not used - Ollama qwen3.2:3b is used via backend)."""
+        """Load LLM with optional quantization for low memory usage (not used - Ollama is used via backend)."""
         try:
             from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
         except ImportError:
@@ -346,7 +346,7 @@ class SimpleRAGModel:
         return instructions
     
     def _generate_with_llm(self, query: str, context_docs: List[Dict]) -> str:
-        """Generate answer using local LLM with retrieved context (not used - Ollama qwen3.2:3b is used via backend)."""
+        """Generate answer using local LLM with retrieved context (not used - Ollama llama3.2:3b is used via backend)."""
         if not self.llm_model or not self.llm_tokenizer:
             raise ValueError("LLM not loaded")
         
@@ -356,7 +356,7 @@ class SimpleRAGModel:
             for i, doc in enumerate(context_docs[:3])  # Use top 3 docs
         ])
         
-        # Create prompt for LLM (ChatML format - not used, Ollama qwen3.2:3b is used via backend)
+        # Create prompt for LLM (ChatML format - not used, Ollama llama3.2:3b is used via backend)
         messages = [
             {
                 "role": "system",
@@ -379,7 +379,7 @@ CRITICAL: When providing commands (sudo, apt-get, systemctl, docker, etc.), ALWA
             }
         ]
         
-        # Apply chat template (ChatML format - not used, Ollama qwen3.2:3b is used via backend)
+        # Apply chat template (ChatML format - not used, Ollama llama3.2:3b is used via backend)
         try:
             prompt = self.llm_tokenizer.apply_chat_template(
                 messages,
@@ -1145,7 +1145,7 @@ def build_rag_model(
     vector_db_path: str = "vector_db",
     embedding_model: str = "all-MiniLM-L6-v2",
     use_llm: bool = False,
-    llm_model_name: str = "qwen3.2:3b",
+    llm_model_name: str = "llama3.2:3b",
     use_quantization: bool = True
 ) -> SimpleRAGModel:
     """

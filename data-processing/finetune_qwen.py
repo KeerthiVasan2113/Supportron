@@ -3,8 +3,8 @@ Fine-tune Qwen model on RAG data using LoRA (Low-Rank Adaptation).
 Optimized for CPU-only training with limited RAM.
 
 Note: This script fine-tunes a local HuggingFace model. The main application uses
-Ollama qwen3.2:3b via the backend. If you want to fine-tune for local use, you can
-use this script, but the primary model is Ollama qwen3.2:3b.
+Ollama llama3.2:3b via the backend. If you want to fine-tune for local use, you can
+use this script, but the primary model is Ollama llama3.2:3b.
 """
 
 # Prevent bitsandbytes import to avoid Python 3.14+ compatibility issues
@@ -141,7 +141,7 @@ def create_tokenize_function(tokenizer, max_length: int = 512):
 
 
 def fine_tune_qwen(
-    model_name: str = "Qwen/Qwen2.5-3B-Instruct",  # HuggingFace model (base for Ollama qwen3.2:3b)
+    model_name: str = "Qwen/Qwen2.5-3B-Instruct",  # HuggingFace model (for local fine-tuning; main app uses Ollama llama3.2:3b)
     training_data_file: str = "output/training_data.jsonl",
     output_dir: str = "fine_tuned_qwen",
     num_epochs: int = 2,
@@ -154,7 +154,7 @@ def fine_tune_qwen(
     Fine-tune Qwen model using LoRA for efficient training.
     
     Note: This fine-tunes a local HuggingFace model. The main application uses
-    Ollama qwen3.2:3b via the backend. This script is for optional local fine-tuning.
+    Ollama llama3.2:3b via the backend. This script is for optional local fine-tuning.
     
     Args:
         model_name: Base model name (HuggingFace model path)
@@ -292,7 +292,7 @@ def main():
     """Main function to run fine-tuning."""
     import argparse
     
-    parser = argparse.ArgumentParser(description="Fine-tune Qwen model on RAG data (for local use; main app uses Ollama qwen3.2:3b)")
+    parser = argparse.ArgumentParser(description="Fine-tune Qwen model on RAG data (for local use; main app uses Ollama llama3.2:3b)")
     parser.add_argument(
         "--chunks-file",
         type=str,

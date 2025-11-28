@@ -22,25 +22,29 @@ router = APIRouter(prefix="/api/v1", tags=["v1"])
 @router.get("/", tags=["health"])
 async def root() -> dict:
     """Root endpoint with service information."""
-    return {
+    response = {
         "status": "online",
-        "service": "Hybrid Chat API",
-        "version": "1.0.0",
-        "model": Config.MODEL,
+        "service": Config.APP_TITLE,
+        "version": Config.APP_VERSION,
         "rag_available": get_rag_model() is not None,
         "model_available": check_ollama_available()
     }
+    if not Config.HIDE_MODEL_INFO:
+        response["model"] = Config.MODEL
+    return response
 
 
 @router.get("/health", tags=["health"])
 async def health() -> dict:
     """Health check endpoint for monitoring."""
-    return {
+    response = {
         "status": "healthy",
-        "model": Config.MODEL,
         "rag_available": get_rag_model() is not None,
         "model_available": check_ollama_available()
     }
+    if not Config.HIDE_MODEL_INFO:
+        response["model"] = Config.MODEL
+    return response
 
 
 @router.post("/chat", response_model=ChatResponse, tags=["chat"])
@@ -49,8 +53,8 @@ async def chat(request: ChatRequest) -> ChatResponse:
     Hybrid chat endpoint with conversation context support.
     
     Pipeline:
-    - If RAG has relevant docs: Use RAG → Ollama qwen3.2:3b
-    - If no RAG docs: Use Ollama qwen3.2:3b directly
+    - If RAG has relevant docs: Use RAG → LLM
+    - If no RAG docs: Use LLM directly
     - Conversation history is included in prompts for context awareness
     
     Args:

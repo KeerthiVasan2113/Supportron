@@ -909,3 +909,68 @@ httpx.ConnectError: [WinError 10061] No connection could be made because the tar
 2025-11-27 11:03:42 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Qwen
 2025-11-27 11:03:42 - app.core.logging_config - INFO - No relevant RAG documents, using llama3.2:3b directly
 2025-11-27 11:05:55 - app.core.logging_config - INFO - Generated answer (length: 1728 chars, sources: 0)
+2025-11-28 09:58:06 - app.core.logging_config - INFO - Checking Ollama model availability...
+2025-11-28 09:58:06 - app.core.logging_config - ERROR - Failed to connect to Ollama or model not found: model 'qwen3.2:3b' not found
+Traceback (most recent call last):
+  File "C:\Projects\Supportron\Supportron\backend\app\main.py", line 96, in startup_event
+    ollama.generate(model=Config.MODEL, prompt="test")
+  File "C:\Projects\Supportron\Supportron\backend\backend\lib\site-packages\ollama\_client.py", line 162, in generate
+    return self._request_stream(
+  File "C:\Projects\Supportron\Supportron\backend\backend\lib\site-packages\ollama\_client.py", line 98, in _request_stream
+    return self._stream(*args, **kwargs) if stream else self._request(*args, **kwargs).json()
+  File "C:\Projects\Supportron\Supportron\backend\backend\lib\site-packages\ollama\_client.py", line 74, in _request
+    raise ResponseError(e.response.text, e.response.status_code) from None
+ollama._types.ResponseError: model 'qwen3.2:3b' not found
+2025-11-28 09:58:06 - app.core.logging_config - WARNING - Make sure Ollama is running and model is pulled:
+2025-11-28 09:58:06 - app.core.logging_config - WARNING -   ollama pull qwen3.2:3b
+2025-11-28 09:58:06 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\Supportron\Supportron\data-processing\vector_db...
+2025-11-28 09:58:11 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-28 09:58:11 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-28 10:01:04 - app.core.logging_config - INFO - Received question: After the recent SSL update, several email accounts stopped working. They cannot connect through Outlook.
+2025-11-28 10:01:04 - app.core.logging_config - INFO - Conversation history: 1 previous messages
+2025-11-28 10:01:06 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Ollama
+2025-11-28 10:01:06 - app.core.logging_config - INFO - No relevant RAG documents, using Ollama qwen3.2:3b directly
+2025-11-28 10:01:06 - app.core.logging_config - ERROR - Model generation failed: model 'qwen3.2:3b' not found
+2025-11-28 10:10:07 - app.core.logging_config - INFO - Checking Ollama model availability...
+2025-11-28 10:10:07 - app.core.logging_config - ERROR - Failed to connect to Ollama or model not found: model 'qwen2.5:3b' not found
+Traceback (most recent call last):
+  File "C:\Projects\Supportron\Supportron\backend\app\main.py", line 96, in startup_event
+    ollama.generate(model=Config.MODEL, prompt="test")
+  File "C:\Projects\Supportron\Supportron\backend\backend\lib\site-packages\ollama\_client.py", line 162, in generate
+    return self._request_stream(
+  File "C:\Projects\Supportron\Supportron\backend\backend\lib\site-packages\ollama\_client.py", line 98, in _request_stream
+    return self._stream(*args, **kwargs) if stream else self._request(*args, **kwargs).json()
+  File "C:\Projects\Supportron\Supportron\backend\backend\lib\site-packages\ollama\_client.py", line 74, in _request
+    raise ResponseError(e.response.text, e.response.status_code) from None
+ollama._types.ResponseError: model 'qwen2.5:3b' not found
+2025-11-28 10:10:07 - app.core.logging_config - WARNING - Make sure Ollama is running and model is pulled:
+2025-11-28 10:10:07 - app.core.logging_config - WARNING -   ollama pull qwen2.5:3b
+2025-11-28 10:10:07 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\Supportron\Supportron\data-processing\vector_db...
+2025-11-28 10:10:12 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-28 10:10:12 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-28 10:15:58 - app.core.logging_config - INFO - Checking Ollama model availability...
+2025-11-28 10:16:13 - app.core.logging_config - INFO - ✓ Model 'llama3.2:3b' is ready!
+2025-11-28 10:16:13 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\Supportron\Supportron\data-processing\vector_db...
+2025-11-28 10:16:17 - app.core.logging_config - INFO - RAG model set successfully
+2025-11-28 10:16:17 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-11-28 10:16:51 - app.core.logging_config - INFO - Received question: After the recent SSL update, several email accounts stopped working. They cannot connect through Outlook.
+2025-11-28 10:16:51 - app.core.logging_config - INFO - Conversation history: 2 previous messages
+2025-11-28 10:16:51 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Ollama
+2025-11-28 10:16:51 - app.core.logging_config - INFO - No relevant RAG documents, using Ollama llama3.2:3b directly
+2025-11-28 10:17:44 - app.core.logging_config - INFO - Generated answer (length: 942 chars, sources: 0)
+2025-11-28 10:19:19 - app.core.logging_config - INFO - Received question: 1. i do not know
+2. No I don't think so
+3. Yes, I tried
+2025-11-28 10:19:19 - app.core.logging_config - INFO - Conversation history: 3 previous messages
+2025-11-28 10:19:19 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Ollama
+2025-11-28 10:19:19 - app.core.logging_config - INFO - No relevant RAG documents, using Ollama llama3.2:3b directly
+2025-11-28 10:20:27 - app.core.logging_config - INFO - Generated answer (length: 1151 chars, sources: 0)
+2025-11-28 11:26:04 - app.core.logging_config - ERROR - Vector database not found: Vector database path does not exist: C:\Projects\Supportron\Supportron\backend\data-processing\vector_db
+2025-11-28 11:26:04 - app.core.logging_config - WARNING - RAG will not be available. Chat will use model directly.
+2025-11-28 11:26:04 - app.core.logging_config - INFO - RAG model cleared
+2025-11-28 11:26:04 - app.core.logging_config - INFO - Checking Ollama model availability...
+2025-11-28 11:26:04 - app.core.logging_config - INFO - Waiting for model '' to be ready...
+2025-11-28 11:27:05 - app.core.logging_config - WARNING - Model '' did not become ready within 60 seconds
+2025-11-28 11:27:05 - app.core.logging_config - WARNING - Ollama model not ready. Make sure Ollama is running and model is pulled:
+2025-11-28 11:27:05 - app.core.logging_config - WARNING -   ollama pull 
+2025-11-28 11:27:05 - app.core.logging_config - WARNING - Server will continue, but chat may have limited functionality.

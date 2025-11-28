@@ -145,7 +145,7 @@ const ChatInterface = ({
 
       if (error instanceof Error) {
         if (error.message.includes('511')) {
-          const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://supportron-api.loca.lt'
+          const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
           errorContent = `⚠️ Tunnel Connection Required\n\nVisit:\n${apiUrl}\n\nThen try again.`
         } else {
           errorContent = `Error: ${error.message}`

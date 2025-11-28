@@ -71,7 +71,7 @@ def format_conversation_history(history: Optional[List[dict]], include_all: bool
     
     Args:
         history: List of previous messages with 'role' and 'content'
-        include_all: If True, include all messages. If False, limit to last 30 messages.
+        include_all: If True, include all messages. If False, limit to last 10 messages for faster processing.
         
     Returns:
         Formatted conversation history string
@@ -79,8 +79,8 @@ def format_conversation_history(history: Optional[List[dict]], include_all: bool
     if not history or len(history) == 0:
         return ""
     
-    # Use all history if requested, otherwise limit to last 30 messages for token management
-    messages_to_format = history if include_all else history[-30:]
+    # Use all history if requested, otherwise limit to last 10 messages for faster processing
+    messages_to_format = history if include_all else history[-10:]
     
     formatted = []
     for idx, msg in enumerate(messages_to_format, 1):
@@ -92,8 +92,8 @@ def format_conversation_history(history: Optional[List[dict]], include_all: bool
             formatted.append(f"[Message {idx}] Assistant: {content}")
     
     # Add summary if we truncated
-    if not include_all and len(history) > 30:
-        formatted.insert(0, f"[Note: This is a conversation with {len(history)} total messages. Showing the last 30 messages below. The first message was: \"{history[0].get('content', '')[:100]}...\"]")
+    if not include_all and len(history) > 10:
+        formatted.insert(0, f"[Note: This is a conversation with {len(history)} total messages. Showing the last 10 messages below. The first message was: \"{history[0].get('content', '')[:100]}...\"]")
     
     return "\n".join(formatted)
 
@@ -104,7 +104,7 @@ def generate_with_rag_pipeline(
     conversation_history: Optional[List[dict]] = None
 ) -> Tuple[str, Optional[List[SourceDocument]]]:
     """
-    Generate answer using RAG with Ollama qwen3.2:3b model.
+    Generate answer using RAG with LLM model.
     
     Args:
         question: User's question
@@ -117,7 +117,7 @@ def generate_with_rag_pipeline(
     Raises:
         HTTPException: If generation fails
     """
-    logger.info("Using RAG + Ollama qwen3.2:3b pipeline")
+    logger.info("Using RAG + LLM pipeline")
     
     # Check if question is about the conversation itself
     question_lower = question.lower()
@@ -148,32 +148,44 @@ This is the full conversation history up to this point. Use this to answer quest
 === END OF CONVERSATION HISTORY ===
 """
     
-    # Use Ollama qwen3.2:3b to generate answer with RAG context
-    prompt = f"""You are a helpful assistant analyzing a user's question in the context of technical documentation and conversation history.
+    # Use LLM to generate answer with RAG context
+    prompt = f"""You are an expert technical support AI assistant. Your role is to provide direct, actionable solutions to technical problems.
 
-Technical Documentation:
+Documentation:
 {context_text}{history_context}
 
-Current User Question: {question}
+Current Question: {question}
 
-IMPORTANT INSTRUCTIONS:
-1. If the question asks about the conversation itself (e.g., "what was the first question", "what did I ask earlier", "what did you say before"), you MUST use the conversation history above to answer.
-2. The conversation history shows numbered messages - you can reference specific messages by their numbers.
-3. For questions about the conversation, look through ALL the messages in the conversation history.
-4. For technical questions, use both the documentation and conversation context.
-5. Maintain continuity with previous messages in the conversation.
-6. Provide a clear, structured answer with proper formatting.
-7. Use code blocks for any code examples.
-8. CRITICAL: When providing commands (sudo, apt-get, systemctl, docker, etc.), ALWAYS provide COMPLETE, EXECUTABLE commands. Never truncate or cut off commands mid-way. Each command must be complete and ready to run.
-9. For installation or configuration steps, provide the full command including all necessary flags and arguments.
+CRITICAL INSTRUCTIONS:
+1. FOCUS ON THE ACTUAL PROBLEM: Identify what the user is actually trying to solve. If they say "Unable to connect to server IP: 199.43.207.194", focus on connection troubleshooting for that specific IP, not generic server setup.
+2. NO ASSUMPTIONS: Do NOT assume operating system, environment, or setup. If the user mentions "Outlook" and "email accounts", they're likely on Windows. If they mention a server IP, address server/client connectivity issues.
+3. DIRECT SOLUTIONS FIRST: Provide step-by-step solutions that directly address the problem. Only ask clarifying questions if absolutely necessary to solve the issue.
+4. USE CONTEXT: The conversation history shows the full context. Read it carefully and address the specific issues mentioned.
+5. RELEVANCE: Only provide information directly related to solving the problem. Do not suggest unrelated commands, tools, or steps.
+6. COMPLETE COMMANDS: All commands must be complete and executable. Never truncate or leave commands incomplete.
+7. PLATFORM AWARENESS: Support all platforms but choose solutions based on the problem context (Outlook = Windows, server IP = network/connectivity).
 
-Provide your answer now:"""
+EXAMPLE OF GOOD RESPONSE:
+User: "Unable to connect to server IP: 199.43.207.194"
+Good Response: "To troubleshoot the connection issue with server 199.43.207.194, try these steps:
+1. Test connectivity: ping 199.43.207.194
+2. Check if the port is open: telnet 199.43.207.194 443 (or the specific port)
+3. Verify firewall settings aren't blocking the connection
+4. Check if the server is running and accessible from your network"
+
+Now answer the current question with a direct, actionable solution:"""
     
     try:
         response = ollama.generate(
             model=Config.MODEL,
             prompt=prompt,
-            stream=False
+            stream=False,
+            options={
+                "num_predict": Config.OLLAMA_NUM_PREDICT,
+                "temperature": Config.OLLAMA_TEMPERATURE,
+                "top_p": Config.OLLAMA_TOP_P,
+                "top_k": Config.OLLAMA_TOP_K,
+            }
         )
         answer = response.get("response", "").strip()
     except Exception as e:
@@ -201,7 +213,7 @@ def generate_direct_answer(
     conversation_history: Optional[List[dict]] = None
 ) -> str:
     """
-    Generate answer directly using Ollama qwen3.2:3b.
+    Generate answer directly using LLM.
     
     Args:
         question: User's question
@@ -213,7 +225,7 @@ def generate_direct_answer(
     Raises:
         HTTPException: If generation fails
     """
-    logger.info("No relevant RAG documents, using Ollama qwen3.2:3b directly")
+    logger.info("No relevant RAG documents, using LLM directly")
     
     # Check if question is about the conversation itself
     question_lower = question.lower()
@@ -227,37 +239,58 @@ def generate_direct_answer(
     history_text = format_conversation_history(conversation_history, include_all=is_about_conversation)
     
     if history_text:
-        prompt = f"""You are a helpful assistant having a conversation with a user. Below is the complete conversation history.
+        prompt = f"""You are an expert technical support AI assistant. Your role is to provide direct, actionable solutions to technical problems.
 
-=== COMPLETE CONVERSATION HISTORY ===
+Conversation History:
 {history_text}
-=== END OF CONVERSATION HISTORY ===
 
-Current User Question: {question}
+Current Question: {question}
 
-IMPORTANT INSTRUCTIONS:
-1. If the question asks about the conversation itself (e.g., "what was the first question", "what did I ask earlier", "what did you say before"), you MUST look through the conversation history above to find the answer.
-2. The conversation history shows numbered messages - you can reference specific messages by their numbers (e.g., "In message 1, you asked...").
-3. For questions about the conversation, carefully review ALL messages in the conversation history.
-4. For general questions, use your knowledge while maintaining context from the conversation.
-5. Always maintain continuity with the conversation history.
-6. CRITICAL: When providing commands (sudo, apt-get, systemctl, docker, etc.), ALWAYS provide COMPLETE, EXECUTABLE commands. Never truncate or cut off commands mid-way. Each command must be complete and ready to run.
+CRITICAL INSTRUCTIONS:
+1. FOCUS ON THE ACTUAL PROBLEM: Read the conversation history and current question carefully. Identify what the user is actually trying to solve. If they mention "Outlook email not connecting after SSL update" and then "Unable to connect to server IP: 199.43.207.194", focus on Outlook email server connection issues, not generic Linux server commands.
+2. NO ASSUMPTIONS: Do NOT assume operating system or environment. If the user mentions "Outlook", they're on Windows. If they mention a server IP, address connectivity issues. Do not suggest Linux commands for Windows Outlook problems.
+3. DIRECT SOLUTIONS FIRST: Provide step-by-step solutions that directly address the problem. If the user says "Unable to connect to server IP: X", provide connection troubleshooting steps for that specific IP and the application (Outlook email).
+4. USE FULL CONTEXT: The conversation history contains important context. If the user mentioned "SSL update" and "Outlook", focus on SSL/TLS configuration for Outlook email accounts connecting to the server IP.
+5. RELEVANCE: Only provide information directly related to solving the problem. Do not suggest unrelated commands, tools, or generic troubleshooting steps.
+6. COMPLETE COMMANDS: All commands must be complete and executable. Never truncate commands.
+7. PLATFORM AWARENESS: Choose solutions based on context (Outlook = Windows email client, server IP = network/email server connectivity).
 
-Provide a helpful, clear answer based on the conversation history and your knowledge."""
+EXAMPLE OF GOOD RESPONSE:
+User (after mentioning Outlook email issues): "Unable to connect to server IP: 199.43.207.194"
+Good Response: "For Outlook email connection issues with server 199.43.207.194, check:
+1. Outlook Account Settings: File > Account Settings > Server Settings - verify the incoming/outgoing server matches 199.43.207.194
+2. Port Settings: Ensure correct ports (IMAP: 993, POP3: 995, SMTP: 465/587) with SSL/TLS enabled
+3. Test Connection: Use Outlook's Test Account Settings feature
+4. Firewall: Ensure Windows Firewall allows Outlook to connect to 199.43.207.194
+5. SSL Certificate: After SSL update, you may need to re-enter password or accept new certificate"
+
+Now answer the current question with a direct, actionable solution:"""
     else:
-        prompt = f"""You are a helpful assistant. Answer the following question clearly and completely.
+        prompt = f"""You are an expert technical support AI assistant. Analyze the user's problem and provide direct, actionable solutions.
 
 Question: {question}
 
-IMPORTANT: When providing commands (sudo, apt-get, systemctl, docker, etc.), ALWAYS provide COMPLETE, EXECUTABLE commands. Never truncate or cut off commands mid-way. Each command must be complete and ready to run.
+CRITICAL INSTRUCTIONS:
+1. UNDERSTAND THE ACTUAL PROBLEM: Read the question carefully. What is the user actually trying to solve? Focus on that specific issue.
+2. NO ASSUMPTIONS: Do NOT assume the user's operating system, environment, or setup unless explicitly stated. If unclear, provide solutions for the most likely scenario based on the problem description.
+3. DIRECT SOLUTIONS: Provide step-by-step solutions that directly address the stated problem. Avoid generic troubleshooting steps that don't relate to the specific issue.
+4. RELEVANT RESPONSES: Only provide information relevant to solving the user's problem. Do not suggest unrelated commands or steps.
+5. COMPLETE COMMANDS: When providing commands, ensure they are complete and executable. Never truncate commands.
+6. PLATFORM SUPPORT: Support Windows, Linux, macOS, and cloud services. Choose the appropriate solution based on the problem context.
 
-Provide your answer:"""
+Answer the question directly and provide a concrete solution:"""
     
     try:
         response = ollama.generate(
             model=Config.MODEL,
             prompt=prompt,
-            stream=False
+            stream=False,
+            options={
+                "num_predict": Config.OLLAMA_NUM_PREDICT,
+                "temperature": Config.OLLAMA_TEMPERATURE,
+                "top_p": Config.OLLAMA_TOP_P,
+                "top_k": Config.OLLAMA_TOP_K,
+            }
         )
         return response.get("response", "").strip()
     except Exception as e:
