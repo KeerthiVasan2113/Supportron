@@ -17,7 +17,7 @@ interface Chat {
 
 interface ChatInterfaceProps {
   messages: Message[]
-  onNewMessage: (message: Message) => void
+  onNewMessage: (message: Message, chatId?: string | null) => void
   onClearChat: () => void
   onNewChat?: () => void
   onUpdateMessages?: (messages: Message[]) => void
@@ -47,6 +47,7 @@ const ChatInterface = ({
 
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
+  const loadingChatIdRef = useRef<string | null>(null) // Track which chat is loading
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const initialQuestionSent = useRef(false)
 
@@ -57,6 +58,16 @@ const ChatInterface = ({
   useEffect(() => {
     scrollToBottom()
   }, [messages])
+
+  // Clear loading state if we switched to a different chat
+  useEffect(() => {
+    if (currentChatId && loadingChatIdRef.current && loadingChatIdRef.current !== currentChatId) {
+      // We switched to a different chat while a request was in progress
+      // Clear the loading state for the old chat
+      setIsLoading(false)
+      loadingChatIdRef.current = null
+    }
+  }, [currentChatId])
 
   // Send initial question ONLY once
   useEffect(() => {
@@ -73,6 +84,10 @@ const ChatInterface = ({
   const handleSendMessage = async (content: string, regenerateMessageId?: string) => {
     if (!content.trim() || isLoading) return
 
+    // Capture the chat ID at the time of sending
+    const chatIdAtSendTime = currentChatId || 'new-chat'
+    loadingChatIdRef.current = chatIdAtSendTime
+
     if (!regenerateMessageId) {
       const userMessage: Message = {
         id: Date.now().toString(),
@@ -81,10 +96,15 @@ const ChatInterface = ({
         timestamp: new Date()
       }
 
-      onNewMessage(userMessage)
+      // Pass the chat ID so the response goes to the correct chat
+      onNewMessage(userMessage, chatIdAtSendTime)
 
-      // delay loader
-      setTimeout(() => setIsLoading(true), 800)
+      // delay loader - only set if still on the same chat
+      setTimeout(() => {
+        if (loadingChatIdRef.current === chatIdAtSendTime) {
+          setIsLoading(true)
+        }
+      }, 800)
     } else {
       setIsLoading(true)
     }
@@ -136,7 +156,8 @@ const ChatInterface = ({
         }
       }
 
-      onNewMessage(assistantMessage)
+      // Always pass the original chat ID to ensure response goes to the correct chat
+      onNewMessage(assistantMessage, chatIdAtSendTime)
 
     } catch (error: any) {
       console.error('Error sending message:', error)
@@ -166,14 +187,24 @@ const ChatInterface = ({
           const updated = [...messages]
           updated[idx] = errorMessage
           onUpdateMessages(updated)
+          // Clear loading state
+          if (loadingChatIdRef.current === chatIdAtSendTime) {
+            setIsLoading(false)
+            loadingChatIdRef.current = null
+          }
           return
         }
       }
 
-      onNewMessage(errorMessage)
+      // Always pass the original chat ID to ensure error goes to the correct chat
+      onNewMessage(errorMessage, chatIdAtSendTime)
 
     } finally {
-      setIsLoading(false)
+      // Only clear loading if this request belongs to the current chat
+      if (loadingChatIdRef.current === chatIdAtSendTime) {
+        setIsLoading(false)
+        loadingChatIdRef.current = null
+      }
     }
   }
 
@@ -288,7 +319,7 @@ const ChatInterface = ({
         ) : (
           <MessageList
             messages={messages}
-            isLoading={isLoading}
+            isLoading={isLoading && loadingChatIdRef.current === currentChatId}
             onEditMessage={handleEditMessage}
             onRegenerate={handleRegenerate}
           />

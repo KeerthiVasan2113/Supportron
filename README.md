@@ -28,16 +28,25 @@ Supportron/
 3. **Ollama** - Required for running LLM models
    - Download from: https://ollama.ai
    - Install and ensure it's running
+4. **NVIDIA GPU (Optional but Recommended)** - For GPU acceleration
+   - CUDA Toolkit 11.8+ (see [GPU_SETUP.md](GPU_SETUP.md) for details)
+   - System will automatically fall back to CPU if GPU is not available
 
 ## Setup Instructions
 
-### 1. Install Ollama Model
+### 1. Install Ollama Models
 
-Before running the application, you need to pull the required Ollama model:
+Before running the application, pull at least one Ollama model. The system will automatically select the best available:
 
 ```powershell
+# Preferred model (recommended)
+ollama pull qwen2.5:7b-instruct
+
+# Alternative model (fallback)
 ollama pull llama3.2:3b
 ```
+
+**Note:** The system will automatically select `qwen2.5:7b-instruct` if available, otherwise falls back to `llama3.2:3b`.
 
 ### 2. Backend Setup
 
@@ -52,10 +61,49 @@ python -m venv venv
 .\venv\Scripts\Activate.ps1
 ```
 
-3. Install dependencies:
+3. **Install PyTorch with GPU support (if you have NVIDIA GPU):**
+   ```powershell
+   # For CUDA 12.1 (recommended)
+   pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+   
+   # For CUDA 11.8
+   pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+   ```
+   
+   **Note:** If you don't have a GPU or prefer CPU-only, skip this step and proceed to step 4.
+
+4. Install dependencies:
 ```powershell
 pip install -r requirements.txt
 ```
+
+5. **Optional: Install FAISS-GPU for faster vector search:**
+   
+   **Windows:** `faiss-gpu` is not available via pip. Use `faiss-cpu` (already installed) or conda:
+   ```powershell
+   # Option 1: Use faiss-cpu (already in requirements.txt)
+   pip install faiss-cpu
+   
+   # Option 2: Use conda (if you have Anaconda/Miniconda)
+   conda install -c pytorch faiss-gpu
+   ```
+   
+   **Linux:**
+   ```bash
+   pip install faiss-gpu
+   ```
+   
+   **Note:** For Windows, `faiss-cpu` works fine. Main GPU acceleration comes from PyTorch for embeddings.
+
+6. **Configure GPU settings (optional):**
+   
+   Create or update `.env` file:
+   ```env
+   USE_GPU=true
+   GPU_DEVICE=cuda
+   ```
+   
+   See [GPU_SETUP.md](GPU_SETUP.md) for detailed GPU setup instructions.
 
 ### 3. Data Processing Setup
 
@@ -70,10 +118,26 @@ python -m venv venv
 .\venv\Scripts\Activate.ps1
 ```
 
-3. Install dependencies:
+3. **Install PyTorch with GPU support (if you have NVIDIA GPU):**
+   ```powershell
+   # For CUDA 12.1 (recommended)
+   pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+   
+   # For CUDA 11.8
+   pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+   ```
+   
+   **Note:** If you don't have a GPU, skip this step and proceed to step 4.
+
+4. Install dependencies:
 ```powershell
 pip install -r requirements.txt
 ```
+
+5. **Optional: Install FAISS-GPU:**
+   ```powershell
+   pip install faiss-gpu
+   ```
 
 4. Build the RAG model (if not already built):
 ```powershell
@@ -249,7 +313,9 @@ npm run dev -- -p 3001
 
 ## Project Features
 
-- **Chat System**: Uses Ollama llama3.2:3b for intelligent responses
+- **Chat System**: Uses Ollama models (qwen2.5:7b-instruct or llama3.2:3b) for intelligent responses
+- **GPU Acceleration**: Automatic GPU detection with CPU fallback for faster embeddings
+- **Model Selection**: Automatically selects best available model (qwen2.5:7b-instruct preferred)
 - **RAG Integration**: Retrieves relevant technical documentation for context-aware answers
 - **Conversation History**: Maintains context across multiple messages
 - **Code Formatting**: Automatically detects and formats code blocks in responses

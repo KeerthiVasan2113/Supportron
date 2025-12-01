@@ -55,7 +55,6 @@ class DatabaseService:
             List of sanitized identifiers
         """
         return [DatabaseService._sanitize_identifier(ident) for ident in identifiers]
-    """Service for performing dynamic database operations."""
     
     @staticmethod
     def validate_table_exists(db_name: str, table_name: str) -> None:

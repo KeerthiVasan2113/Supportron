@@ -13,6 +13,7 @@ from sentence_transformers import SentenceTransformer
 from typing import List, Dict, Optional
 import torch
 from logger_utils import setup_logger
+from gpu_utils import detect_gpu, get_device
 
 logger = setup_logger("logs/build_rag_model.log")
 
@@ -40,9 +41,21 @@ class SimpleRAGModel:
             llm_model_name: Name of the LLM model to use
             use_quantization: Use 8-bit quantization for lower memory usage
         """
+        # Detect GPU and set device
+        has_gpu, gpu_name, device_type = detect_gpu()
+        self.device = get_device()
+        
         logger.info(f"Loading embedding model: {embedding_model}...")
         print(f"Loading embedding model: {embedding_model}...")
-        self.embedding_model = SentenceTransformer(embedding_model)
+        if has_gpu:
+            print(f"  Using GPU: {gpu_name}")
+            logger.info(f"Using GPU: {gpu_name} for embeddings")
+        else:
+            print(f"  Using CPU (GPU not available)")
+            logger.info("Using CPU for embeddings (GPU not available)")
+        
+        # Load model with device specification
+        self.embedding_model = SentenceTransformer(embedding_model, device=self.device)
         print("✓ Embedding model loaded successfully!")
         
         logger.info(f"Loading FAISS index from {vector_db_path}...")
@@ -99,6 +112,7 @@ class SimpleRAGModel:
         print(f"Total documents: {self.index.ntotal}")
         print(f"Embedding dimension: {self.index.d}")
         print(f"Top-K retrieval: {self.top_k}")
+        print(f"Device: {self.device.upper()}")
         print(f"Answer generation: {'LLM (local)' if self.use_llm else 'Template-based (Ollama via backend)'}")
         print(f"{'='*60}\n")
     
@@ -123,7 +137,11 @@ class SimpleRAGModel:
             self.llm_tokenizer.pad_token_id = self.llm_tokenizer.eos_token_id
         
         # Configure quantization for CPU (8-bit)
-        if use_quantization and not torch.cuda.is_available():
+        # Get device from GPU utils
+        device = get_device()
+        has_gpu = device == "cuda"
+        
+        if use_quantization and not has_gpu:
             logger.info("Using 8-bit quantization for CPU inference...")
             print("Using 8-bit quantization for lower memory usage...")
             # For CPU, we use load_in_8bit=False but will use torch_dtype=torch.float16 if possible
@@ -132,19 +150,28 @@ class SimpleRAGModel:
             self.llm_model = AutoModelForCausalLM.from_pretrained(
                 model_name,
                 trust_remote_code=True,
-                torch_dtype=torch.float32,  # Use torch_dtype for CPU
+                torch_dtype=torch.float32,  # Use float32 for CPU
                 low_cpu_mem_usage=True,
                 device_map="cpu"
             )
         else:
-            # Load normally
-            self.llm_model = AutoModelForCausalLM.from_pretrained(
-                model_name,
-                trust_remote_code=True,
-                torch_dtype=torch.float32,  # Use torch_dtype for CPU
-                low_cpu_mem_usage=True,
-                device_map="cpu"
-            )
+            # Load with GPU support if available
+            if has_gpu:
+                self.llm_model = AutoModelForCausalLM.from_pretrained(
+                    model_name,
+                    trust_remote_code=True,
+                    torch_dtype=torch.float16,  # Use float16 for GPU (faster, less memory)
+                    low_cpu_mem_usage=True,
+                    device_map="auto"  # Auto-detect GPU
+                )
+            else:
+                self.llm_model = AutoModelForCausalLM.from_pretrained(
+                    model_name,
+                    trust_remote_code=True,
+                    torch_dtype=torch.float32,  # Use float32 for CPU
+                    low_cpu_mem_usage=True,
+                    device_map="cpu"
+                )
         
         # Set pad token in model config if needed
         if hasattr(self.llm_model.config, 'pad_token_id') and self.llm_model.config.pad_token_id is None:
@@ -203,8 +230,17 @@ class SimpleRAGModel:
         expanded_query = self._expand_query(query)
         
         # Generate query embedding from both original and expanded
-        query_embedding = self.embedding_model.encode([query]).astype('float32')
-        expanded_embedding = self.embedding_model.encode([expanded_query]).astype('float32')
+        # Use GPU if available for faster encoding
+        query_embedding = self.embedding_model.encode(
+            [query], 
+            device=self.device,
+            show_progress_bar=False
+        ).astype('float32')
+        expanded_embedding = self.embedding_model.encode(
+            [expanded_query], 
+            device=self.device,
+            show_progress_bar=False
+        ).astype('float32')
         
         # Search in FAISS index - retrieve more candidates for better filtering
         search_k = min(self.top_k * 3, self.index.ntotal)

@@ -26,6 +26,7 @@ from app.api.v1 import routes as v1_routes
 from app.core.config import Config
 from app.core.logging_config import logger
 from app.services.ollama_service import ensure_ollama_ready
+from app.utils.gpu_utils import detect_gpu
 
 # RAG model imports
 data_processing_path = Config.get_data_processing_path()
@@ -104,6 +105,14 @@ async def chat_legacy(request: ChatRequest) -> ChatResponse:
 @app.on_event("startup")
 async def startup_event() -> None:
     """Initialize Ollama models and RAG on startup."""
+    # Detect GPU first
+    has_gpu, gpu_name, device_type = detect_gpu()
+    if has_gpu:
+        logger.info(f"✓ GPU acceleration available: {gpu_name}")
+        logger.info(f"  Using device: {device_type.upper()}")
+    else:
+        logger.info("ℹ Using CPU (GPU not available)")
+    
     # Start RAG initialization and Ollama check in parallel
     async def init_rag_model() -> None:
         """Initialize RAG model asynchronously."""
@@ -133,11 +142,16 @@ async def startup_event() -> None:
     async def init_ollama_model() -> None:
         """Initialize Ollama model asynchronously in background."""
         logger.info("Checking Ollama model availability...")
-        is_ready = await ensure_ollama_ready(max_wait_time=60)
+        is_ready, selected_model = await ensure_ollama_ready(max_wait_time=60)
         
-        if not is_ready:
-            logger.warning("Ollama model not ready. Make sure Ollama is running and model is pulled:")
-            logger.warning(f"  ollama pull {Config.MODEL}")
+        if is_ready and selected_model:
+            logger.info(f"✓ Ollama model ready: {selected_model}")
+            # Config.MODEL is already updated by ensure_ollama_ready
+        else:
+            logger.warning("Ollama model not ready. Make sure Ollama is running and at least one model is pulled:")
+            logger.warning("  ollama pull qwen2.5:7b-instruct")
+            logger.warning("  or")
+            logger.warning("  ollama pull llama3.2:3b")
             logger.warning("Server will continue, but chat may have limited functionality.")
     
     # Run both initializations concurrently

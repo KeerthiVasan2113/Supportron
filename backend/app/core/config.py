@@ -10,8 +10,21 @@ from typing import List
 class Config:
     """Application configuration with environment variable support."""
     
-    # Model configuration - MUST be set in environment, no default for security
-    MODEL: str = os.getenv("OLLAMA_MODEL", "") or os.getenv("MODEL", "")
+    # Model configuration - supports multiple models with fallback
+    # Priority: qwen2.5:7b-instruct > llama3.2:3b
+    # Can be overridden via OLLAMA_MODEL or MODEL env var
+    _default_model = os.getenv("OLLAMA_MODEL", "") or os.getenv("MODEL", "")
+    MODEL: str = _default_model if _default_model else "qwen2.5:7b-instruct"
+    
+    # Preferred models in order of preference
+    PREFERRED_MODELS: List[str] = [
+        "qwen2.5:7b-instruct",
+        "llama3.2:3b"
+    ]
+    
+    # GPU configuration
+    USE_GPU: bool = os.getenv("USE_GPU", "true").lower() == "true"
+    GPU_DEVICE: str = os.getenv("GPU_DEVICE", "cuda")  # "cuda" or "cpu"
     
     # RAG configuration
     RAG_MAX_DISTANCE: float = float(os.getenv("RAG_MAX_DISTANCE", "0.8"))
@@ -19,9 +32,9 @@ class Config:
     RAG_CONTEXT_LENGTH: int = int(os.getenv("RAG_CONTEXT_LENGTH", "400"))  # Reduced for faster processing
     RAG_PREVIEW_LENGTH: int = int(os.getenv("RAG_PREVIEW_LENGTH", "200"))
     
-    # Ollama generation options for faster responses
-    OLLAMA_NUM_PREDICT: int = int(os.getenv("OLLAMA_NUM_PREDICT", "512"))  # Limit response length
-    OLLAMA_TEMPERATURE: float = float(os.getenv("OLLAMA_TEMPERATURE", "0.5"))  # Lower for more focused, deterministic responses
+    # Ollama generation options for well-structured responses
+    OLLAMA_NUM_PREDICT: int = int(os.getenv("OLLAMA_NUM_PREDICT", "2048"))  # Allow longer, detailed responses
+    OLLAMA_TEMPERATURE: float = float(os.getenv("OLLAMA_TEMPERATURE", "0.6"))  # Balanced for clarity and creativity
     OLLAMA_TOP_P: float = float(os.getenv("OLLAMA_TOP_P", "0.9"))  # Nucleus sampling
     OLLAMA_TOP_K: int = int(os.getenv("OLLAMA_TOP_K", "40"))  # Top-k sampling
     
@@ -73,6 +86,10 @@ class Config:
     
     # Security - hide model info in responses
     HIDE_MODEL_INFO: bool = os.getenv("HIDE_MODEL_INFO", "true").lower() == "true"
+    
+    # Embedding model configuration
+    EMBEDDING_MODEL: str = os.getenv("EMBEDDING_MODEL", "all-MiniLM-L6-v2")
+    EMBEDDING_DEVICE: str = os.getenv("EMBEDDING_DEVICE", "")  # Auto-detect if empty
     
     @classmethod
     def get_project_root(cls) -> Path:

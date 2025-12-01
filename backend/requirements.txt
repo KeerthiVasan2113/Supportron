@@ -1,11 +1,21 @@
+# FastAPI and web server
 fastapi==0.110.1
 uvicorn[standard]==0.29.0
 python-multipart==0.0.7
+
+# Data validation and settings
 pydantic==2.7.0
 pydantic-settings==2.2.1
+
+# Ollama client
 ollama==0.3.1
 
-# Embeddings / Vector DB
+# PyTorch - GPU support with CPU fallback
+# Install with CUDA: pip install torch --index-url https://download.pytorch.org/whl/cu121
+# Or CPU-only: pip install torch
+torch>=2.1.0
+
+# Embeddings and Vector DB
 sentence-transformers==2.3.1
 faiss-cpu==1.7.4
 numpy==1.26.4

@@ -348,22 +348,87 @@ def format_code_blocks(text: str) -> str:
         # Handle existing code block markers
         if stripped.startswith('```'):
             if in_code_block:
-                # End code block
+                # End code block - add closing marker
                 if code_block_lines:
-                    formatted_lines.append('```')
+                    # Add opening marker if not already added
+                    if not formatted_lines or not formatted_lines[-1].strip().startswith('```'):
+                        formatted_lines.append('```')
                     formatted_lines.extend(code_block_lines)
                     formatted_lines.append('```')
-                    code_block_lines = []
+                else:
+                    # Empty code block - still add markers
+                    if not formatted_lines or not formatted_lines[-1].strip().startswith('```'):
+                        formatted_lines.append('```')
+                    formatted_lines.append('```')
+                code_block_lines = []
                 in_code_block = False
             else:
-                # Start code block
+                # Start code block - extract language if present
+                lang_match = re.match(r'^```([a-zA-Z0-9_-]*)$', stripped)
+                lang = lang_match.group(1) if lang_match else ''
+                formatted_lines.append(f'```{lang}' if lang else '```')
                 in_code_block = True
                 code_block_lines = []
-            formatted_lines.append(line)
             i += 1
             continue
         
         if in_code_block:
+            # Inside code block - check if this line is explanatory text that should be outside
+            # Detect explanatory text patterns: (Note: ...), (This example...), etc.
+            stripped_lower = stripped.lower()
+            is_explanatory_text = (
+                stripped.startswith('(Note:') or
+                stripped.startswith('(Note ') or
+                stripped.startswith('Note:') or
+                stripped.startswith('Note ') or
+                stripped.startswith('(This example') or
+                stripped.startswith('(This command') or
+                stripped.startswith('(For ') or
+                stripped.startswith('(When ') or
+                stripped.startswith('(If ') or
+                stripped.startswith('(Warning:') or
+                stripped.startswith('(Important:') or
+                # Match patterns like "(Note: This command is used for...)"
+                (re.match(r'^\(Note[:\s]', stripped, re.IGNORECASE)) or
+                # Match patterns like "(This example is for...)"
+                (re.match(r'^\(This\s+(example|command|method|approach)', stripped, re.IGNORECASE)) or
+                # Match any parenthetical note that's clearly explanatory
+                (stripped.startswith('(') and ')' in stripped and len(stripped) < 200 and 
+                 not any(c in stripped for c in ['{', '}', '=', ';']) and
+                 (stripped.count('(') == 1 and stripped.count(')') == 1) and
+                 any(word in stripped_lower for word in ['note', 'example', 'for', 'when', 'if', 'used', 'command', 'machine', 'scenario']))
+            )
+            
+            # Also check if line looks like a sentence/explanation rather than code
+            looks_like_text = (
+                not any(pattern.match(stripped) for pattern in code_indicators) and
+                (stripped.endswith('.') or stripped.endswith(')')) and
+                len(stripped.split()) > 3 and
+                not any(char in stripped for char in ['{', '}', '[', ']', '=', ';', '|', '&&', '||', '>', '<']) and
+                # Check if it starts with common explanatory phrases
+                (stripped.startswith('Note') or stripped.startswith('(Note') or 
+                 stripped.startswith('This') or stripped.startswith('(This') or
+                 stripped.startswith('For ') or stripped.startswith('(For ') or
+                 stripped.startswith('When ') or stripped.startswith('(When ') or
+                 stripped.startswith('If ') or stripped.startswith('(If ') or
+                 'domain-joined' in stripped_lower or 'standalone' in stripped_lower or
+                 'dual-boot' in stripped_lower or 'scenarios' in stripped_lower)
+            )
+            
+            if is_explanatory_text or looks_like_text:
+                # This is explanatory text - close code block, add text outside
+                if code_block_lines:
+                    # Close the current code block first
+                    formatted_lines.extend(code_block_lines)
+                    formatted_lines.append('```')
+                    code_block_lines = []
+                    in_code_block = False
+                # Add the explanatory text as regular text (outside code block)
+                formatted_lines.append(line)
+                i += 1
+                continue
+            
+            # Inside code block - accumulate all lines (including empty ones)
             code_block_lines.append(line)
             i += 1
             continue

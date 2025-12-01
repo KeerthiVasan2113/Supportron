@@ -12,6 +12,7 @@ import numpy as np
 from sentence_transformers import SentenceTransformer
 from tqdm import tqdm
 from logger_utils import setup_logger
+from gpu_utils import detect_gpu, get_device
 
 logger = setup_logger("logs/create_embeddings.log")
 
@@ -56,11 +57,21 @@ def create_embeddings(
         logger.warning("No chunks to process!")
         return
     
+    # Detect GPU and set device
+    has_gpu, gpu_name, device_type = detect_gpu()
+    device = get_device()
+    
     # Initialize sentence transformer model for embeddings
     logger.info(f"Loading embedding model: {embedding_model}...")
     print(f"Loading embedding model: {embedding_model}...")
+    if has_gpu:
+        print(f"  Using GPU: {gpu_name}")
+        logger.info(f"Using GPU: {gpu_name} for embeddings")
+    else:
+        print(f"  Using CPU (GPU not available)")
+        logger.info("Using CPU for embeddings (GPU not available)")
     print("This may take a moment on first run (downloading model)...")
-    model = SentenceTransformer(embedding_model)
+    model = SentenceTransformer(embedding_model, device=device)
     print("Model loaded successfully!")
     
     # Get embedding dimension
@@ -97,8 +108,14 @@ def create_embeddings(
             texts = [chunk['text'] for chunk in batch]
             
             # Generate embeddings with progress bar
+            # Use GPU if available for faster encoding
             pbar.set_description(f"Batch {batch_num}/{total_batches}: Generating embeddings")
-            embeddings = model.encode(texts, show_progress_bar=True, convert_to_numpy=True)
+            embeddings = model.encode(
+                texts, 
+                device=device,
+                show_progress_bar=True, 
+                convert_to_numpy=True
+            )
             
             # Convert to numpy array
             embeddings = np.array(embeddings).astype('float32')
@@ -157,7 +174,11 @@ def create_embeddings(
     logger.info("Testing vector store with a sample query...")
     print(f"\nTesting vector store with a sample query...")
     test_query = "system configuration"
-    test_embedding = model.encode([test_query], show_progress_bar=False).astype('float32')
+    test_embedding = model.encode(
+        [test_query], 
+        device=device,
+        show_progress_bar=False
+    ).astype('float32')
     
     # Search for top 3 similar vectors
     k = 3

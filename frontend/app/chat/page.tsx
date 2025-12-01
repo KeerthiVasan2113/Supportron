@@ -141,33 +141,46 @@ export default function ChatPage() {
     }
   }, [initialQuestion, messages.length, currentChatId])
 
-  const handleNewMessage = (message: Message) => {
+  const handleNewMessage = (message: Message, specifiedChatId?: string | null) => {
     setMessages((prev) => {
       const newMessages = [...prev, message]
       
-      // Use ref as source of truth (it's always up-to-date)
-      // Fall back to currentChatId if ref is null
-      const chatIdToUse = pendingChatIdRef.current || currentChatId
+      // Use specified chat ID if provided (for responses to ensure they go to the correct chat)
+      // Otherwise use ref as source of truth, fall back to currentChatId
+      const chatIdToUse = specifiedChatId || pendingChatIdRef.current || currentChatId
       
-      if (chatIdToUse) {
+      if (chatIdToUse && chatIdToUse !== 'new-chat') {
         // Chat exists, update it
         updateChat(chatIdToUse, newMessages)
         // Ensure ref and state are in sync
         if (pendingChatIdRef.current !== chatIdToUse) {
           pendingChatIdRef.current = chatIdToUse
         }
-        if (currentChatId !== chatIdToUse) {
-          setCurrentChatId(chatIdToUse)
+        // Only update currentChatId if we're currently viewing this chat
+        // This prevents switching to a different chat when a response arrives
+        if (currentChatId === chatIdToUse || !currentChatId) {
+          if (currentChatId !== chatIdToUse) {
+            setCurrentChatId(chatIdToUse)
+          }
         }
       } else {
         // No chat exists, create a new one
         const newChatId = createChat(newMessages)
         // Immediately set the ref so subsequent messages use the same chat
         pendingChatIdRef.current = newChatId
-        setCurrentChatId(newChatId)
+        // Only set currentChatId if we're not viewing a different chat
+        if (!currentChatId || currentChatId === chatIdToUse) {
+          setCurrentChatId(newChatId)
+        }
       }
       
-      return newMessages
+      // Only update local messages if we're viewing this chat
+      if (currentChatId === chatIdToUse || (!currentChatId && chatIdToUse === pendingChatIdRef.current)) {
+        return newMessages
+      }
+      
+      // If we're viewing a different chat, don't update local messages
+      return prev
     })
   }
 
@@ -189,6 +202,10 @@ export default function ChatPage() {
   const handleSelectChat = (chatId: string) => {
     selectChat(chatId)
     setCurrentChatId(chatId)
+    // Only update pendingChatIdRef if we're not in the middle of a request
+    // This preserves the chat ID for in-flight requests
+    // We'll check if there's an active request by checking if messages are being loaded
+    // For now, we'll update it, but the ChatInterface will handle clearing loading state
     pendingChatIdRef.current = chatId
   }
 

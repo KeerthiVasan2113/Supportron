@@ -39,6 +39,13 @@ def retrieve_rag_documents(question: str) -> List[dict]:
     Returns:
         List of relevant documents, empty if none found or RAG unavailable
     """
+    # Skip RAG for simple greetings - they don't need documentation
+    question_lower = question.lower().strip()
+    simple_greetings = ['hi', 'hello', 'hey', 'greetings', 'good morning', 'good afternoon', 'good evening', 'thanks', 'thank you']
+    if question_lower in simple_greetings or len(question.split()) <= 2:
+        logger.info("Skipping RAG for simple greeting/short query")
+        return []
+    
     rag_model = get_rag_model()
     if rag_model is None:
         return []
@@ -119,8 +126,10 @@ def generate_with_rag_pipeline(
     """
     logger.info("Using RAG + LLM pipeline")
     
+    # Cache lowercased question for performance (used multiple times)
+    question_lower = question.lower().strip()
+    
     # Check if question is about the conversation itself
-    question_lower = question.lower()
     is_about_conversation = any(keyword in question_lower for keyword in [
         'first question', 'first message', 'earlier', 'previous', 'before', 
         'what did i ask', 'what did you say', 'conversation', 'chat history',
@@ -148,32 +157,66 @@ This is the full conversation history up to this point. Use this to answer quest
 === END OF CONVERSATION HISTORY ===
 """
     
+    # Check if it's a conversational/non-technical question
+    conversational_keywords = [
+        'what time', 'what is the time', 'current time', 'time now',
+        'what date', 'what day', 'today', 'weather', 'how are you',
+        'who are you', 'what can you do', 'your name', 'tell me about yourself'
+    ]
+    is_conversational = any(keyword in question_lower for keyword in conversational_keywords)
+    
     # Use LLM to generate answer with RAG context
-    prompt = f"""You are an expert technical support AI assistant. Your role is to provide direct, actionable solutions to technical problems.
+    if is_conversational:
+        prompt = f"""You are Supportron, an AI assistant specialized in Linux server configuration, hosting support, and system administration.
+
+Documentation (if relevant):
+{context_text}{history_context}
+
+Current Question: {question}
+
+IMPORTANT INSTRUCTIONS:
+1. If asked about current time/date: You are an AI without real-time access. Politely explain that you don't have access to the current time, but you can help them check the time on their system using commands if they need.
+2. If asked about yourself: Briefly introduce yourself as Supportron, an AI assistant for technical support, and mention you can help with Linux, server configuration, and system administration.
+3. GENERAL RULE: For non-technical conversational questions, respond naturally and briefly. Do NOT provide technical commands unless the user explicitly asks for them.
+4. OUT-OF-DOMAIN: If the question is completely unrelated to technical support, politely redirect to your technical support capabilities.
+5. USE DOCUMENTATION ONLY IF RELEVANT: Only use the documentation context if it's actually relevant to the question. For conversational questions, you typically won't need it.
+
+Respond naturally and appropriately:"""
+    else:
+        prompt = f"""You are an expert technical support AI assistant. Your role is to provide clear, well-structured, step-by-step solutions to technical problems.
 
 Documentation:
 {context_text}{history_context}
 
 Current Question: {question}
 
-CRITICAL INSTRUCTIONS:
-1. FOCUS ON THE ACTUAL PROBLEM: Identify what the user is actually trying to solve. If they say "Unable to connect to server IP: 199.43.207.194", focus on connection troubleshooting for that specific IP, not generic server setup.
-2. NO ASSUMPTIONS: Do NOT assume operating system, environment, or setup. If the user mentions "Outlook" and "email accounts", they're likely on Windows. If they mention a server IP, address server/client connectivity issues.
-3. DIRECT SOLUTIONS FIRST: Provide step-by-step solutions that directly address the problem. Only ask clarifying questions if absolutely necessary to solve the issue.
-4. USE CONTEXT: The conversation history shows the full context. Read it carefully and address the specific issues mentioned.
-5. RELEVANCE: Only provide information directly related to solving the problem. Do not suggest unrelated commands, tools, or steps.
-6. COMPLETE COMMANDS: All commands must be complete and executable. Never truncate or leave commands incomplete.
-7. PLATFORM AWARENESS: Support all platforms but choose solutions based on the problem context (Outlook = Windows, server IP = network/connectivity).
+CRITICAL INSTRUCTIONS FOR RESPONSE STRUCTURE:
+1. STRUCTURED FORMAT: Always organize your response with clear headings and numbered steps. Use this format:
+   - Start with a brief overview (1-2 sentences)
+   - Use headings like "## Steps to Resolve" or "## Troubleshooting Steps"
+   - Number each step clearly (1., 2., 3., etc.)
+   - Each step should be on a new line and be specific and actionable
+   - End with a summary or next steps if applicable
 
-EXAMPLE OF GOOD RESPONSE:
-User: "Unable to connect to server IP: 199.43.207.194"
-Good Response: "To troubleshoot the connection issue with server 199.43.207.194, try these steps:
-1. Test connectivity: ping 199.43.207.194
-2. Check if the port is open: telnet 199.43.207.194 443 (or the specific port)
-3. Verify firewall settings aren't blocking the connection
-4. Check if the server is running and accessible from your network"
+2. STEP-BY-STEP INSTRUCTIONS: For any problem-solving response, break it down into clear, sequential steps. Each step should:
+   - Be specific and actionable
+   - Start on a new line
+   - Include what to do and why (when helpful)
+   - Be easy to follow for users of all technical levels
 
-Now answer the current question with a direct, actionable solution:"""
+3. CLARITY AND CONCISENESS: Be clear-cut and concise but thorough. Avoid unnecessary fluff while ensuring completeness.
+
+4. ANSWER ONLY THE ACTUAL QUESTION: Respond directly to what the user asked. Do NOT invent problems or assume issues that weren't mentioned.
+
+5. NO HALLUCINATIONS: Do NOT reference problems, IP addresses, or issues that were NOT mentioned in the current question or conversation history.
+
+6. COMPLETE COMMANDS: When providing commands, ensure they are complete and executable. Format them clearly.
+
+7. USE CONTEXT CAREFULLY: Only use conversation history if it actually contains relevant information.
+
+8. PLATFORM AWARENESS: Support all platforms but choose solutions based on the problem context.
+
+Now provide a well-structured, step-by-step response to the current question:"""
     
     try:
         response = ollama.generate(
@@ -227,8 +270,10 @@ def generate_direct_answer(
     """
     logger.info("No relevant RAG documents, using LLM directly")
     
+    # Cache lowercased question for performance (used multiple times)
+    question_lower = question.lower().strip()
+    
     # Check if question is about the conversation itself
-    question_lower = question.lower()
     is_about_conversation = any(keyword in question_lower for keyword in [
         'first question', 'first message', 'earlier', 'previous', 'before', 
         'what did i ask', 'what did you say', 'conversation', 'chat history',
@@ -239,46 +284,126 @@ def generate_direct_answer(
     history_text = format_conversation_history(conversation_history, include_all=is_about_conversation)
     
     if history_text:
-        prompt = f"""You are an expert technical support AI assistant. Your role is to provide direct, actionable solutions to technical problems.
+        # Check if it's a conversational question
+        conversational_keywords = [
+            'what time', 'what is the time', 'current time', 'time now',
+            'what date', 'what day', 'today', 'weather', 'how are you',
+            'who are you', 'what can you do', 'your name', 'tell me about yourself'
+        ]
+        is_conversational = any(keyword in question_lower for keyword in conversational_keywords)
+        
+        if is_conversational:
+            prompt = f"""You are Supportron, an AI assistant specialized in Linux server configuration, hosting support, and system administration.
 
 Conversation History:
 {history_text}
 
 Current Question: {question}
 
-CRITICAL INSTRUCTIONS:
-1. FOCUS ON THE ACTUAL PROBLEM: Read the conversation history and current question carefully. Identify what the user is actually trying to solve. If they mention "Outlook email not connecting after SSL update" and then "Unable to connect to server IP: 199.43.207.194", focus on Outlook email server connection issues, not generic Linux server commands.
-2. NO ASSUMPTIONS: Do NOT assume operating system or environment. If the user mentions "Outlook", they're on Windows. If they mention a server IP, address connectivity issues. Do not suggest Linux commands for Windows Outlook problems.
-3. DIRECT SOLUTIONS FIRST: Provide step-by-step solutions that directly address the problem. If the user says "Unable to connect to server IP: X", provide connection troubleshooting steps for that specific IP and the application (Outlook email).
-4. USE FULL CONTEXT: The conversation history contains important context. If the user mentioned "SSL update" and "Outlook", focus on SSL/TLS configuration for Outlook email accounts connecting to the server IP.
-5. RELEVANCE: Only provide information directly related to solving the problem. Do not suggest unrelated commands, tools, or generic troubleshooting steps.
-6. COMPLETE COMMANDS: All commands must be complete and executable. Never truncate commands.
-7. PLATFORM AWARENESS: Choose solutions based on context (Outlook = Windows email client, server IP = network/email server connectivity).
+IMPORTANT INSTRUCTIONS:
+1. If asked about current time/date: You are an AI without real-time access. Politely explain that you don't have access to the current time, but you can help them check the time on their system using commands if they need.
+2. If asked about yourself: Briefly introduce yourself as Supportron, an AI assistant for technical support, and mention you can help with Linux, server configuration, and system administration.
+3. GENERAL RULE: For non-technical conversational questions, respond naturally and briefly. Do NOT provide technical commands unless the user explicitly asks for them.
+4. OUT-OF-DOMAIN: If the question is completely unrelated to technical support, politely redirect to your technical support capabilities.
+5. USE HISTORY CAREFULLY: Only reference conversation history if it's actually relevant to the current question.
 
-EXAMPLE OF GOOD RESPONSE:
-User (after mentioning Outlook email issues): "Unable to connect to server IP: 199.43.207.194"
-Good Response: "For Outlook email connection issues with server 199.43.207.194, check:
-1. Outlook Account Settings: File > Account Settings > Server Settings - verify the incoming/outgoing server matches 199.43.207.194
-2. Port Settings: Ensure correct ports (IMAP: 993, POP3: 995, SMTP: 465/587) with SSL/TLS enabled
-3. Test Connection: Use Outlook's Test Account Settings feature
-4. Firewall: Ensure Windows Firewall allows Outlook to connect to 199.43.207.194
-5. SSL Certificate: After SSL update, you may need to re-enter password or accept new certificate"
+Respond naturally and appropriately:"""
+        else:
+            prompt = f"""You are an expert technical support AI assistant. Your role is to provide clear, well-structured, step-by-step solutions to technical problems.
 
-Now answer the current question with a direct, actionable solution:"""
+Conversation History:
+{history_text}
+
+Current Question: {question}
+
+CRITICAL INSTRUCTIONS FOR RESPONSE STRUCTURE:
+1. STRUCTURED FORMAT: Always organize your response with clear headings and numbered steps. Use this format:
+   - Start with a brief overview (1-2 sentences)
+   - Use headings like "## Steps to Resolve" or "## Troubleshooting Steps"
+   - Number each step clearly (1., 2., 3., etc.)
+   - Each step should be on a new line and be specific and actionable
+   - End with a summary or next steps if applicable
+
+2. STEP-BY-STEP INSTRUCTIONS: For any problem-solving response, break it down into clear, sequential steps. Each step should:
+   - Be specific and actionable
+   - Start on a new line
+   - Include what to do and why (when helpful)
+   - Be easy to follow for users of all technical levels
+
+3. CLARITY AND CONCISENESS: Be clear-cut and concise but thorough. Avoid unnecessary fluff while ensuring completeness.
+
+4. ANSWER ONLY THE ACTUAL QUESTION: Respond directly to what the user asked. Do NOT invent problems or assume issues that weren't mentioned.
+
+5. NO HALLUCINATIONS: Do NOT reference problems, IP addresses, applications, or issues that were NOT mentioned in the conversation history or current question.
+
+6. USE CONTEXT CAREFULLY: Only use information from conversation history if it was actually discussed. Do NOT make up context.
+
+7. COMPLETE COMMANDS: When providing commands, ensure they are complete and executable. Format them clearly.
+
+8. PLATFORM AWARENESS: Choose solutions based on the actual context mentioned in the conversation.
+
+Now provide a well-structured, step-by-step response to the current question:"""
     else:
-        prompt = f"""You are an expert technical support AI assistant. Analyze the user's problem and provide direct, actionable solutions.
+        # Check if it's a simple greeting or conversational question
+        question_lower = question.lower().strip()
+        is_greeting = question_lower in ['hi', 'hello', 'hey', 'greetings', 'good morning', 'good afternoon', 'good evening']
+        
+        # Check for conversational/non-technical questions
+        conversational_keywords = [
+            'what time', 'what is the time', 'current time', 'time now',
+            'what date', 'what day', 'today', 'weather', 'how are you',
+            'who are you', 'what can you do', 'your name', 'tell me about yourself'
+        ]
+        is_conversational = any(keyword in question_lower for keyword in conversational_keywords)
+        
+        if is_greeting:
+            prompt = f"""You are Supportron, a friendly AI assistant for Linux server configuration, hosting support, and system administration.
+
+The user just said: "{question}"
+
+Respond with a friendly greeting and ask how you can help them. Keep it brief and welcoming. Do NOT provide troubleshooting steps or assume any problems."""
+        elif is_conversational:
+            prompt = f"""You are Supportron, an AI assistant specialized in Linux server configuration, hosting support, and system administration.
+
+The user asked: "{question}"
+
+IMPORTANT INSTRUCTIONS:
+1. If asked about current time/date: You are an AI without real-time access. Politely explain that you don't have access to the current time, but you can help them check the time on their system using commands if they need.
+2. If asked about yourself: Briefly introduce yourself as Supportron, an AI assistant for technical support, and mention you can help with Linux, server configuration, and system administration.
+3. GENERAL RULE: For non-technical conversational questions, respond naturally and briefly. Do NOT provide technical commands unless the user explicitly asks for them.
+4. OUT-OF-DOMAIN: If the question is completely unrelated to technical support (like weather, general knowledge, etc.), politely redirect to your technical support capabilities.
+
+Respond naturally and appropriately:"""
+        else:
+            prompt = f"""You are an expert technical support AI assistant. Analyze the user's question and provide clear, well-structured, step-by-step solutions.
 
 Question: {question}
 
-CRITICAL INSTRUCTIONS:
-1. UNDERSTAND THE ACTUAL PROBLEM: Read the question carefully. What is the user actually trying to solve? Focus on that specific issue.
-2. NO ASSUMPTIONS: Do NOT assume the user's operating system, environment, or setup unless explicitly stated. If unclear, provide solutions for the most likely scenario based on the problem description.
-3. DIRECT SOLUTIONS: Provide step-by-step solutions that directly address the stated problem. Avoid generic troubleshooting steps that don't relate to the specific issue.
-4. RELEVANT RESPONSES: Only provide information relevant to solving the user's problem. Do not suggest unrelated commands or steps.
-5. COMPLETE COMMANDS: When providing commands, ensure they are complete and executable. Never truncate commands.
-6. PLATFORM SUPPORT: Support Windows, Linux, macOS, and cloud services. Choose the appropriate solution based on the problem context.
+CRITICAL INSTRUCTIONS FOR RESPONSE STRUCTURE:
+1. STRUCTURED FORMAT: Always organize your response with clear headings and numbered steps. Use this format:
+   - Start with a brief overview (1-2 sentences)
+   - Use headings like "## Steps to Resolve" or "## Troubleshooting Steps"
+   - Number each step clearly (1., 2., 3., etc.)
+   - Each step should be on a new line and be specific and actionable
+   - End with a summary or next steps if applicable
 
-Answer the question directly and provide a concrete solution:"""
+2. STEP-BY-STEP INSTRUCTIONS: For any problem-solving response, break it down into clear, sequential steps. Each step should:
+   - Be specific and actionable
+   - Start on a new line
+   - Include what to do and why (when helpful)
+   - Be easy to follow for users of all technical levels
+
+3. CLARITY AND CONCISENESS: Be clear-cut and concise but thorough. Avoid unnecessary fluff while ensuring completeness.
+
+4. ANSWER ONLY WHAT WAS ASKED: Read the question carefully and respond directly to it. Do NOT invent problems or assume issues that weren't mentioned.
+
+5. NO HALLUCINATIONS: Do NOT reference problems, IP addresses, applications, or issues that were NOT mentioned in the question.
+
+6. COMPLETE COMMANDS: When providing commands, ensure they are complete and executable. Format them clearly.
+
+7. PLATFORM SUPPORT: Support Windows, Linux, macOS, and cloud services. Choose the appropriate solution based on the problem context.
+
+Now provide a well-structured, step-by-step response to the question:"""
     
     try:
         response = ollama.generate(

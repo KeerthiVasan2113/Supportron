@@ -87,3 +87,41 @@
 .animate-paperplane-icon {
   animation: paperplane-icon 0.3s ease-out forwards;
 }
+
+/* Improved text rendering for better readability */
+.message-content {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: 0.01em;
+  line-height: 1.75;
+}
+
+/* Better spacing for nested content */
+.message-content > *:first-child {
+  margin-top: 0;
+}
+
+.message-content > *:last-child {
+  margin-bottom: 0;
+}
+
+/* Enhanced spacing for list items */
+.message-content > div[class*="flex items-start"] {
+  margin-bottom: 0.875rem;
+  line-height: 1.8;
+}
+
+/* Better paragraph spacing */
+.message-content > p {
+  margin-bottom: 1rem;
+  line-height: 1.75;
+}
+
+/* Better heading spacing */
+.message-content > h2,
+.message-content > h3 {
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
