@@ -4,6 +4,7 @@
  */
 
 // Get API base URL from environment variable (REQUIRED)
+// Lazy evaluation to avoid build-time errors when env var is not set
 const getApiBaseUrl = (): string => {
   if (process.env.NEXT_PUBLIC_API_URL) {
     return process.env.NEXT_PUBLIC_API_URL
@@ -14,23 +15,42 @@ const getApiBaseUrl = (): string => {
       return 'http://localhost:8000'
     }
   }
+  // During build time (SSR), return a placeholder that will be caught at runtime
+  // This allows the build to complete successfully
+  if (typeof window === 'undefined') {
+    return 'http://localhost:8000' // Placeholder for build - will error at runtime if not set
+  }
   throw new Error('NEXT_PUBLIC_API_URL environment variable must be set. See .env.example for configuration.')
 }
 
-const API_BASE_URL = getApiBaseUrl()
 const API_VERSION = process.env.NEXT_PUBLIC_API_VERSION || 'v1'
 
 /**
- * API endpoints configuration.
+ * Get API endpoints (lazy evaluation to avoid build-time errors).
+ * This function is called at runtime, not during build.
+ */
+const getApiEndpoints = () => {
+  const API_BASE_URL = getApiBaseUrl()
+  return {
+    // Health check endpoints
+    health: `${API_BASE_URL}/health`,
+    healthV1: `${API_BASE_URL}/api/${API_VERSION}/health`,
+    
+    // Chat endpoints
+    chat: `${API_BASE_URL}/api/chat`, // Legacy endpoint (backward compatible)
+    chatV1: `${API_BASE_URL}/api/${API_VERSION}/chat`, // New v1 endpoint
+  } as const
+}
+
+/**
+ * API endpoints configuration (lazy-loaded to avoid build-time errors).
+ * Access endpoints via getter functions that evaluate at runtime.
  */
 export const API_ENDPOINTS = {
-  // Health check endpoints
-  health: `${API_BASE_URL}/health`,
-  healthV1: `${API_BASE_URL}/api/${API_VERSION}/health`,
-  
-  // Chat endpoints
-  chat: `${API_BASE_URL}/api/chat`, // Legacy endpoint (backward compatible)
-  chatV1: `${API_BASE_URL}/api/${API_VERSION}/chat`, // New v1 endpoint
+  get health() { return getApiEndpoints().health },
+  get healthV1() { return getApiEndpoints().healthV1 },
+  get chat() { return getApiEndpoints().chat },
+  get chatV1() { return getApiEndpoints().chatV1 },
 } as const
 
 /**
@@ -116,7 +136,7 @@ export const sendChatMessage = async (
   if (!response.ok) {
     // Handle localtunnel 511 error (Network Authentication Required)
     if (response.status === 511) {
-      const backendUrl = API_BASE_URL
+      const backendUrl = getApiBaseUrl()
       throw new Error(
         `Tunnel authentication required. Please visit ${backendUrl} in your browser first to accept the connection, then try again.`
       )

@@ -160,13 +160,16 @@ const ChatInterface = ({
       onNewMessage(assistantMessage, chatIdAtSendTime)
 
     } catch (error: any) {
-      console.error('Error sending message:', error)
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Error sending message:', error)
+      }
 
       let errorContent = 'An unexpected error occurred. Please try again.'
 
       if (error instanceof Error) {
         if (error.message.includes('511')) {
-          const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+          // Only show localhost in development
+          const apiUrl = process.env.NEXT_PUBLIC_API_URL || (process.env.NODE_ENV === 'development' ? 'http://localhost:8000' : 'the backend URL')
           errorContent = `⚠️ Tunnel Connection Required\n\nVisit:\n${apiUrl}\n\nThen try again.`
         } else {
           errorContent = `Error: ${error.message}`

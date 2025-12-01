@@ -974,3 +974,17 @@ ollama._types.ResponseError: model 'qwen2.5:3b' not found
 2025-11-28 11:27:05 - app.core.logging_config - WARNING - Ollama model not ready. Make sure Ollama is running and model is pulled:
 2025-11-28 11:27:05 - app.core.logging_config - WARNING -   ollama pull 
 2025-11-28 11:27:05 - app.core.logging_config - WARNING - Server will continue, but chat may have limited functionality.
+2025-12-01 15:00:04 - app.core.logging_config - INFO - ℹ Using CPU (GPU not available)
+2025-12-01 15:00:04 - app.core.logging_config - INFO - Initializing RAG model from C:\Projects\Supportron\data-processing\vector_db...
+2025-12-01 15:00:15 - app.core.logging_config - INFO - RAG model set successfully
+2025-12-01 15:00:15 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-12-01 15:00:15 - app.core.logging_config - INFO - Checking Ollama model availability...
+2025-12-01 15:00:15 - app.core.logging_config - INFO - Available Ollama models: ['llama3.2:3b']
+2025-12-01 15:00:31 - app.core.logging_config - INFO - ✓ Selected model: llama3.2:3b
+2025-12-01 15:00:33 - app.core.logging_config - INFO - ✓ Ollama service is already running with model: llama3.2:3b
+2025-12-01 15:00:33 - app.core.logging_config - INFO - ✓ Ollama model ready: llama3.2:3b
+2025-12-01 15:01:38 - app.core.logging_config - INFO - Received question: linux commands to configure network
+2025-12-01 15:01:38 - app.core.logging_config - INFO - Conversation history: 1 previous messages
+2025-12-01 15:01:48 - app.core.logging_config - INFO - Found 1 relevant RAG documents
+2025-12-01 15:01:48 - app.core.logging_config - INFO - Using RAG + LLM pipeline
+2025-12-01 15:03:33 - app.core.logging_config - INFO - Generated answer (length: 1666 chars, sources: 1)

@@ -1,13 +1,13 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import ChatInterface from '@/components/ChatInterface'
 import { Message } from '@/types/chat'
 import { useChatStorage } from '@/hooks/useChatStorage'
 import { getSessionItem, removeSessionItem, removeStorageItem, getStorageItem, StorageKeys } from '@/utils/storage'
 
-export default function ChatPage() {
+function ChatPageContent() {
   const searchParams = useSearchParams()
   const initialQuestion = searchParams.get('q')
   
@@ -253,6 +253,21 @@ export default function ChatPage() {
         initialQuestion={initialQuestion || undefined}
       />
     </div>
+  )
+}
+
+export default function ChatPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex h-screen bg-gray-50 dark:bg-gray-900 w-full items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-500 mx-auto mb-4"></div>
+          <p className="text-slate-300">Loading chat...</p>
+        </div>
+      </div>
+    }>
+      <ChatPageContent />
+    </Suspense>
   )
 }
 

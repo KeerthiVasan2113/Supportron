@@ -31,7 +31,9 @@ const CodeBlock = ({ code, language }: CodeBlockProps) => {
       setIsCopied(true)
       setTimeout(() => setIsCopied(false), 2000)
     } catch (error) {
-      console.error('Copy failed:', error)
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Copy failed:', error)
+      }
     }
   }
 
@@ -111,7 +113,9 @@ const MessageBubble = ({ message, onEdit, onRegenerate }: MessageBubbleProps) =>
       setIsCopied(true)
       setTimeout(() => setIsCopied(false), 2000)
     } catch (error) {
-      console.error('Copy failed:', error)
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Copy failed:', error)
+      }
     }
   }
 

@@ -25,7 +25,9 @@ export const getStorageItem = <T>(key: string, defaultValue: T): T => {
     }
     return JSON.parse(item) as T
   } catch (error) {
-    console.error(`Error reading from localStorage (${key}):`, error)
+    if (process.env.NODE_ENV === 'development') {
+      console.error(`Error reading from localStorage (${key}):`, error)
+    }
     return defaultValue
   }
 }
@@ -42,9 +44,11 @@ export const setStorageItem = <T>(key: string, value: T): boolean => {
     localStorage.setItem(key, JSON.stringify(value))
     return true
   } catch (error) {
-    console.error(`Error writing to localStorage (${key}):`, error)
-    if (error instanceof Error && error.name === 'QuotaExceededError') {
-      console.warn('localStorage quota exceeded. Consider clearing old data.')
+    if (process.env.NODE_ENV === 'development') {
+      console.error(`Error writing to localStorage (${key}):`, error)
+      if (error instanceof Error && error.name === 'QuotaExceededError') {
+        console.warn('localStorage quota exceeded. Consider clearing old data.')
+      }
     }
     return false
   }
@@ -62,7 +66,9 @@ export const removeStorageItem = (key: string): boolean => {
     localStorage.removeItem(key)
     return true
   } catch (error) {
-    console.error(`Error removing from localStorage (${key}):`, error)
+    if (process.env.NODE_ENV === 'development') {
+      console.error(`Error removing from localStorage (${key}):`, error)
+    }
     return false
   }
 }
@@ -78,7 +84,9 @@ export const getSessionItem = (key: string): string | null => {
   try {
     return sessionStorage.getItem(key)
   } catch (error) {
-    console.error(`Error reading from sessionStorage (${key}):`, error)
+    if (process.env.NODE_ENV === 'development') {
+      console.error(`Error reading from sessionStorage (${key}):`, error)
+    }
     return null
   }
 }
@@ -95,7 +103,9 @@ export const setSessionItem = (key: string, value: string): boolean => {
     sessionStorage.setItem(key, value)
     return true
   } catch (error) {
-    console.error(`Error writing to sessionStorage (${key}):`, error)
+    if (process.env.NODE_ENV === 'development') {
+      console.error(`Error writing to sessionStorage (${key}):`, error)
+    }
     return false
   }
 }
@@ -112,7 +122,9 @@ export const removeSessionItem = (key: string): boolean => {
     sessionStorage.removeItem(key)
     return true
   } catch (error) {
-    console.error(`Error removing from sessionStorage (${key}):`, error)
+    if (process.env.NODE_ENV === 'development') {
+      console.error(`Error removing from sessionStorage (${key}):`, error)
+    }
     return false
   }
 }

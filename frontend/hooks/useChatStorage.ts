@@ -69,7 +69,9 @@ export const useChatStorage = () => {
         hasLoadedFromStorage.current = true
       }
     } catch (error) {
-      console.error('Error loading chats from storage:', error)
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Error loading chats from storage:', error)
+      }
       hasLoadedFromStorage.current = true
     }
   }, [])
