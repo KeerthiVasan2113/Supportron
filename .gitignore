@@ -36,18 +36,33 @@ data-processing/__pycache__/
 venv/
 env/
 ENV/
+.venv
+myenv/
+.myenv
+**/venv/
+**/env/
+**/ENV/
+**/.venv
+**/myenv/
+**/.myenv
 backend/backend/
 data-processing/data-processing/
-.venv
 
 # Backend specific
 backend/databases/
 backend/logs/
 backend/.env
+backend/.env.*
+backend/**/.env
+backend/**/.env.*
 
 # Data Processing specific
 data-processing/logs/
 data-processing/vector_db/
+data-processing/.env
+data-processing/.env.*
+data-processing/**/.env
+data-processing/**/.env.*
 
 # Node.js / Frontend
 node_modules/
@@ -70,9 +85,14 @@ frontend/.pnp.js
 frontend/coverage/
 frontend/.env*.local
 frontend/.env
+frontend/.env.*
+frontend/**/.env
+frontend/**/.env.*
 frontend/.vercel
 frontend/*.tsbuildinfo
 frontend/next-env.d.ts
+frontend/.next/cache/
+frontend/.cache/
 
 # IDEs
 .vscode/
@@ -81,15 +101,26 @@ frontend/next-env.d.ts
 *.swo
 *~
 
-# Logs
+# Logs - comprehensive patterns
 *.log
-logs/
 *.log.*
+logs/
+**/logs/
+**/*.log
+**/*.log.*
+backend/logs/
+data-processing/logs/
+frontend/logs/
 
-# Environment variables
+# Environment variables - comprehensive patterns
 .env
+.env.*
 .env.local
 .env.*.local
+**/.env
+**/.env.*
+**/.env.local
+**/.env.*.local
 
 # OS
 .DS_Store
@@ -122,15 +153,30 @@ htmlcov/
 .tox/
 .coverage
 .coverage.*
-.cache
 nosetests.xml
 coverage.xml
 *.cover
 
-# mypy
+# Cache files and directories - comprehensive patterns
+.cache/
+.cache
+**/.cache/
+**/.cache
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.pyd
+.pytest_cache/
 .mypy_cache/
 .dmypy.json
 dmypy.json
+.ruff_cache/
+.hypothesis/
+frontend/.next/cache/
+frontend/.cache/
+node_modules/.cache/
+.npm/
+.yarn/
 
 # Project documentation (user requested)
 ASSISTANT_PREFERENCES.md
