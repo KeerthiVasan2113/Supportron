@@ -323,6 +323,8 @@ Your response MUST follow this structure exactly:
 
 Make the tone professional, concise, and engineer-friendly.
 
+CRITICAL: You MUST complete your entire response. Do not stop mid-sentence or cut off your answer. Ensure all sections are fully written out, especially the "Recommended Fix", "Fallback / Alternatives", "Command Summary", and "Sources Used" sections.
+
 ========================
 
 RAG CONTEXT:
@@ -331,7 +333,7 @@ RAG CONTEXT:
 
 ========================
 
-Now answer the user query below, following all rules above.
+Now answer the user query below, following all rules above. Remember to complete ALL sections fully.
 
 User Query: {question}"""
     
@@ -348,11 +350,25 @@ User Query: {question}"""
             }
         )
         answer = response.get("response", "").strip()
+        
+        # Check if response seems incomplete (ends mid-sentence or missing expected sections)
+        if answer:
+            # Check for incomplete responses: ends without punctuation or ends mid-word
+            last_char = answer[-1] if answer else ""
+            ends_with_punctuation = last_char in '.!?'
+            # Check if response mentions sections that should be present
+            expected_sections = ["Recommended Fix", "Fallback", "Command Summary", "Sources Used"]
+            has_expected_sections = any(section.lower() in answer.lower() for section in expected_sections)
+            
+            # If response is long but doesn't end properly, it might be incomplete
+            if len(answer) > 500 and not ends_with_punctuation and has_expected_sections:
+                logger.warning(f"Response may be incomplete (length: {len(answer)}, ends with: '{last_char}')")
     except Exception as e:
         logger.error(f"Model generation failed: {e}")
+        from app.core.error_messages import GENERATION_SERVICE_UNAVAILABLE
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="Generation service temporarily unavailable"
+            detail=GENERATION_SERVICE_UNAVAILABLE
         )
     
     # Format sources
@@ -462,6 +478,8 @@ When responding:
 
 - THEN: Provide a **short, clean summary** of the exact commands and configuration paths used.
 
+CRITICAL: You MUST complete your entire response. Do not stop mid-sentence or cut off your answer. Ensure all sections are fully written out, especially the "Recommended Fix", "Fallback / Alternatives", and "Command Summary" sections.
+
 ========================
      STRICT RULES
 ========================
@@ -534,6 +552,8 @@ Your response MUST follow this structure exactly:
 
 Make the tone professional, concise, and engineer-friendly.
 
+CRITICAL: You MUST complete your entire response. Do not stop mid-sentence or cut off your answer. Ensure all sections are fully written out, especially the "Recommended Fix", "Fallback / Alternatives", and "Command Summary" sections.
+
 ========================
 
 CONVERSATION HISTORY:
@@ -542,7 +562,7 @@ CONVERSATION HISTORY:
 
 ========================
 
-Now answer the user query below, following all rules above.
+Now answer the user query below, following all rules above. Remember to complete ALL sections fully.
 
 User Query: {question}"""
     else:
@@ -685,9 +705,11 @@ Your response MUST follow this structure exactly:
 
 Make the tone professional, concise, and engineer-friendly.
 
+CRITICAL: You MUST complete your entire response. Do not stop mid-sentence or cut off your answer. Ensure all sections are fully written out, especially the "Recommended Fix", "Fallback / Alternatives", and "Command Summary" sections.
+
 ========================
 
-Now answer the user query below, following all rules above.
+Now answer the user query below, following all rules above. Remember to complete ALL sections fully.
 
 User Query: {question}"""
     
@@ -703,12 +725,25 @@ User Query: {question}"""
                 "top_k": Config.OLLAMA_TOP_K,
             }
         )
-        return response.get("response", "").strip()
+        answer = response.get("response", "").strip()
+        
+        # Check if response seems incomplete
+        if answer:
+            last_char = answer[-1] if answer else ""
+            ends_with_punctuation = last_char in '.!?'
+            expected_sections = ["Recommended Fix", "Fallback", "Command Summary"]
+            has_expected_sections = any(section.lower() in answer.lower() for section in expected_sections)
+            
+            if len(answer) > 500 and not ends_with_punctuation and has_expected_sections:
+                logger.warning(f"Response may be incomplete (length: {len(answer)}, ends with: '{last_char}')")
+        
+        return answer
     except Exception as e:
         logger.error(f"Model generation failed: {e}")
+        from app.core.error_messages import GENERATION_SERVICE_UNAVAILABLE
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="Generation service temporarily unavailable. Make sure Ollama is running."
+            detail=GENERATION_SERVICE_UNAVAILABLE
         )
 
 
@@ -749,7 +784,8 @@ def process_chat_request(
             sources = None
         
         if not answer:
-            answer = "I apologize, but I couldn't generate a response. Please try again."
+            from app.core.error_messages import COULD_NOT_GENERATE_RESPONSE
+            answer = COULD_NOT_GENERATE_RESPONSE
         
         # Post-process answer to format code blocks and clean punctuation
         answer = format_code_blocks(answer)
@@ -765,14 +801,15 @@ def process_chat_request(
         raise
     except Exception as e:
         logger.error(f"Error processing question: {str(e)}", exc_info=True)
+        from app.core.error_messages import OLLAMA_SERVICE_UNAVAILABLE, UNEXPECTED_ERROR_PROCESSING_QUESTION
         error_msg = str(e).lower()
         if "connection" in error_msg or "refused" in error_msg:
             raise HTTPException(
                 status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-                detail="Ollama service is not available. Make sure Ollama is running."
+                detail=OLLAMA_SERVICE_UNAVAILABLE
             )
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="An unexpected error occurred while processing your question."
+            detail=UNEXPECTED_ERROR_PROCESSING_QUESTION
         )
 

@@ -988,3 +988,130 @@ ollama._types.ResponseError: model 'qwen2.5:3b' not found
 2025-12-01 15:01:48 - app.core.logging_config - INFO - Found 1 relevant RAG documents
 2025-12-01 15:01:48 - app.core.logging_config - INFO - Using RAG + LLM pipeline
 2025-12-01 15:03:33 - app.core.logging_config - INFO - Generated answer (length: 1666 chars, sources: 1)
+2025-12-02 13:18:57 - app.core.logging_config - INFO - ✓ GPU acceleration available: NVIDIA GeForce RTX 3060
+2025-12-02 13:18:57 - app.core.logging_config - INFO -   Using device: CUDA
+2025-12-02 13:18:57 - app.core.logging_config - INFO - Initializing RAG model from C:\Users\Armia\Desktop\Projects\Supportron\data-processing\vector_db...
+2025-12-02 13:19:14 - app.core.logging_config - INFO - RAG model set successfully
+2025-12-02 13:19:14 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-12-02 13:19:14 - app.core.logging_config - INFO - Checking Ollama model availability...
+2025-12-02 13:19:14 - app.core.logging_config - INFO - Available Ollama models: ['qwen2.5:7b-instruct', 'qwen2.5:3b', 'llama3.1:8b']
+2025-12-02 13:19:55 - app.core.logging_config - INFO - ✓ Selected model: qwen2.5:7b-instruct
+2025-12-02 13:19:55 - app.core.logging_config - INFO - ✓ Ollama service is already running with model: qwen2.5:7b-instruct
+2025-12-02 13:19:55 - app.core.logging_config - INFO - ✓ Ollama model ready: qwen2.5:7b-instruct
+2025-12-02 13:23:31 - app.core.logging_config - INFO - Received question: My mails to german companies are getting blocked
+2025-12-02 13:23:31 - app.core.logging_config - INFO - Conversation history: 1 previous messages
+2025-12-02 13:23:35 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Ollama
+2025-12-02 13:23:35 - app.core.logging_config - INFO - No relevant RAG documents, using LLM directly
+2025-12-02 13:23:45 - app.core.logging_config - INFO - Generated answer (length: 2051 chars, sources: 0)
+2025-12-02 13:29:04 - app.core.logging_config - INFO - Received question: My mails to german companies keep getting blocked for some reason
+2025-12-02 13:29:04 - app.core.logging_config - INFO - Conversation history: 1 previous messages
+2025-12-02 13:29:04 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Ollama
+2025-12-02 13:29:04 - app.core.logging_config - INFO - No relevant RAG documents, using LLM directly
+2025-12-02 13:29:16 - app.core.logging_config - INFO - Generated answer (length: 2037 chars, sources: 0)
+2025-12-02 13:30:36 - app.core.logging_config - INFO - Received question: After the recent SSL update, several email accounts stopped working. They cannot connect through Outlook.
+2025-12-02 13:30:36 - app.core.logging_config - INFO - Conversation history: 1 previous messages
+2025-12-02 13:30:36 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Ollama
+2025-12-02 13:30:36 - app.core.logging_config - INFO - No relevant RAG documents, using LLM directly
+2025-12-02 13:30:45 - app.core.logging_config - INFO - Generated answer (length: 2167 chars, sources: 0)
+2025-12-02 13:32:00 - app.core.logging_config - INFO - Received question: We are unable to connect to the server
+2025-12-02 13:32:00 - app.core.logging_config - INFO - Conversation history: 1 previous messages
+2025-12-02 13:32:00 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Ollama
+2025-12-02 13:32:00 - app.core.logging_config - INFO - No relevant RAG documents, using LLM directly
+2025-12-02 13:32:09 - app.core.logging_config - INFO - Generated answer (length: 2283 chars, sources: 0)
+2025-12-02 13:32:22 - app.core.logging_config - INFO - Received question: We are unable to connect to the server
+2025-12-02 13:32:22 - app.core.logging_config - INFO - Conversation history: 2 previous messages
+2025-12-02 13:32:22 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Ollama
+2025-12-02 13:32:22 - app.core.logging_config - INFO - No relevant RAG documents, using LLM directly
+2025-12-02 13:32:32 - app.core.logging_config - INFO - Generated answer (length: 2055 chars, sources: 0)
+2025-12-02 14:30:38 - app.core.logging_config - INFO - ✓ GPU acceleration available: NVIDIA GeForce RTX 3060
+2025-12-02 14:30:38 - app.core.logging_config - INFO -   Using device: CUDA
+2025-12-02 14:30:38 - app.core.logging_config - INFO - Initializing RAG model from C:\Users\Armia\Desktop\Projects\Supportron\data-processing\vector_db...
+2025-12-02 14:30:44 - app.core.logging_config - INFO - RAG model set successfully
+2025-12-02 14:30:44 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-12-02 14:30:44 - app.core.logging_config - INFO - Checking Ollama model availability...
+2025-12-02 14:30:44 - app.core.logging_config - INFO - Available Ollama models: ['qwen2.5:7b-instruct', 'qwen2.5:3b', 'llama3.1:8b']
+2025-12-02 14:30:46 - app.core.logging_config - INFO - ✓ Selected model: qwen2.5:7b-instruct
+2025-12-02 14:30:47 - app.core.logging_config - INFO - ✓ Ollama service is already running with model: qwen2.5:7b-instruct
+2025-12-02 14:30:47 - app.core.logging_config - INFO - ✓ Ollama model ready: qwen2.5:7b-instruct
+2025-12-02 14:31:29 - app.core.logging_config - INFO - Received question: network configuration commands for linux
+2025-12-02 14:31:29 - app.core.logging_config - INFO - Conversation history: 2 previous messages
+2025-12-02 14:31:29 - app.core.logging_config - INFO - Found 1 relevant RAG documents
+2025-12-02 14:31:29 - app.core.logging_config - INFO - Using RAG + LLM pipeline
+2025-12-02 14:31:39 - app.core.logging_config - INFO - Generated answer (length: 2105 chars, sources: 1)
+2025-12-02 14:32:06 - app.core.logging_config - INFO - Received question: now do the same for windows
+2025-12-02 14:32:06 - app.core.logging_config - INFO - Conversation history: 3 previous messages
+2025-12-02 14:32:06 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Ollama
+2025-12-02 14:32:06 - app.core.logging_config - INFO - No relevant RAG documents, using LLM directly
+2025-12-02 14:32:16 - app.core.logging_config - INFO - Generated answer (length: 2172 chars, sources: 0)
+2025-12-02 14:32:56 - app.core.logging_config - INFO - Received question: how to install docker in linux
+2025-12-02 14:32:56 - app.core.logging_config - INFO - Conversation history: 1 previous messages
+2025-12-02 14:32:56 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Ollama
+2025-12-02 14:32:56 - app.core.logging_config - INFO - No relevant RAG documents, using LLM directly
+2025-12-02 14:33:05 - app.core.logging_config - INFO - Generated answer (length: 2177 chars, sources: 0)
+2025-12-02 14:34:12 - app.core.logging_config - INFO - Received question: now, guide me through the windows installation for it
+2025-12-02 14:34:12 - app.core.logging_config - INFO - Conversation history: 3 previous messages
+2025-12-02 14:34:12 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Ollama
+2025-12-02 14:34:12 - app.core.logging_config - INFO - No relevant RAG documents, using LLM directly
+2025-12-02 14:34:21 - app.core.logging_config - INFO - Generated answer (length: 2183 chars, sources: 0)
+2025-12-02 14:37:12 - app.core.logging_config - INFO - Received question: my outlook stopped syncing after password reset yesterday. it keeps asking me to enter credentials again.
+2025-12-02 14:37:12 - app.core.logging_config - INFO - Conversation history: 1 previous messages
+2025-12-02 14:37:12 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Ollama
+2025-12-02 14:37:12 - app.core.logging_config - INFO - No relevant RAG documents, using LLM directly
+2025-12-02 14:37:21 - app.core.logging_config - INFO - Generated answer (length: 2199 chars, sources: 0)
+2025-12-02 14:37:41 - app.core.logging_config - INFO - Received question: my outlook stopped syncing after password reset yesterday. it keeps asking me to enter credentials again.
+2025-12-02 14:37:41 - app.core.logging_config - INFO - Conversation history: 2 previous messages
+2025-12-02 14:37:41 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Ollama
+2025-12-02 14:37:41 - app.core.logging_config - INFO - No relevant RAG documents, using LLM directly
+2025-12-02 14:37:50 - app.core.logging_config - INFO - Generated answer (length: 2362 chars, sources: 0)
+2025-12-02 14:38:28 - app.core.logging_config - INFO - Received question: I cleared the cache, but still showing the same error
+2025-12-02 14:38:28 - app.core.logging_config - INFO - Conversation history: 3 previous messages
+2025-12-02 14:38:28 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Ollama
+2025-12-02 14:38:28 - app.core.logging_config - INFO - No relevant RAG documents, using LLM directly
+2025-12-02 14:38:37 - app.core.logging_config - INFO - Generated answer (length: 2287 chars, sources: 0)
+2025-12-02 14:51:13 - app.core.logging_config - INFO - ✓ GPU acceleration available: NVIDIA GeForce RTX 3060
+2025-12-02 14:51:13 - app.core.logging_config - INFO -   Using device: CUDA
+2025-12-02 14:51:13 - app.core.logging_config - INFO - Initializing RAG model from C:\Users\Armia\Desktop\Projects\Supportron\data-processing\vector_db...
+2025-12-02 14:51:21 - app.core.logging_config - INFO - RAG model set successfully
+2025-12-02 14:51:21 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-12-02 14:51:21 - app.core.logging_config - INFO - Checking Ollama model availability...
+2025-12-02 14:51:21 - app.core.logging_config - INFO - Available Ollama models: ['qwen2.5:7b-instruct', 'qwen2.5:3b', 'llama3.1:8b']
+2025-12-02 14:51:23 - app.core.logging_config - INFO - ✓ Selected model: qwen2.5:7b-instruct
+2025-12-02 14:51:23 - app.core.logging_config - INFO - ✓ Ollama service is already running with model: qwen2.5:7b-instruct
+2025-12-02 14:51:23 - app.core.logging_config - INFO - ✓ Ollama model ready: qwen2.5:7b-instruct
+2025-12-02 14:51:33 - app.core.logging_config - INFO - Received question: I cleared the cache, but still showing the same error
+2025-12-02 14:51:33 - app.core.logging_config - INFO - Conversation history: 4 previous messages
+2025-12-02 14:51:35 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Ollama
+2025-12-02 14:51:35 - app.core.logging_config - INFO - No relevant RAG documents, using LLM directly
+2025-12-02 14:51:45 - app.core.logging_config - WARNING - Response may be incomplete (length: 2371, ends with: 'e')
+2025-12-02 14:51:45 - app.core.logging_config - INFO - Generated answer (length: 2361 chars, sources: 0)
+2025-12-02 14:54:38 - app.core.logging_config - INFO - Received question: My company VPN won't connect today. It stuck at "Waiting for server response"
+2025-12-02 14:54:38 - app.core.logging_config - INFO - Conversation history: 1 previous messages
+2025-12-02 14:54:39 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Ollama
+2025-12-02 14:54:39 - app.core.logging_config - INFO - No relevant RAG documents, using LLM directly
+2025-12-02 14:54:41 - app.core.logging_config - INFO - Generated answer (length: 633 chars, sources: 0)
+2025-12-02 14:54:46 - app.core.logging_config - INFO - Received question: My company VPN won't connect today. It stuck at "Waiting for server response"
+2025-12-02 14:54:46 - app.core.logging_config - INFO - Conversation history: 2 previous messages
+2025-12-02 14:54:47 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Ollama
+2025-12-02 14:54:47 - app.core.logging_config - INFO - No relevant RAG documents, using LLM directly
+2025-12-02 14:54:49 - app.core.logging_config - INFO - Generated answer (length: 459 chars, sources: 0)
+2025-12-02 14:55:11 - app.core.logging_config - INFO - Received question: yes, give it to me
+2025-12-02 14:55:11 - app.core.logging_config - INFO - Conversation history: 3 previous messages
+2025-12-02 14:55:12 - app.core.logging_config - INFO - No relevant RAG documents, using LLM directly
+2025-12-02 14:55:21 - app.core.logging_config - WARNING - Response may be incomplete (length: 2325, ends with: '`')
+2025-12-02 14:55:21 - app.core.logging_config - INFO - Generated answer (length: 2189 chars, sources: 0)
+2025-12-02 15:06:47 - app.core.logging_config - INFO - ✓ GPU acceleration available: NVIDIA GeForce RTX 3060
+2025-12-02 15:06:47 - app.core.logging_config - INFO -   Using device: CUDA
+2025-12-02 15:06:47 - app.core.logging_config - INFO - Initializing RAG model from C:\Users\Armia\Desktop\Projects\Supportron\data-processing\vector_db...
+2025-12-02 15:06:52 - app.core.logging_config - INFO - RAG model set successfully
+2025-12-02 15:06:52 - app.core.logging_config - INFO - ✓ RAG model initialized successfully!
+2025-12-02 15:06:52 - app.core.logging_config - INFO - Checking Ollama model availability...
+2025-12-02 15:06:52 - app.core.logging_config - INFO - Available Ollama models: ['qwen2.5:7b-instruct', 'qwen2.5:3b', 'llama3.1:8b']
+2025-12-02 15:06:55 - app.core.logging_config - INFO - ✓ Selected model: qwen2.5:7b-instruct
+2025-12-02 15:06:55 - app.core.logging_config - INFO - ✓ Ollama service is already running with model: qwen2.5:7b-instruct
+2025-12-02 15:06:55 - app.core.logging_config - INFO - ✓ Ollama model ready: qwen2.5:7b-instruct
+2025-12-02 15:16:38 - app.core.logging_config - INFO - Received question: My emails to german companies keep getting blocked
+2025-12-02 15:16:38 - app.core.logging_config - INFO - Conversation history: 1 previous messages
+2025-12-02 15:16:38 - app.core.logging_config - INFO - RAG documents found but distance too high, using direct Ollama
+2025-12-02 15:16:38 - app.core.logging_config - INFO - No relevant RAG documents, using LLM directly
+2025-12-02 15:16:51 - app.core.logging_config - WARNING - Response may be incomplete (length: 2096, ends with: '/')
+2025-12-02 15:16:51 - app.core.logging_config - INFO - Generated answer (length: 1988 chars, sources: 0)

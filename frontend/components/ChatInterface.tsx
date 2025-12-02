@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { Send, Loader2, Plus } from 'lucide-react'
+import { Send, Plus } from 'lucide-react'
 import MessageList from './MessageList'
 import ChatInput from './ChatInput'
 import ChatHistoryDropdown from './ChatHistoryDropdown'

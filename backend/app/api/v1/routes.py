@@ -127,9 +127,10 @@ async def universal_db_operation(request: UniversalDBRequest) -> UniversalDBResp
         elif method == "POST":
             # Create operation
             if not request.values:
+                from app.core.error_messages import VALUES_REQUIRED_FOR_CREATE
                 raise HTTPException(
                     status_code=status.HTTP_400_BAD_REQUEST,
-                    detail="Values are required for POST (CREATE) operations"
+                    detail=VALUES_REQUIRED_FOR_CREATE
                 )
             result = DatabaseService.create(
                 db_name=request.db_name,
@@ -148,14 +149,16 @@ async def universal_db_operation(request: UniversalDBRequest) -> UniversalDBResp
         elif method == "PUT":
             # Update operation
             if not request.values:
+                from app.core.error_messages import VALUES_REQUIRED_FOR_UPDATE
                 raise HTTPException(
                     status_code=status.HTTP_400_BAD_REQUEST,
-                    detail="Values are required for PUT (UPDATE) operations"
+                    detail=VALUES_REQUIRED_FOR_UPDATE
                 )
             if not request.filters:
+                from app.core.error_messages import FILTERS_REQUIRED_FOR_UPDATE
                 raise HTTPException(
                     status_code=status.HTTP_400_BAD_REQUEST,
-                    detail="Filters are required for PUT (UPDATE) operations"
+                    detail=FILTERS_REQUIRED_FOR_UPDATE
                 )
             result = DatabaseService.update(
                 db_name=request.db_name,
@@ -175,9 +178,10 @@ async def universal_db_operation(request: UniversalDBRequest) -> UniversalDBResp
         elif method == "DELETE":
             # Delete operation
             if not request.filters:
+                from app.core.error_messages import FILTERS_REQUIRED_FOR_DELETE
                 raise HTTPException(
                     status_code=status.HTTP_400_BAD_REQUEST,
-                    detail="Filters are required for DELETE operations"
+                    detail=FILTERS_REQUIRED_FOR_DELETE
                 )
             result = DatabaseService.delete(
                 db_name=request.db_name,
@@ -194,9 +198,10 @@ async def universal_db_operation(request: UniversalDBRequest) -> UniversalDBResp
             )
         
         else:
+            from app.core.error_messages import INVALID_METHOD
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail=f"Unsupported method: {method}. Supported methods: GET, POST, PUT, DELETE"
+                detail=INVALID_METHOD.format(method=method)
             )
     
     except ValueError as e:
@@ -206,10 +211,11 @@ async def universal_db_operation(request: UniversalDBRequest) -> UniversalDBResp
             detail=str(e)
         )
     except Exception as e:
+        from app.core.error_messages import DATABASE_OPERATION_FAILED
         logger.error(f"Error in universal DB operation: {e}", exc_info=True)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Database operation failed: {str(e)}"
+            detail=DATABASE_OPERATION_FAILED.format(error=str(e))
         )
 
 
@@ -243,10 +249,11 @@ async def get_table_info(request: TableInfoRequest) -> TableInfoResponse:
             detail=str(e)
         )
     except Exception as e:
+        from app.core.error_messages import TABLE_INFO_FAILED
         logger.error(f"Error getting table info: {e}", exc_info=True)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to get table info: {str(e)}"
+            detail=TABLE_INFO_FAILED.format(error=str(e))
         )
 
 

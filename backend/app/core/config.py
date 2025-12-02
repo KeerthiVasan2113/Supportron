@@ -33,7 +33,7 @@ class Config:
     RAG_PREVIEW_LENGTH: int = int(os.getenv("RAG_PREVIEW_LENGTH", "200"))
     
     # Ollama generation options for well-structured responses
-    OLLAMA_NUM_PREDICT: int = int(os.getenv("OLLAMA_NUM_PREDICT", "2048"))  # Allow longer, detailed responses
+    OLLAMA_NUM_PREDICT: int = int(os.getenv("OLLAMA_NUM_PREDICT", "4096"))  # Allow longer, detailed responses (increased for complete answers)
     OLLAMA_TEMPERATURE: float = float(os.getenv("OLLAMA_TEMPERATURE", "0.6"))  # Balanced for clarity and creativity
     OLLAMA_TOP_P: float = float(os.getenv("OLLAMA_TOP_P", "0.9"))  # Nucleus sampling
     OLLAMA_TOP_K: int = int(os.getenv("OLLAMA_TOP_K", "40"))  # Top-k sampling
@@ -159,12 +159,18 @@ class Config:
     @classmethod
     def validate(cls) -> None:
         """Validate configuration values."""
+        from app.core.error_messages import (
+            OLLAMA_MODEL_NOT_SET,
+            INVALID_RAG_MAX_DISTANCE,
+            INVALID_RAG_TOP_DOCS,
+            INVALID_PORT
+        )
         if not cls.MODEL:
-            raise ValueError("OLLAMA_MODEL environment variable must be set. See .env.example for configuration.")
+            raise ValueError(OLLAMA_MODEL_NOT_SET)
         if cls.RAG_MAX_DISTANCE < 0 or cls.RAG_MAX_DISTANCE > 1:
-            raise ValueError("RAG_MAX_DISTANCE must be between 0 and 1")
+            raise ValueError(INVALID_RAG_MAX_DISTANCE)
         if cls.RAG_TOP_DOCS < 1:
-            raise ValueError("RAG_TOP_DOCS must be at least 1")
+            raise ValueError(INVALID_RAG_TOP_DOCS)
         if cls.PORT < 1 or cls.PORT > 65535:
-            raise ValueError("PORT must be between 1 and 65535")
+            raise ValueError(INVALID_PORT)
 

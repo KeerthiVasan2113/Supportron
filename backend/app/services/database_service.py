@@ -30,15 +30,17 @@ class DatabaseService:
         Raises:
             ValueError: If identifier is invalid
         """
+        from app.core.error_messages import IDENTIFIER_REQUIRED
         if not identifier or not isinstance(identifier, str):
-            raise ValueError("Identifier must be a non-empty string")
+            raise ValueError(IDENTIFIER_REQUIRED)
         
         # Remove any whitespace
         identifier = identifier.strip()
         
         # Validate pattern
+        from app.core.error_messages import INVALID_IDENTIFIER
         if not DatabaseService._IDENTIFIER_PATTERN.match(identifier):
-            raise ValueError(f"Invalid identifier: {identifier}. Only alphanumeric, underscore, and hyphen allowed.")
+            raise ValueError(f"{INVALID_IDENTIFIER} Got: {identifier}")
         
         # SQLite doesn't require quoting for valid identifiers, but we validate strictly
         return identifier
@@ -68,8 +70,9 @@ class DatabaseService:
         Raises:
             ValueError: If table doesn't exist
         """
+        from app.core.error_messages import TABLE_NOT_FOUND
         if not db_manager.table_exists(db_name, table_name):
-            raise ValueError(f"Table '{table_name}' does not exist in database '{db_name}'")
+            raise ValueError(TABLE_NOT_FOUND.format(table_name=table_name, db_name=db_name))
     
     @staticmethod
     def validate_columns(db_name: str, table_name: str, columns: List[str]) -> None:
@@ -87,11 +90,15 @@ class DatabaseService:
         schema = db_manager.get_table_schema(db_name, table_name)
         existing_columns = {col["name"] for col in schema}
         
+        from app.core.error_messages import COLUMN_NOT_FOUND
         invalid_columns = set(columns) - existing_columns
         if invalid_columns:
             raise ValueError(
-                f"Columns {invalid_columns} do not exist in table '{table_name}'. "
-                f"Available columns: {sorted(existing_columns)}"
+                COLUMN_NOT_FOUND.format(
+                    columns=invalid_columns,
+                    table_name=table_name,
+                    available_columns=sorted(existing_columns)
+                )
             )
     
     @staticmethod
@@ -166,8 +173,9 @@ class DatabaseService:
             if k in existing_columns
         }
         
+        from app.core.error_messages import NO_VALID_COLUMNS
         if not filtered_values:
-            raise ValueError("No valid columns provided")
+            raise ValueError(NO_VALID_COLUMNS)
         
         columns = DatabaseService._sanitize_identifiers(list(filtered_values.keys()))
         placeholders = ", ".join(["?" for _ in columns])
@@ -190,8 +198,9 @@ class DatabaseService:
                 logger.info(f"Created record in {db_name}.{table_name} with rowid {rowid}")
                 return {"rowid": rowid, "record": record}
         except IntegrityError as e:
+            from app.core.error_messages import DATABASE_INTEGRITY_ERROR
             logger.error(f"Integrity error creating record: {e}")
-            raise ValueError(f"Database integrity error: {str(e)}")
+            raise ValueError(DATABASE_INTEGRITY_ERROR.format(error=str(e)))
     
     @staticmethod
     def read(
@@ -246,13 +255,14 @@ class DatabaseService:
         
         # Add LIMIT and OFFSET with validation
         if limit is not None:
+            from app.core.error_messages import INVALID_LIMIT, INVALID_OFFSET
             if not isinstance(limit, int) or limit < 0:
-                raise ValueError("Limit must be a non-negative integer")
+                raise ValueError(INVALID_LIMIT)
             query += " LIMIT ?"
             params.append(limit)
             if offset is not None:
                 if not isinstance(offset, int) or offset < 0:
-                    raise ValueError("Offset must be a non-negative integer")
+                    raise ValueError(INVALID_OFFSET)
                 query += " OFFSET ?"
                 params.append(offset)
         
@@ -289,8 +299,9 @@ class DatabaseService:
         
         DatabaseService.validate_table_exists(db_name, table_name)
         
+        from app.core.error_messages import FILTERS_REQUIRED_FOR_UPDATE
         if not filters:
-            raise ValueError("Filters are required for UPDATE operations")
+            raise ValueError(FILTERS_REQUIRED_FOR_UPDATE)
         
         schema = db_manager.get_table_schema(db_name, table_name)
         DatabaseService.validate_values(schema, values)
@@ -305,8 +316,9 @@ class DatabaseService:
             if k in existing_columns
         }
         
+        from app.core.error_messages import NO_VALID_COLUMNS_FOR_UPDATE
         if not filtered_values:
-            raise ValueError("No valid columns provided for update")
+            raise ValueError(NO_VALID_COLUMNS_FOR_UPDATE)
         
         # Sanitize filter column names
         sanitized_filter_keys = DatabaseService._sanitize_identifiers(list(filters.keys()))
@@ -327,8 +339,9 @@ class DatabaseService:
                 logger.info(f"Updated {affected_rows} records in {db_name}.{table_name}")
                 return {"affected_rows": affected_rows}
         except IntegrityError as e:
+            from app.core.error_messages import DATABASE_INTEGRITY_ERROR
             logger.error(f"Integrity error updating records: {e}")
-            raise ValueError(f"Database integrity error: {str(e)}")
+            raise ValueError(DATABASE_INTEGRITY_ERROR.format(error=str(e)))
     
     @staticmethod
     def delete(db_name: str, table_name: str, filters: Dict[str, Any]) -> Dict[str, Any]:
@@ -349,8 +362,9 @@ class DatabaseService:
         
         DatabaseService.validate_table_exists(db_name, table_name)
         
+        from app.core.error_messages import FILTERS_REQUIRED_FOR_DELETE
         if not filters:
-            raise ValueError("Filters are required for DELETE operations")
+            raise ValueError(FILTERS_REQUIRED_FOR_DELETE)
         
         DatabaseService.validate_columns(db_name, table_name, list(filters.keys()))
         

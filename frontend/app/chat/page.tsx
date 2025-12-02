@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation'
 import ChatInterface from '@/components/ChatInterface'
 import { Message } from '@/types/chat'
 import { useChatStorage } from '@/hooks/useChatStorage'
-import { getSessionItem, removeSessionItem, removeStorageItem, getStorageItem, StorageKeys } from '@/utils/storage'
+import { getSessionItem, removeSessionItem, removeStorageItem, StorageKeys } from '@/utils/storage'
 
 function ChatPageContent() {
   const searchParams = useSearchParams()
@@ -25,12 +25,14 @@ function ChatPageContent() {
 
   const [messages, setMessages] = useState<Message[]>([])
   const pendingChatIdRef = useRef<string | null>(null)
-  const isInitialLoad = useRef(true)
+  const isInitializedRef = useRef(false)
   const greetingSentRef = useRef(false)
-  const isCreatingGreetingRef = useRef(false)
 
-  // Check if we should start a new chat (from home page)
+  // Initialize: Check for new chat request and load chat state
   useEffect(() => {
+    if (isInitializedRef.current) return
+    
+    // Check if we should start a new chat (from home page)
     const shouldStartNew = getSessionItem(StorageKeys.START_NEW_CHAT) === 'true'
     if (shouldStartNew) {
       removeSessionItem(StorageKeys.START_NEW_CHAT)
@@ -38,149 +40,101 @@ function ChatPageContent() {
       setMessages([])
       pendingChatIdRef.current = null
       removeStorageItem(StorageKeys.LAST_CHAT_ID)
-      isInitialLoad.current = false
-      // Reset greeting flags to allow new greeting to be sent
       greetingSentRef.current = false
-      isCreatingGreetingRef.current = false
+      isInitializedRef.current = true
+      return
     }
-  }, [setCurrentChatId])
 
-  // Load chat messages when chat is selected or chat history changes
-  useEffect(() => {
+    // Load messages for current chat if it exists
     if (currentChatId) {
       const chat = chatHistory.find((c) => c.id === currentChatId)
-      if (chat && chat.messages && chat.messages.length > 0) {
-        setMessages(chat.messages)
+      if (chat) {
+        setMessages(chat.messages || [])
         pendingChatIdRef.current = currentChatId
-        isInitialLoad.current = false
-        // If chat has greeting, mark it as sent to prevent re-sending
-        if (chat.greetingSent) {
-          greetingSentRef.current = true
-        }
-      } else if (chat) {
-        // Chat exists but has no messages yet
-        setMessages([])
-        pendingChatIdRef.current = currentChatId
-        isInitialLoad.current = false
+        greetingSentRef.current = chat.greetingSent || false
       }
-    } else if (chatHistory.length > 0 && isInitialLoad.current) {
-      // On initial load, wait for useChatStorage to restore the last chat
-      // Don't clear messages yet
-      isInitialLoad.current = false
-      // Check if restored chat has greeting
-      const lastChatId = getStorageItem<string | null>(StorageKeys.LAST_CHAT_ID, null)
-      if (lastChatId) {
-        const restoredChat = chatHistory.find(c => c.id === lastChatId)
-        if (restoredChat && restoredChat.greetingSent) {
-          greetingSentRef.current = true
-        }
-      }
-    } else if (!currentChatId && !isInitialLoad.current) {
-      // Only clear messages if explicitly no chat selected (user action)
-      // Don't clear on initial load
-      setMessages([])
-      pendingChatIdRef.current = null
-      greetingSentRef.current = false
     }
-  }, [currentChatId, chatHistory])
+    
+    isInitializedRef.current = true
+  }, [currentChatId, chatHistory, setCurrentChatId])
 
-  // Send greeting message for new chats
+  // Sync messages when chat selection changes (after initialization)
   useEffect(() => {
-    // Only send greeting if:
-    // 1. No current chat selected
-    // 2. No messages yet
-    // 3. Not loading an existing chat
-    // 4. Initial load is complete
-    // 5. No initial question (which would create a chat with user message)
-    // 6. Greeting hasn't been sent yet in this session
-    // 7. Not already in the process of creating a greeting (prevents double creation)
-    if (!currentChatId && messages.length === 0 && !isInitialLoad.current && !initialQuestion && !greetingSentRef.current && !isCreatingGreetingRef.current) {
-      // Set flag immediately to prevent double execution
-      isCreatingGreetingRef.current = true
-      greetingSentRef.current = true
-      
-      const greetingMessage: Message = {
-        id: `greeting-${Date.now()}`,
-        role: 'assistant',
-        content: "Hello! I'm Supportron, your AI assistant for Linux server configuration, hosting support, and system administration. How can I help you today?",
-        timestamp: new Date(),
-      }
-      
-      // Create a new chat with the greeting
-      const newChatId = createChat([greetingMessage])
-      setCurrentChatId(newChatId)
-      pendingChatIdRef.current = newChatId
-      setMessages([greetingMessage])
-      
-      // Reset the creating flag after a short delay to allow state to settle
-      setTimeout(() => {
-        isCreatingGreetingRef.current = false
-      }, 100)
-    }
-  }, [currentChatId, messages.length, isInitialLoad.current, initialQuestion, createChat])
-  
-  // Reset greeting flag when a chat is selected or cleared
-  useEffect(() => {
+    if (!isInitializedRef.current) return
+
     if (currentChatId) {
-      // Check if this chat already has a greeting
-      const chat = chatHistory.find(c => c.id === currentChatId)
-      if (chat && chat.greetingSent) {
-        greetingSentRef.current = true
+      const chat = chatHistory.find((c) => c.id === currentChatId)
+      if (chat) {
+        setMessages(chat.messages || [])
+        pendingChatIdRef.current = currentChatId
+        greetingSentRef.current = chat.greetingSent || false
       } else {
+        // Chat ID exists but chat not found - clear state
+        setMessages([])
+        pendingChatIdRef.current = null
         greetingSentRef.current = false
       }
     } else {
-      greetingSentRef.current = false
+      // No chat selected - clear messages and send greeting if needed
+      setMessages([])
+      pendingChatIdRef.current = null
+      
+      // Send greeting for new empty chats (only once, no initial question)
+      if (!greetingSentRef.current && !initialQuestion) {
+        greetingSentRef.current = true
+        
+        const greetingMessage: Message = {
+          id: `greeting-${Date.now()}`,
+          role: 'assistant',
+          content: "Hello! I'm Supportron, your AI assistant for Linux server configuration, hosting support, and system administration. How can I help you today?",
+          timestamp: new Date(),
+        }
+        
+        const newChatId = createChat([greetingMessage])
+        setCurrentChatId(newChatId)
+        pendingChatIdRef.current = newChatId
+        setMessages([greetingMessage])
+      } else {
+        greetingSentRef.current = false
+      }
     }
-  }, [currentChatId, chatHistory])
-
-  // Load initial question if provided (only if no existing messages)
-  useEffect(() => {
-    if (initialQuestion && messages.length === 0 && !currentChatId) {
-      // This will be handled by ChatInterface when it mounts
-    }
-  }, [initialQuestion, messages.length, currentChatId])
+  }, [currentChatId, chatHistory, initialQuestion, createChat])
 
   const handleNewMessage = (message: Message, specifiedChatId?: string | null) => {
+    // Determine which chat this message belongs to
+    const chatIdToUse = specifiedChatId || pendingChatIdRef.current || currentChatId
+    
+    // Only update local messages if we're viewing the target chat
+    const isViewingTargetChat = !currentChatId || currentChatId === chatIdToUse
+    
     setMessages((prev) => {
-      const newMessages = [...prev, message]
+      // Only update if viewing the target chat
+      if (!isViewingTargetChat) {
+        return prev
+      }
       
-      // Use specified chat ID if provided (for responses to ensure they go to the correct chat)
-      // Otherwise use ref as source of truth, fall back to currentChatId
-      const chatIdToUse = specifiedChatId || pendingChatIdRef.current || currentChatId
+      const newMessages = [...prev, message]
       
       if (chatIdToUse && chatIdToUse !== 'new-chat') {
         // Chat exists, update it
         updateChat(chatIdToUse, newMessages)
-        // Ensure ref and state are in sync
-        if (pendingChatIdRef.current !== chatIdToUse) {
-          pendingChatIdRef.current = chatIdToUse
-        }
-        // Only update currentChatId if we're currently viewing this chat
-        // This prevents switching to a different chat when a response arrives
-        if (currentChatId === chatIdToUse || !currentChatId) {
-          if (currentChatId !== chatIdToUse) {
-            setCurrentChatId(chatIdToUse)
-          }
+        pendingChatIdRef.current = chatIdToUse
+        
+        // Sync currentChatId if needed
+        if (!currentChatId || currentChatId !== chatIdToUse) {
+          setCurrentChatId(chatIdToUse)
         }
       } else {
         // No chat exists, create a new one
         const newChatId = createChat(newMessages)
-        // Immediately set the ref so subsequent messages use the same chat
         pendingChatIdRef.current = newChatId
-        // Only set currentChatId if we're not viewing a different chat
-        if (!currentChatId || currentChatId === chatIdToUse) {
+        
+        if (!currentChatId) {
           setCurrentChatId(newChatId)
         }
       }
       
-      // Only update local messages if we're viewing this chat
-      if (currentChatId === chatIdToUse || (!currentChatId && chatIdToUse === pendingChatIdRef.current)) {
-        return newMessages
-      }
-      
-      // If we're viewing a different chat, don't update local messages
-      return prev
+      return newMessages
     })
   }
 
@@ -200,13 +154,11 @@ function ChatPageContent() {
   }
 
   const handleSelectChat = (chatId: string) => {
+    // Update chat selection synchronously
     selectChat(chatId)
     setCurrentChatId(chatId)
-    // Only update pendingChatIdRef if we're not in the middle of a request
-    // This preserves the chat ID for in-flight requests
-    // We'll check if there's an active request by checking if messages are being loaded
-    // For now, we'll update it, but the ChatInterface will handle clearing loading state
     pendingChatIdRef.current = chatId
+    // Messages will be synced by the useEffect that watches currentChatId
   }
 
   const handleDeleteChat = (chatId: string) => {

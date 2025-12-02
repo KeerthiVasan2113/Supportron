@@ -23,7 +23,11 @@ def check_ollama_running() -> bool:
     try:
         ollama.list()
         return True
-    except Exception:
+    except ConnectionError as e:
+        logger.debug(f"Ollama connection error: {e}")
+        return False
+    except Exception as e:
+        logger.warning(f"Unexpected error checking Ollama status: {e}")
         return False
 
 
@@ -42,7 +46,14 @@ def check_model_available(model_name: Optional[str] = None) -> bool:
         # Quick test generation to verify model is loaded
         ollama.generate(model=model, prompt="test", options={"num_predict": 1})
         return True
-    except Exception:
+    except ConnectionError as e:
+        logger.debug(f"Connection error checking model '{model}': {e}")
+        return False
+    except ValueError as e:
+        logger.warning(f"Model '{model}' not found or invalid: {e}")
+        return False
+    except Exception as e:
+        logger.warning(f"Unexpected error checking model '{model}': {e}")
         return False
 
 

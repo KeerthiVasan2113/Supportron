@@ -18,8 +18,9 @@ def validate_question(question: str) -> str:
     Raises:
         ValueError: If question is empty or invalid
     """
+    from app.core.error_messages import QUESTION_EMPTY
     if not question or not question.strip():
-        raise ValueError("Question cannot be empty")
+        raise ValueError(QUESTION_EMPTY)
     
     # Sanitize: remove excessive whitespace and limit length
     sanitized = question.strip()
@@ -28,8 +29,9 @@ def validate_question(question: str) -> str:
     sanitized = ''.join(char for char in sanitized if ord(char) >= 32 or char in '\n\t')
     
     # Limit length to prevent DoS
+    from app.core.error_messages import QUESTION_TOO_LONG
     if len(sanitized) > 5000:
-        raise ValueError("Question is too long. Maximum length is 5000 characters.")
+        raise ValueError(QUESTION_TOO_LONG)
     
     return sanitized
 
